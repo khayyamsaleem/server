@@ -2,28 +2,40 @@ version: '3'
 
 services:
 
-  proxy:
-    image: traefik
-    networks:
-      - webgateway
-    environment:
-      - DO_AUTH_TOKEN
-      - HTTP_AUTH
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./traefik.toml:/etc/traefik/traefik.toml
-      - ./acme:/etc/traefik/acme
-    labels:
-      traefik.enable: "true"
-      traefik.backend: "traefik"
-      traefik.port: "8080"
-      traefik.frontend.rule: "Host: monitor.lifeskillssoftware.tech"
-      traefik.frontend.auth.basic: $HTTP_AUTH
-    restart: unless-stopped
+    proxy:
+        image: traefik
+        networks:
+            - webgateway
+        environment:
+            - DO_AUTH_TOKEN
+            - HTTP_AUTH
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - ./traefik.toml:/etc/traefik/traefik.toml
+            - ./acme:/etc/traefik/acme
+        labels:
+            traefik.enable: "true"
+            traefik.backend: "traefik"
+            traefik.port: "8080"
+            traefik.frontend.rule: "Host: monitor.lifeskillssoftware.tech"
+            traefik.frontend.auth.basic: $HTTP_AUTH
+        restart: unless-stopped
+
+    jenkins:
+        image: jenkins
+        networks:
+            - webgateway
+        labels:
+            traefik.enable: "true"
+            traefik.backend: "jenkins"
+            traefik.frontend.rule: "Host: jenkins.lifeskillssoftware.tech"
+            traefik.port: "8080"
+        restart: unless-stopped
+
 
 networks:
-  webgateway:
-    driver: bridge
+    webgateway:
+        driver: bridge
