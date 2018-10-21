@@ -1,0 +1,35 @@
+debug = false
+checkNewVersion = false
+logLevel = "INFO"
+defaultEntryPoints = ["https", "http"]
+insecureSkipVerify = true # allow self-signed cert between traefik and ubiquti controller
+
+[api]
+dashboard = true
+
+[entryPoints]
+
+  [entryPoints.http]
+  address = ":80"
+    [entryPoints.http.redirect]
+    entryPoint = "https"
+
+  [entryPoints.https]
+  address = ":443"
+    [entryPoints.https.tls]
+
+[acme]
+email = "khayyam.saleem@gmail.com"
+storage = "/etc/traefik/acme/acme.json"
+entryPoint = "https"
+onHostRule = true
+  [acme.dnsChallenge]
+  provider = "digitalocean"
+  [[acme.domains]]
+  main = "*.lifeskillssoftware.tech"
+  sans = ["lifeskillssoftware.tech"]
+
+[docker]
+endpoint = "unix:///var/run/docker.sock"
+domain = "lifeskillssoftware.tech"
+exposedByDefault = false

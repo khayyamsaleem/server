@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+
+  proxy:
+    image: traefik
+    networks:
+      - webgateway
+    environment:
+      - DO_AUTH_TOKEN
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.toml:/etc/traefik/traefik.toml
+      - ./acme:/etc/traefik/acme
+    labels:
+      traefik.enable: "true"
+      traefik.backend: "traefik"
+      traefik.port: "8080"
+      traefik.frontend.rule: "Host: traefik.lifeskillssoftware.tech"
+      traefik.frontend.auth.basic: $HTTP_AUTH
+    restart: unless-stopped
+
+
+networks:
+  webgateway:
+    driver: bridge
