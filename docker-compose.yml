@@ -24,8 +24,24 @@ services:
                         traefik.frontend.auth.basic: $HTTP_AUTH
                 restart: unless-stopped
 
+        postgres:
+                image: postgres:10-alpine
+                networks:
+                        - database
+                environment:
+                        - POSTGRES_USER lss
+                        - POSTGRES_PASSWORD
+                labels:
+                        traefik.enable: "true"
+                        traefik.backend: "postgres"
+                        traefik.port: "5432"
+                restart: unless-stopped
+
         jenkins:
-                image: jenkins/jenkins:latest
+                build:
+                        context: .
+                        dockerfile: Dockerfile.jenkdock
+                image: jenkdock
                 networks:
                         - webgateway
                 user: root
@@ -39,10 +55,23 @@ services:
                         traefik.frontend.rule: "Host: jenkins.lifeskillssoftware.tech"
                         traefik.port: "8080"
                 restart: unless-stopped
-
+        
+        portal:
+                build:
+                        context: ../LifeSkillsSoftware-Portal
+                        dockerfile: Dockerfile.portal
+                image: portal
+                networks:
+                        - webgateway
+                labels:
+                        traefik.enable: "true"
+                        traefik.frontend.rule: "Host: lifeskillssoftware.tech"
+                        traefik.port: "3000"
 
 networks:
         webgateway:
+                driver: bridge
+        database:
                 driver: bridge
 
 volumes:
