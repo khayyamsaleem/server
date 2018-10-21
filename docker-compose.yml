@@ -37,7 +37,7 @@ services:
                         traefik.enable: "true"
                         traefik.backend: "jenkins"
                         traefik.frontend.rule: "Host: jenkins.lifeskillssoftware.tech"
-			traefik.port: "8080"
+                        traefik.port: "8080"
                 restart: unless-stopped
 
 
