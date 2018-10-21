@@ -28,17 +28,22 @@ services:
                 image: jenkins/jenkins:latest
                 networks:
                         - webgateway
-                ports:
-                        - "8080:8080"
+                user: root
+                privileged: true
                 volumes:
                         - /var/run/docker.sock:/var/run/docker.sock
+                        - jenkins_home:/var/jenkins_home
                 labels:
                         traefik.enable: "true"
                         traefik.backend: "jenkins"
                         traefik.frontend.rule: "Host: jenkins.lifeskillssoftware.tech"
+			traefik.port: "8080"
                 restart: unless-stopped
 
 
 networks:
         webgateway:
                 driver: bridge
+
+volumes:
+        jenkins_home:
