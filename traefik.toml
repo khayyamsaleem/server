@@ -1,8 +1,9 @@
+debug = true
+logLevel = "DEBUG"
 defaultEntryPoints = ["http", "https"]
-[web]
-address = ":8080"
-    [web.auth.basic]
-    users = [""]
+
+[api]
+dashboard = true
 
 [entryPoints]
     [entryPoints.http]
@@ -14,8 +15,17 @@ address = ":8080"
         [entryPoints.https.tls]
 
 [acme]
-email = ""
+email = "khayyamsaleem@gmail.com"
 storage = "acme.json"
 entryPoint = "https"
 onHostRule = true
-onDemand = false
+    [acme.dnsChallenge]
+    provider = "digitalocean"
+    [[acme.domains]]
+    main = "*.lifeskillssoftware.tech"
+    sans = ["lifeskillssoftware.tech"]
+
+[docker]
+endpoint = "unix:///var/run/docker.sock"
+domain = "lifeskillssoftware.tech"
+exposedByDefault = false

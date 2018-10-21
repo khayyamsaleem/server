@@ -8,6 +8,7 @@ services:
       - webgateway
     environment:
       - DO_AUTH_TOKEN
+      - HTTP_AUTH
     ports:
       - "80:80"
       - "443:443"
@@ -19,10 +20,9 @@ services:
       traefik.enable: "true"
       traefik.backend: "traefik"
       traefik.port: "8080"
-      traefik.frontend.rule: "Host: traefik.lifeskillssoftware.tech"
+      traefik.frontend.rule: "Host: monitor.lifeskillssoftware.tech"
       traefik.frontend.auth.basic: $HTTP_AUTH
     restart: unless-stopped
-
 
 networks:
   webgateway:
