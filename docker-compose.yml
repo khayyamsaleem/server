@@ -1,78 +1,51 @@
 version: '3'
 
 services:
+  proxy:
+    image: traefik:v1.7.16
+    command: --web --docker --docker.domain=docker.localhost --logLevel=DEBUG
+    networks:
+      - webgateway
+    environment:
+      - DO_AUTH_TOKEN
+      - HTTP_AUTH
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.toml:/etc/traefik/traefik.toml
+      - ./acme:/etc/traefik/acme
+    labels:
+      traefik.enable: "true"
+      traefik.backend: "traefik"
+      traefik.port: "8080"
+      traefik.frontend.rule: "Host: build.khayyam.me"
+      traefik.frontend.auth.basic: $HTTP_AUTH
+    restart: unless-stopped
 
-        proxy:
-                image: traefik
-                networks:
-                        - webgateway
-                environment:
-                        - DO_AUTH_TOKEN
-                        - HTTP_AUTH
-                ports:
-                        - "80:80"
-                        - "443:443"
-                volumes:
-                        - /var/run/docker.sock:/var/run/docker.sock
-                        - ./traefik.toml:/etc/traefik/traefik.toml
-                        - ./acme:/etc/traefik/acme
-                labels:
-                        traefik.enable: "true"
-                        traefik.backend: "traefik"
-                        traefik.port: "8080"
-                        traefik.frontend.rule: "Host: monitor.lifeskillssoftware.tech"
-                        traefik.frontend.auth.basic: $HTTP_AUTH
-                restart: unless-stopped
-
-        postgres:
-                image: postgres:10-alpine
-                networks:
-                        - database
-                environment:
-                        - POSTGRES_USER lss
-                        - POSTGRES_PASSWORD
-                labels:
-                        traefik.enable: "true"
-                        traefik.backend: "postgres"
-                        traefik.port: "5432"
-                restart: unless-stopped
-
-        jenkins:
-                build:
-                        context: .
-                        dockerfile: Dockerfile.jenkdock
-                image: jenkdock
-                networks:
-                        - webgateway
-                user: root
-                privileged: true
-                volumes:
-                        - /var/run/docker.sock:/var/run/docker.sock
-                        - jenkins_home:/var/jenkins_home
-                labels:
-                        traefik.enable: "true"
-                        traefik.backend: "jenkins"
-                        traefik.frontend.rule: "Host: jenkins.lifeskillssoftware.tech"
-                        traefik.port: "8080"
-                restart: unless-stopped
-        
-        portal:
-                build:
-                        context: ../LifeSkillsSoftware-Portal
-                        dockerfile: Dockerfile.portal
-                image: portal
-                networks:
-                        - webgateway
-                labels:
-                        traefik.enable: "true"
-                        traefik.frontend.rule: "Host: lifeskillssoftware.tech"
-                        traefik.port: "3000"
+  jenkins:
+    build:
+      context: .
+      dockerfile: Dockerfile.jenkdock
+      image: jenkdock
+      networks:
+        - webgateway
+      user: root
+      privileged: true
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+        - jenkins_home:/var/jenkins_home
+      labels:
+        traefik.enable: "true"
+        traefik.backend: "jenkins"
+        traefik.frontend.rule: "Host: build.khayyam.me"
+        traefik.port: "8080"
+        restart: unless-stopped
 
 networks:
-        webgateway:
-                driver: bridge
-        database:
-                driver: bridge
+  webgateway:
+    driver: bridge
 
 volumes:
-        jenkins_home:
+  jenkins_home:

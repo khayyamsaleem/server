@@ -22,10 +22,10 @@ onHostRule = true
     [acme.dnsChallenge]
     provider = "digitalocean"
     [[acme.domains]]
-    main = "*.lifeskillssoftware.tech"
-    sans = ["lifeskillssoftware.tech"]
+    main = "*.khayyam.me"
+    sans = ["khayyam.me"]
 
 [docker]
 endpoint = "unix:///var/run/docker.sock"
-domain = "lifeskillssoftware.tech"
+domain = "khayyam.me"
 exposedByDefault = false
