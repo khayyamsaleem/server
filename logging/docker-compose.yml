@@ -41,6 +41,8 @@ services:
       traefik.http.routers.kibana.rule: "Host(`logs.khayyam.me`)"
       traefik.http.routers.kibana.entrypoints: https
       traefik.http.services.kibana.loadbalancer.server.port: "5601"
+      traefik.http.routers.kibana.middlewares: auth
+      traefik.http.middlewares.auth.basicauth.users: $HTTP_AUTH
       traefik.docker.network: "server_webgateway"
     restart: always
     
