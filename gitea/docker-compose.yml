@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  gitea:
+    image: gitea/gitea:latest
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+    restart: always
+    networks:
+      - webgateway
+    volumes:
+      - gitea:/data
+    environment:
+      - SSH_DOMAIN=git.khayyam.me
+      - SSH_PORT=10022
+      - SSH_LISTEN_PORT=10022
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.gitea-web.rule: "Host(`git.khayyam.me`)"
+      traefik.http.routers.gitea-web.entrypoints: https
+      traefik.http.routers.gitea-web.service: "gitea-web-svc"
+      traefik.http.services.gitea-web-svc.loadbalancer.server.port: "3000"
+      traefik.tcp.routers.gitea-ssh.rule: "HostSNI(`*`)"
+      traefik.tcp.routers.gitea-ssh.entrypoints: ssh
+      traefik.tcp.routers.gitea-ssh.service: "gitea-ssh-svc"
+      traefik.tcp.services.gitea-ssh-svc.loadbalancer.server.port: "10022"
+      traefik.docker.network: "server_webgateway"
+
+networks:
+  webgateway:
+    external:
+      name: server_webgateway
+
+volumes:
+  gitea:

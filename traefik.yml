@@ -12,6 +12,8 @@ entryPoints:
         entryPoint:
           to: https
           scheme: https
+  ssh:
+    address: :10022
 
   https:
     address: :443
