@@ -42,5 +42,5 @@ certificatesResolvers:
       email: khayyam.saleem@gmail.com
       storage: /etc/traefik/acme/acme.json
       dnsChallenge:
-        provider: digitalocean
+        provider: cloudflare
 
