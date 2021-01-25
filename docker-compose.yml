@@ -37,7 +37,7 @@ services:
   jenkins:
     build:
       context: .
-      dockerfile: Dockerfile.jenkdock
+      dockerfile: jind.dockerfile
     networks:
       - webgateway
     logging:
