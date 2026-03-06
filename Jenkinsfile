@@ -33,7 +33,8 @@ pipeline {
                                     cd ${JUUL_DEPLOY_DIR}/juul &&
                                     git -C ${JUUL_DEPLOY_DIR} fetch origin &&
                                     git -C ${JUUL_DEPLOY_DIR} reset --hard origin/master &&
-                                    docker compose up -d --force-recreate --remove-orphans --no-recreate jenkins
+                                    docker compose up -d --force-recreate --remove-orphans --scale jenkins=0 &&
+                                    docker compose up -d jenkins --no-recreate
                                 '
                             """
                         }
