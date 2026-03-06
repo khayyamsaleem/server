@@ -58,6 +58,32 @@ services:
           cpus: '0.05'
           memory: 64M
 
+  network-exporter:
+    image: syepes/network_exporter:latest
+    cap_add:
+    - NET_ADMIN
+    - NET_RAW
+    network_mode: host
+    volumes:
+    - ./network_exporter.yml:/app/cfg/network_exporter.yml:ro
+    restart: unless-stopped
+    labels:
+      com.centurylinklabs.watchtower.enable: 'true'
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:9427/metrics > /dev/null || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 64M
+        reservations:
+          cpus: '0.01'
+          memory: 16M
+
   promtail:
     image: grafana/promtail:latest
     extra_hosts:

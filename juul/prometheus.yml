@@ -46,3 +46,14 @@ scrape_configs:
     - cherryblossom:19091
     labels:
       host: cherryblossom
+- job_name: tailscale
+  static_configs:
+  - targets:
+    - tailscale-exporter:9250
+- job_name: network
+  scrape_interval: 30s
+  static_configs:
+  - targets:
+    - cherryblossom:9427
+    labels:
+      host: cherryblossom

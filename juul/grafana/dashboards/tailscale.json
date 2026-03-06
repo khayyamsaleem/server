@@ -1,0 +1,150 @@
+{
+  "uid": "tailscale",
+  "title": "Tailscale",
+  "tags": ["tailscale", "network"],
+  "timezone": "browser",
+  "editable": true,
+  "refresh": "30s",
+  "time": { "from": "now-1h", "to": "now" },
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "Total Devices",
+      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 0 },
+      "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
+      "targets": [
+        {
+          "expr": "count(tailscale_devices)",
+          "legendFormat": ""
+        }
+      ],
+      "options": { "colorMode": "value", "graphMode": "none" },
+      "fieldConfig": {
+        "defaults": { "thresholds": { "steps": [{ "color": "blue", "value": null }] } }
+      }
+    },
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "Online Devices",
+      "gridPos": { "h": 4, "w": 4, "x": 4, "y": 0 },
+      "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
+      "targets": [
+        {
+          "expr": "count(tailscale_devices{online=\"true\"})",
+          "legendFormat": ""
+        }
+      ],
+      "options": { "colorMode": "value", "graphMode": "none" },
+      "fieldConfig": {
+        "defaults": { "thresholds": { "steps": [{ "color": "green", "value": null }] } }
+      }
+    },
+    {
+      "id": 3,
+      "type": "stat",
+      "title": "Offline Devices",
+      "gridPos": { "h": 4, "w": 4, "x": 8, "y": 0 },
+      "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
+      "targets": [
+        {
+          "expr": "count(tailscale_devices{online=\"false\"})",
+          "legendFormat": ""
+        }
+      ],
+      "options": { "colorMode": "value", "graphMode": "none" },
+      "fieldConfig": {
+        "defaults": { "thresholds": { "steps": [{ "color": "orange", "value": null }] } }
+      }
+    },
+    {
+      "id": 4,
+      "type": "table",
+      "title": "Device Inventory",
+      "gridPos": { "h": 12, "w": 24, "x": 0, "y": 4 },
+      "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
+      "targets": [
+        {
+          "expr": "tailscale_devices",
+          "format": "table",
+          "instant": true,
+          "legendFormat": ""
+        }
+      ],
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": { "Time": true, "Value": true, "__name__": true, "job": true, "instance": true },
+            "renameByName": {
+              "hostname": "Hostname",
+              "os": "OS",
+              "online": "Online",
+              "tailscale_ips": "Tailscale IP",
+              "authorized": "Authorized",
+              "tags": "Tags",
+              "user": "User"
+            }
+          }
+        }
+      ],
+      "fieldConfig": {
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "Online" },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  { "type": "value", "options": { "true": { "text": "Online", "color": "green" }, "false": { "text": "Offline", "color": "red" } } }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 5,
+      "type": "timeseries",
+      "title": "Online Device Count",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 16 },
+      "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
+      "targets": [
+        {
+          "expr": "count(tailscale_devices{online=\"true\"})",
+          "legendFormat": "Online"
+        },
+        {
+          "expr": "count(tailscale_devices{online=\"false\"})",
+          "legendFormat": "Offline"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "fillOpacity": 20, "stacking": { "mode": "normal" } }
+        },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "Online" }, "properties": [{ "id": "color", "value": { "fixedColor": "green", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "Offline" }, "properties": [{ "id": "color", "value": { "fixedColor": "orange", "mode": "fixed" } }] }
+        ]
+      }
+    },
+    {
+      "id": 6,
+      "type": "piechart",
+      "title": "Devices by OS",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 16 },
+      "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
+      "targets": [
+        {
+          "expr": "count by (os) (tailscale_devices)",
+          "legendFormat": "{{os}}"
+        }
+      ],
+      "options": { "legend": { "displayMode": "table", "placement": "right" } }
+    }
+  ],
+  "schemaVersion": 39
+}
