@@ -25,8 +25,7 @@
   "panels": [
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -90,8 +89,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "jellyfin_up{instance=~\"$instance\"}",
@@ -106,8 +104,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "description": "",
       "fieldConfig": {
@@ -161,8 +158,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "jellyfin_media_count{type=\"Movie\", instance=~\"$instance\"}",
@@ -177,8 +173,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "description": "",
       "fieldConfig": {
@@ -231,8 +226,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "jellyfin_media_count{type=\"BoxSet\", instance=~\"$instance\"}",
@@ -247,8 +241,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "description": "",
       "fieldConfig": {
@@ -301,8 +294,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "jellyfin_media_count{type=\"Series\", instance=~\"$instance\"}",
@@ -317,8 +309,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "description": "",
       "fieldConfig": {
@@ -371,8 +362,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "jellyfin_media_count{type=\"Episode\", instance=~\"$instance\"}",
@@ -387,8 +377,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -451,8 +440,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "sum by (user_device, item_index_clean, type) (\n  label_replace(\n    label_join(\n      label_join(\n        label_join(\n          jellyfin_now_playing_state{instance=~\"$instance\"},\n          \"item_index\",\n          \" \",\n          \"series_season\",\n          \"series_episode\"\n        ),\n        \"full_name\",\n        \" - \",\n        \"series_title\",\n        \"item_index\",\n        \"title\"\n      ),\n      \"user_device\",\n      \" - \",\n      \"username\",\n      \"device\"\n    ),\n    \"item_index_clean\",\n    \"$1\",\n    \"full_name\",\n    \"^[- ]*(.*?)[- ]*$\"\n  )\n)\n",
@@ -565,8 +553,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -629,8 +616,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "sum by (user_device, item_index_clean, type) (\n  label_replace(\n    label_join(\n      label_join(\n        label_join(\n          jellyfin_now_playing_state{instance=~\"$instance\"},\n          \"item_index\",\n          \" \",\n          \"series_season\",\n          \"series_episode\"\n        ),\n        \"full_name\",\n        \" - \",\n        \"series_title\",\n        \"item_index\",\n        \"title\"\n      ),\n      \"user_device\",\n      \" - \",\n      \"username\",\n      \"device\"\n    ),\n    \"item_index_clean\",\n    \"$1\",\n    \"full_name\",\n    \"^[- ]*(.*?)[- ]*$\"\n  )\n)\n",
@@ -743,8 +729,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -807,8 +792,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "sum by (user_device, item_index_clean, type) (\n  label_replace(\n    label_join(\n      label_join(\n        label_join(\n          jellyfin_now_playing_state{instance=~\"$instance\"},\n          \"item_index\",\n          \" \",\n          \"series_season\",\n          \"series_episode\"\n        ),\n        \"full_name\",\n        \" - \",\n        \"series_title\",\n        \"item_index\",\n        \"title\"\n      ),\n      \"user_device\",\n      \" - \",\n      \"username\",\n      \"device\"\n    ),\n    \"item_index_clean\",\n    \"$1\",\n    \"full_name\",\n    \"^[- ]*(.*?)[- ]*$\"\n  )\n)\n",
@@ -921,8 +905,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -975,8 +958,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -1019,8 +1001,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1092,8 +1073,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -1166,8 +1146,7 @@
         "y": 43
       },
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1188,16 +1167,14 @@
           "expr": "rate(container_fs_reads_bytes_total{name=\"jellyfin\"}[$interval])",
           "legendFormat": "Reads",
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           }
         },
         {
           "expr": "rate(container_fs_writes_bytes_total{name=\"jellyfin\"}[$interval])",
           "legendFormat": "Writes",
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           }
         }
       ]
@@ -1213,8 +1190,7 @@
         "y": 43
       },
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1238,32 +1214,28 @@
           "expr": "container_memory_rss{name=\"jellyfin\"}",
           "legendFormat": "RSS",
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           }
         },
         {
           "expr": "container_memory_cache{name=\"jellyfin\"}",
           "legendFormat": "Cache",
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           }
         },
         {
           "expr": "container_memory_swap{name=\"jellyfin\"}",
           "legendFormat": "Swap",
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           }
         },
         {
           "expr": "container_memory_working_set_bytes{name=\"jellyfin\"}",
           "legendFormat": "Working Set",
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           }
         }
       ]
@@ -1279,8 +1251,7 @@
         "y": 43
       },
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1302,24 +1273,21 @@
           "expr": "rate(container_cpu_usage_seconds_total{name=\"jellyfin\"}[$interval])",
           "legendFormat": "Total CPU",
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           }
         },
         {
           "expr": "rate(container_cpu_system_seconds_total{name=\"jellyfin\"}[$interval])",
           "legendFormat": "System",
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           }
         },
         {
           "expr": "rate(container_cpu_user_seconds_total{name=\"jellyfin\"}[$interval])",
           "legendFormat": "User",
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           }
         }
       ]
@@ -1335,8 +1303,7 @@
         "y": 50
       },
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1357,16 +1324,14 @@
           "expr": "rate(container_fs_read_seconds_total{name=\"jellyfin\"}[$interval]) / clamp_min(rate(container_fs_reads_total{name=\"jellyfin\"}[$interval]), 1)",
           "legendFormat": "Read Latency",
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           }
         },
         {
           "expr": "rate(container_fs_write_seconds_total{name=\"jellyfin\"}[$interval]) / clamp_min(rate(container_fs_writes_total{name=\"jellyfin\"}[$interval]), 1)",
           "legendFormat": "Write Latency",
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           }
         }
       ]
@@ -1382,8 +1347,7 @@
         "y": 50
       },
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1404,16 +1368,14 @@
           "expr": "rate(container_network_receive_bytes_total{name=\"jellyfin\"}[$interval])",
           "legendFormat": "Inbound",
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           }
         },
         {
           "expr": "rate(container_network_transmit_bytes_total{name=\"jellyfin\"}[$interval])",
           "legendFormat": "Outbound",
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           }
         }
       ]
@@ -1429,8 +1391,7 @@
         "y": 50
       },
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1451,16 +1412,14 @@
           "expr": "container_fs_usage_bytes{name=\"jellyfin\"}",
           "legendFormat": "Used",
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           }
         },
         {
           "expr": "container_fs_limit_bytes{name=\"jellyfin\"}",
           "legendFormat": "Limit",
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           }
         }
       ]
@@ -1538,8 +1497,7 @@
       {
         "current": {},
         "datasource": {
-          "type": "prometheus",
-          "uid": "P4169E866C3094E38"
+          "type": "prometheus"
         },
         "definition": "label_values(jellyfin_up,instance)",
         "includeAll": false,

@@ -15,8 +15,7 @@
       },
       {
         "datasource": {
-          "type": "prometheus",
-          "uid": "P4169E866C3094E38"
+          "type": "prometheus"
         },
         "enable": false,
         "expr": "changes(count(transmission_torrent_error > 0)[5m:]) > 0",
@@ -90,8 +89,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -151,8 +149,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -170,8 +167,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -235,8 +231,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "transmission_session_stats_uploaded_bytes{instance=~\"$instance\",job=~\"$job\",type=\"current\"}",
@@ -252,8 +247,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -317,8 +311,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "sum (increase(transmission_session_stats_uploaded_bytes{instance=~\"$instance\",job=~\"$job\",type=\"cumulative\"}[1d]))",
@@ -335,8 +328,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -400,8 +392,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "sum (increase(transmission_session_stats_uploaded_bytes{instance=~\"$instance\",job=~\"$job\",type=\"cumulative\"}[7d]))",
@@ -418,8 +409,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -483,8 +473,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "transmission_session_stats_uploaded_bytes{instance=~\"$instance\",job=~\"$job\",type=\"cumulative\"}",
@@ -500,8 +489,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "description": "Combined upload rate across all active torrents right now.",
       "fieldConfig": {
@@ -555,8 +543,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -572,8 +559,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -636,8 +622,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "count(transmission_torrent_error{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"} > 0) OR vector(0)",
@@ -652,8 +637,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -702,8 +686,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "sum(transmission_torrent_left_until_done_bytes{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
@@ -718,8 +701,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -772,8 +754,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "sum(transmission_torrent_corrupt_ever_bytes{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
@@ -788,8 +769,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -853,8 +833,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "transmission_session_stats_uploaded_bytes{instance=~\"$instance\",job=~\"$job\",type=\"current\"}/transmission_session_stats_downloaded_bytes{instance=~\"$instance\",job=~\"$job\",type=\"current\"}",
@@ -870,8 +849,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "description": "Ratio of uploaded to downloaded bytes across all sessions.",
       "fieldConfig": {
@@ -932,8 +910,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "expr": "transmission_session_stats_uploaded_bytes{instance=~\"$instance\",job=~\"$job\",type=\"cumulative\"}/transmission_session_stats_downloaded_bytes{instance=~\"$instance\",job=~\"$job\",type=\"cumulative\"}",
           "format": "time_series",
@@ -946,8 +923,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1011,8 +987,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "transmission_session_stats_downloaded_bytes{instance=~\"$instance\",job=~\"$job\",type=\"current\"}",
@@ -1028,8 +1003,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1093,8 +1067,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "sum (increase(transmission_session_stats_downloaded_bytes{instance=~\"$instance\",job=~\"$job\",type=\"cumulative\"}[1d]))",
@@ -1111,8 +1084,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "description": "Download volume over the last 7 days.",
       "fieldConfig": {
@@ -1177,8 +1149,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "sum (increase(transmission_session_stats_downloaded_bytes{instance=~\"$instance\",job=~\"$job\",type=\"cumulative\"}[7d]))",
@@ -1194,8 +1165,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1259,8 +1229,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "expr": "transmission_session_stats_downloaded_bytes{instance=~\"$instance\",job=~\"$job\",type=\"cumulative\"}",
           "format": "time_series",
@@ -1274,8 +1243,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "description": "Combined download rate across all active torrents right now.",
       "fieldConfig": {
@@ -1329,8 +1297,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -1346,8 +1313,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1433,8 +1399,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "expr": "max by (name) (transmission_torrent_upload_bytes{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
@@ -1450,8 +1415,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "description": "Per-torrent statistics including ratio, peers, size, error status, queue position, and completion date.",
       "fieldConfig": {
@@ -1980,8 +1944,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -1995,8 +1958,7 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -2010,8 +1972,7 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -2025,8 +1986,7 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -2040,8 +2000,7 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -2055,8 +2014,7 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -2070,8 +2028,7 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -2085,8 +2042,7 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -2100,8 +2056,7 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -2115,8 +2070,7 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -2130,8 +2084,7 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -2145,8 +2098,7 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -2159,8 +2111,7 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -2173,8 +2124,7 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -2187,8 +2137,7 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -2477,8 +2426,7 @@
       "panels": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "description": "Extended per-torrent statistics with 30-day average upload rate, 1-day average upload, current upload speed, and all peer/tracker details.",
           "fieldConfig": {
@@ -2895,8 +2843,7 @@
           "targets": [
             {
               "datasource": {
-                "type": "prometheus",
-                "uid": "P4169E866C3094E38"
+                "type": "prometheus"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -2909,8 +2856,7 @@
             },
             {
               "datasource": {
-                "type": "prometheus",
-                "uid": "P4169E866C3094E38"
+                "type": "prometheus"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -2924,8 +2870,7 @@
             },
             {
               "datasource": {
-                "type": "prometheus",
-                "uid": "P4169E866C3094E38"
+                "type": "prometheus"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -2939,8 +2884,7 @@
             },
             {
               "datasource": {
-                "type": "prometheus",
-                "uid": "P4169E866C3094E38"
+                "type": "prometheus"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -2954,8 +2898,7 @@
             },
             {
               "datasource": {
-                "type": "prometheus",
-                "uid": "P4169E866C3094E38"
+                "type": "prometheus"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -2969,8 +2912,7 @@
             },
             {
               "datasource": {
-                "type": "prometheus",
-                "uid": "P4169E866C3094E38"
+                "type": "prometheus"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -2984,8 +2926,7 @@
             },
             {
               "datasource": {
-                "type": "prometheus",
-                "uid": "P4169E866C3094E38"
+                "type": "prometheus"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -2999,8 +2940,7 @@
             },
             {
               "datasource": {
-                "type": "prometheus",
-                "uid": "P4169E866C3094E38"
+                "type": "prometheus"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -3014,8 +2954,7 @@
             },
             {
               "datasource": {
-                "type": "prometheus",
-                "uid": "P4169E866C3094E38"
+                "type": "prometheus"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -3029,8 +2968,7 @@
             },
             {
               "datasource": {
-                "type": "prometheus",
-                "uid": "P4169E866C3094E38"
+                "type": "prometheus"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -3044,8 +2982,7 @@
             },
             {
               "datasource": {
-                "type": "prometheus",
-                "uid": "P4169E866C3094E38"
+                "type": "prometheus"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -3059,8 +2996,7 @@
             },
             {
               "datasource": {
-                "type": "prometheus",
-                "uid": "P4169E866C3094E38"
+                "type": "prometheus"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -3074,8 +3010,7 @@
             },
             {
               "datasource": {
-                "type": "prometheus",
-                "uid": "P4169E866C3094E38"
+                "type": "prometheus"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -3089,8 +3024,7 @@
             },
             {
               "datasource": {
-                "type": "prometheus",
-                "uid": "P4169E866C3094E38"
+                "type": "prometheus"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -3356,8 +3290,7 @@
       "panels": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "description": "Detailed health view per torrent: error status, bytes remaining/valid/corrupt, queue position, last activity, completion date, and time spent downloading and seeding.",
           "fieldConfig": {
@@ -3583,8 +3516,7 @@
           "targets": [
             {
               "datasource": {
-                "type": "prometheus",
-                "uid": "P4169E866C3094E38"
+                "type": "prometheus"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -3597,8 +3529,7 @@
             },
             {
               "datasource": {
-                "type": "prometheus",
-                "uid": "P4169E866C3094E38"
+                "type": "prometheus"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -3611,8 +3542,7 @@
             },
             {
               "datasource": {
-                "type": "prometheus",
-                "uid": "P4169E866C3094E38"
+                "type": "prometheus"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -3625,8 +3555,7 @@
             },
             {
               "datasource": {
-                "type": "prometheus",
-                "uid": "P4169E866C3094E38"
+                "type": "prometheus"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -3639,8 +3568,7 @@
             },
             {
               "datasource": {
-                "type": "prometheus",
-                "uid": "P4169E866C3094E38"
+                "type": "prometheus"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -3653,8 +3581,7 @@
             },
             {
               "datasource": {
-                "type": "prometheus",
-                "uid": "P4169E866C3094E38"
+                "type": "prometheus"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -3667,8 +3594,7 @@
             },
             {
               "datasource": {
-                "type": "prometheus",
-                "uid": "P4169E866C3094E38"
+                "type": "prometheus"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -3681,8 +3607,7 @@
             },
             {
               "datasource": {
-                "type": "prometheus",
-                "uid": "P4169E866C3094E38"
+                "type": "prometheus"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -3695,8 +3620,7 @@
             },
             {
               "datasource": {
-                "type": "prometheus",
-                "uid": "P4169E866C3094E38"
+                "type": "prometheus"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -3790,8 +3714,7 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -3876,8 +3799,7 @@
           "targets": [
             {
               "datasource": {
-                "type": "prometheus",
-                "uid": "P4169E866C3094E38"
+                "type": "prometheus"
               },
               "editorMode": "code",
               "expr": "max by (name) (transmission_torrent_seconds_seeding{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
@@ -3892,8 +3814,7 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -3978,8 +3899,7 @@
           "targets": [
             {
               "datasource": {
-                "type": "prometheus",
-                "uid": "P4169E866C3094E38"
+                "type": "prometheus"
               },
               "editorMode": "code",
               "expr": "max by (name) (transmission_torrent_seconds_downloading{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
@@ -3994,8 +3914,7 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -4046,8 +3965,7 @@
           "targets": [
             {
               "datasource": {
-                "type": "prometheus",
-                "uid": "P4169E866C3094E38"
+                "type": "prometheus"
               },
               "editorMode": "code",
               "expr": "max by (name) (transmission_torrent_done{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"}) < 1",
@@ -4079,8 +3997,7 @@
       {
         "current": {},
         "datasource": {
-          "type": "prometheus",
-          "uid": "P4169E866C3094E38"
+          "type": "prometheus"
         },
         "definition": "label_values(transmission_version,instance)",
         "includeAll": true,
@@ -4100,8 +4017,7 @@
       {
         "current": {},
         "datasource": {
-          "type": "prometheus",
-          "uid": "P4169E866C3094E38"
+          "type": "prometheus"
         },
         "definition": "label_values(transmission_version,job)",
         "includeAll": true,
@@ -4121,8 +4037,7 @@
       {
         "current": {},
         "datasource": {
-          "type": "prometheus",
-          "uid": "P4169E866C3094E38"
+          "type": "prometheus"
         },
         "definition": "label_values(transmission_torrent_ratio,name)",
         "includeAll": true,
