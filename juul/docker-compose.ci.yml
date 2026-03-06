@@ -14,7 +14,7 @@ services:
       traefik.enable: 'true'
       traefik.http.routers.jenkins.rule: Host(`build.khayyam.me`)
       traefik.http.routers.jenkins.entrypoints: https
-      traefik.docker.network: server_webgateway
+      traefik.docker.network: juul_webgateway
       com.centurylinklabs.watchtower.enable: 'true'
     restart: unless-stopped
     environment:
