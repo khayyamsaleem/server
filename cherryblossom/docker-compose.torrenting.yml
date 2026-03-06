@@ -17,7 +17,17 @@ services:
     - WIREGUARD_ADDRESSES=${VPN_WG_ADDRESSES}
     - SERVER_COUNTRIES=${VPN_COUNTRY}
     - TZ=America/New_York
+    # Allow inbound peer connections on Transmission's peer port through the VPN
+    # tunnel interface (tun0). Without this, gluetun's iptables rules drop all
+    # incoming traffic on the VPN side even if the provider forwards the port.
+    # Matches PEERPORT in the transmission service below.
     - FIREWALL_VPN_INPUT_PORTS=51413
+    # Exempt local/private subnets from the VPN tunnel so container-to-container
+    # and LAN traffic doesn't get routed through the VPN:
+    #   100.64.0.0/10  - Tailscale CGNAT range (tailscale ip -4)
+    #   192.168.0.0/16 - LAN (ip route | grep 'proto kernel')
+    #   10.0.0.0/8     - Docker bridge networks (docker network inspect bridge --format '{{range .IPAM.Config}}{{.Subnet}}{{end}}')
+    #   172.0.0.0/8    - Docker compose networks (docker network inspect cherryblossom_default --format '{{range .IPAM.Config}}{{.Subnet}}{{end}}')
     - FIREWALL_OUTBOUND_SUBNETS=100.64.0.0/10,192.168.0.0/16,10.0.0.0/8,172.0.0.0/8
     volumes:
     - gluetun-data:/gluetun
