@@ -32,7 +32,10 @@ pipeline {
                                     cd ${JUUL_DEPLOY_DIR}/juul &&
                                     git -C ${JUUL_DEPLOY_DIR} fetch origin &&
                                     git -C ${JUUL_DEPLOY_DIR} reset --hard origin/master &&
-                                    docker compose up -d --remove-orphans
+                                    docker compose up -d --remove-orphans &&
+                                    cp ${JUUL_DEPLOY_DIR}/juul/motd.sh /etc/update-motd.d/01-juul &&
+                                    chmod 755 /etc/update-motd.d/01-juul &&
+                                    rm -f /etc/update-motd.d/juul-art.txt
                                 '
                             """
                         }
@@ -46,7 +49,10 @@ pipeline {
                                     cd ${CHERRYBLOSSOM_DEPLOY_DIR}/cherryblossom &&
                                     GIT_SSH_COMMAND="ssh -i ~/.ssh/server-deploy-key" git -C ${CHERRYBLOSSOM_DEPLOY_DIR} fetch origin &&
                                     GIT_SSH_COMMAND="ssh -i ~/.ssh/server-deploy-key" git -C ${CHERRYBLOSSOM_DEPLOY_DIR} reset --hard origin/master &&
-                                    docker compose up -d --remove-orphans
+                                    docker compose up -d --remove-orphans &&
+                                    cp ${CHERRYBLOSSOM_DEPLOY_DIR}/cherryblossom/motd.sh ~/motd.sh &&
+                                    chmod 755 ~/motd.sh &&
+                                    grep -q "motd.sh" ~/.zshrc || echo "\\n# Dynamic MOTD\\n[[ -o interactive ]] && ~/motd.sh" >> ~/.zshrc
                                 '
                             """
                         }
