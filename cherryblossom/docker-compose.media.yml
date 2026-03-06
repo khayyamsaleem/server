@@ -37,6 +37,9 @@ services:
     environment:
     - JELLYFIN_ADDRESS=http://jellyfin:8096
     - JELLYFIN_TOKEN=${JELLYFIN_EXPORTER_TOKEN}
+    depends_on:
+      jellyfin:
+        condition: service_healthy
     ports:
     - 9594:9594
     restart: unless-stopped
