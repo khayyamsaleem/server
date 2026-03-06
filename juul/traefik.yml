@@ -1,9 +1,7 @@
 global:
   sendAnonymousUsage: false
-
 serversTransport:
   insecureSkipVerify: true
-
 entryPoints:
   http:
     address: :80
@@ -14,28 +12,28 @@ entryPoints:
           scheme: https
   ssh:
     address: :10022
-
   https:
     address: :443
     http:
       tls:
-        certResolver: leresolver
+        certresolver: leresolver
         domains:
-          - main: khayyam.me
-            sans:
-              - "*.khayyam.me"
-
+        - main: khayyam.me
+          sans:
+          - '*.khayyam.me'
 providers:
+  file:
+    directory: /etc/traefik/dynamic
+    watch: true
   docker:
     endpoint: unix:///var/run/docker.sock
     exposedByDefault: false
-
 api:
   dashboard: true
-
+  insecure: true
 log:
   level: INFO
-
+  format: json
 certificatesResolvers:
   leresolver:
     acme:
@@ -43,4 +41,14 @@ certificatesResolvers:
       storage: /etc/traefik/acme/acme.json
       dnsChallenge:
         provider: cloudflare
-
+metrics:
+  prometheus:
+    addEntryPointsLabels: true
+    addRoutersLabels: true
+    addServicesLabels: true
+accessLog:
+  format: json
+  filters:
+    statusCodes:
+    - 200-599
+ping: {}

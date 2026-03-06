@@ -1,0 +1,12 @@
+http:
+  routers:
+    transmission:
+      rule: "Host(`transmission.khayyam.me`)"
+      entryPoints:
+        - https
+      service: transmission
+  services:
+    transmission:
+      loadBalancer:
+        servers:
+          - url: "http://cherryblossom:9091"

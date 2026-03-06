@@ -1,0 +1,6 @@
+include:
+  - docker-compose.media.yml
+  - docker-compose.torrenting.yml
+  - docker-compose.ai.yml
+  - docker-compose.monitoring.yml
+  - docker-compose.infra.yml

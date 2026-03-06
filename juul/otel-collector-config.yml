@@ -1,0 +1,25 @@
+receivers:
+  prometheus:
+    config:
+      scrape_configs:
+        - job_name: jenkins
+          metrics_path: /prometheus/
+          basic_auth:
+            username: ${env:JENKINS_USER}
+            password: ${env:JENKINS_PASSWORD}
+          scrape_interval: 15s
+          static_configs:
+            - targets:
+                - server-jenkins-1:8080
+
+exporters:
+  otlphttp:
+    endpoint: http://victoriametrics:8428/opentelemetry
+    tls:
+      insecure: true
+
+service:
+  pipelines:
+    metrics:
+      receivers: [prometheus]
+      exporters: [otlphttp]

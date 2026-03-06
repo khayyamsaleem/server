@@ -1,0 +1,94 @@
+server:
+  http_listen_port: 9080
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: docker
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 5s
+    relabel_configs:
+      - source_labels: ['__meta_docker_container_name']
+        regex: '/(.+)'
+        target_label: container
+      - source_labels: ['__meta_docker_container_log_stream']
+        target_label: stream
+      - source_labels: ['__meta_docker_container_label_com_docker_compose_project']
+        target_label: compose_project
+      - source_labels: ['__meta_docker_container_label_com_docker_compose_service']
+        target_label: compose_service
+      - action: replace
+        replacement: cherryblossom
+        target_label: host
+    pipeline_stages:
+      # JSON-emitting services: Watchtower, Envoy, Gluetun
+      - match:
+          selector: '{compose_service=~"watchtower|envoy|gluetun"}'
+          stages:
+            - json:
+                expressions:
+                  level: level
+                  msg: msg
+                  message: message
+            - template:
+                source: level
+                template: '{{ .Value | ToLower }}'
+            - labels:
+                level:
+      # Go slog services (time=... level=... format): node-exporter, jellyfin-exporter, ollama
+      - match:
+          selector: '{compose_service=~"node-exporter|jellyfin-exporter|ollama"}'
+          stages:
+            - regex:
+                expression: '^(time=\S+ )?level=(?P<level>\S+)\s'
+            - labels:
+                level:
+      # Jellyfin: [HH:MM:SS] [LEVEL] [tid] class: msg
+      - match:
+          selector: '{compose_service="jellyfin"}'
+          stages:
+            - regex:
+                expression: '^\[(?P<ts>[^\]]+)\] \[(?P<level>[A-Z]+)\] '
+            - template:
+                source: level
+                template: '{{ .Value | ToLower }}'
+            - labels:
+                level:
+      # PicoClaw: structured Go logs with [LEVEL] tag
+      - match:
+          selector: '{compose_service="picoclaw-gateway"}'
+          stages:
+            - regex:
+                expression: '\[(?P<level>INFO|WARN|ERROR|DEBUG)\]'
+            - template:
+                source: level
+                template: '{{ .Value | ToLower }}'
+            - labels:
+                level:
+      # Transmission: [timestamp] LEVEL source:line message
+      - match:
+          selector: '{container="transmission"}'
+          stages:
+            - regex:
+                expression: '^\[\d{4}-\d{2}-\d{2}T[^\]]+\] (?P<level>[A-Z]+) '
+            - template:
+                source: level
+                template: '{{ if eq .Value "ERR" }}error{{ else if eq .Value "WRN" }}warn{{ else if eq .Value "INF" }}info{{ else if eq .Value "DBG" }}debug{{ else }}{{ .Value | ToLower }}{{ end }}'
+            - labels:
+                level:
+      # cAdvisor: glog format (E/W/I/F prefix)
+      - match:
+          selector: '{compose_service="cadvisor"}'
+          stages:
+            - regex:
+                expression: '^(?P<glog_level>[IWEF])\d{4} '
+            - template:
+                source: level
+                template: '{{ if eq .glog_level "I" }}info{{ else if eq .glog_level "W" }}warn{{ else if eq .glog_level "E" }}error{{ else if eq .glog_level "F" }}fatal{{ end }}'
+            - labels:
+                level:

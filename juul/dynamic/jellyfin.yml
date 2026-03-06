@@ -1,0 +1,12 @@
+http:
+  routers:
+    jellyfin:
+      rule: "Host(`jelly.khayyam.me`)"
+      entryPoints:
+        - https
+      service: jellyfin
+  services:
+    jellyfin:
+      loadBalancer:
+        servers:
+          - url: "http://cherryblossom:8096"

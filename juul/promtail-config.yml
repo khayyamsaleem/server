@@ -1,0 +1,61 @@
+server:
+  http_listen_port: 9080
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: docker
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 5s
+    relabel_configs:
+      - source_labels: ['__meta_docker_container_name']
+        regex: '/(.+)'
+        target_label: container
+      - source_labels: ['__meta_docker_container_log_stream']
+        target_label: stream
+      - source_labels: ['__meta_docker_container_label_com_docker_compose_project']
+        target_label: compose_project
+      - source_labels: ['__meta_docker_container_label_com_docker_compose_service']
+        target_label: compose_service
+      - action: replace
+        replacement: juul
+        target_label: host
+    pipeline_stages:
+      # JSON-emitting services: Traefik, Grafana, Jenkins, VictoriaMetrics, Watchtower
+      - match:
+          selector: '{compose_service=~"proxy|grafana|jenkins|victoriametrics|watchtower"}'
+          stages:
+            - json:
+                expressions:
+                  level: level
+                  msg: msg
+                  message: message
+            - template:
+                source: level
+                template: '{{ .Value | ToLower }}'
+            - labels:
+                level:
+      # Go slog services (time=... level=... format): Loki, node-exporter, promtail
+      - match:
+          selector: '{compose_service=~"loki|node-exporter|promtail"}'
+          stages:
+            - regex:
+                expression: '^(time=\S+ )?level=(?P<level>\S+)\s'
+            - labels:
+                level:
+      # cAdvisor: glog format (E/W/I/F prefix)
+      - match:
+          selector: '{compose_service="cadvisor"}'
+          stages:
+            - regex:
+                expression: '^(?P<glog_level>[IWEF])\d{4} '
+            - template:
+                source: level
+                template: '{{ if eq .glog_level "I" }}info{{ else if eq .glog_level "W" }}warn{{ else if eq .glog_level "E" }}error{{ else if eq .glog_level "F" }}fatal{{ end }}'
+            - labels:
+                level:

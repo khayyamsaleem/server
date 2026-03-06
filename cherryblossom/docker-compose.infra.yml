@@ -1,0 +1,26 @@
+services:
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+    - WATCHTOWER_CLEANUP=true
+    - WATCHTOWER_SCHEDULE=0 0 4 * * *
+    - WATCHTOWER_LABEL_ENABLE=true
+    - DOCKER_API_VERSION=1.45
+    - WATCHTOWER_LOG_FORMAT=JSON
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/watchtower", "--health-check"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 64M
+        reservations:
+          cpus: '0.01'
+          memory: 16M

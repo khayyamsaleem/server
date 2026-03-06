@@ -1,0 +1,9 @@
+include:
+  - docker-compose.networking.yml
+  - docker-compose.ci.yml
+  - docker-compose.monitoring.yml
+  - docker-compose.logging.yml
+
+networks:
+  webgateway:
+    driver: bridge

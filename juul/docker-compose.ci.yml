@@ -1,0 +1,62 @@
+services:
+  jenkins:
+    image: jenkins/jenkins:lts
+    networks:
+    - webgateway
+    group_add:
+    - ${DOCKER_GID:-988}
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - ${DATA_DIR}/jenkins_home/_data:/var/jenkins_home
+    - ./jenkins-json-logging.properties:/var/jenkins_home/json-logging.properties:ro
+    - ./jul-jsonformatter.jar:/var/jenkins_home/jul-jsonformatter.jar:ro
+    labels:
+      traefik.enable: 'true'
+      traefik.http.routers.jenkins.rule: Host(`build.khayyam.me`)
+      traefik.http.routers.jenkins.entrypoints: https
+      traefik.docker.network: server_webgateway
+      com.centurylinklabs.watchtower.enable: 'true'
+    restart: unless-stopped
+    environment:
+    - JAVA_OPTS=-Djava.util.logging.config.file=/var/jenkins_home/json-logging.properties
+      -Xbootclasspath/a:/var/jenkins_home/jul-jsonformatter.jar
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8080/login > /dev/null"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.05'
+          memory: 256M
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    networks:
+    - webgateway
+    depends_on:
+      jenkins:
+        condition: service_healthy
+      victoriametrics:
+        condition: service_healthy
+    volumes:
+    - ./otel-collector-config.yml:/etc/otelcol-contrib/config.yaml:ro
+    environment:
+    - JENKINS_USER=${JENKINS_USER}
+    - JENKINS_PASSWORD=${JENKINS_PASSWORD}
+    restart: unless-stopped
+    labels:
+      com.centurylinklabs.watchtower.enable: 'true'
+    deploy:
+      resources:
+        limits:
+          cpus: '0.10'
+          memory: 128M
+        reservations:
+          cpus: '0.01'
+          memory: 32M

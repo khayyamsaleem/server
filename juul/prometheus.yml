@@ -1,0 +1,42 @@
+global:
+  scrape_interval: 15s
+scrape_configs:
+- job_name: node-juul
+  static_configs:
+  - targets:
+    - node-exporter:9100
+    labels:
+      host: juul
+- job_name: node-cherryblossom
+  static_configs:
+  - targets:
+    - cherryblossom:9100  # cherryblossom (Tailscale)
+    labels:
+      host: cherryblossom
+- job_name: cadvisor-juul
+  static_configs:
+  - targets:
+    - cadvisor:8080
+    labels:
+      host: juul
+- job_name: cadvisor-cherryblossom
+  static_configs:
+  - targets:
+    - cherryblossom:9101
+    labels:
+      host: cherryblossom
+- job_name: traefik
+  static_configs:
+  - targets:
+    - tailscale:8080
+- job_name: jellyfin
+  static_configs:
+  - targets:
+    - cherryblossom:9594
+- job_name: ollama-envoy
+  metrics_path: /stats/prometheus
+  static_configs:
+  - targets:
+    - cherryblossom:9901
+    labels:
+      host: cherryblossom

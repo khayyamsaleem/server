@@ -1,0 +1,59 @@
+services:
+  loki:
+    image: grafana/loki:latest
+    networks:
+    - webgateway
+    volumes:
+    - ${DATA_DIR}/loki:/loki
+    - ./loki-config.yml:/etc/loki/local-config.yaml
+    command:
+    - -config.file=/etc/loki/local-config.yaml
+    ports:
+    - 3100:3100
+    labels:
+      com.centurylinklabs.watchtower.enable: 'true'
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/usr/bin/loki", "-health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 256M
+        reservations:
+          cpus: '0.02'
+          memory: 64M
+
+  promtail:
+    image: grafana/promtail:latest
+    networks:
+    - webgateway
+    volumes:
+    - ./promtail-config.yml:/etc/promtail/config.yml
+    - /var/run/docker.sock:/var/run/docker.sock
+    - /var/lib/docker/containers:/var/lib/docker/containers:ro
+    command:
+    - -config.file=/etc/promtail/config.yml
+    depends_on:
+    - loki
+    labels:
+      com.centurylinklabs.watchtower.enable: 'true'
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/usr/bin/promtail", "-check-syntax", "-config.file=/etc/promtail/config.yml"]
+      interval: 60s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 192M
+        reservations:
+          cpus: '0.01'
+          memory: 48M

@@ -1,0 +1,115 @@
+services:
+  ollama:
+    image: ollama/ollama:latest
+    volumes:
+    - ollama-data:/root/.ollama
+    deploy:
+      resources:
+        limits:
+          cpus: '8.00'
+          memory: 24G
+        reservations:
+          cpus: '0.50'
+          memory: 1G
+          devices:
+          - driver: nvidia
+            count: all
+            capabilities:
+            - gpu
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    labels:
+      com.centurylinklabs.watchtower.enable: 'true'
+    ports:
+    - 127.0.0.1:11434:11434
+
+  picoclaw-gateway:
+    build:
+      context: /home/khayyam/dev/pico-claw
+      dockerfile: Dockerfile
+      args:
+        DOCKER_GID: ${DOCKER_GID:-965}
+    image: picoclaw-gateway:local
+    deploy:
+      resources:
+        limits:
+          cpus: '2.00'
+          memory: 512M
+        reservations:
+          cpus: '0.05'
+          memory: 32M
+          devices:
+          - driver: nvidia
+            count: all
+            capabilities:
+            - gpu
+    environment:
+      TZ: America/New_York
+      TERM: xterm-256color
+      OLLAMA_API_KEY: ollama-local
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      DISCORD_BOT_TOKEN: ${DISCORD_BOT_TOKEN:-}
+      GH_TOKEN: ${GH_TOKEN:-}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      DIGITALOCEAN_ACCESS_TOKEN: ${DIGITALOCEAN_ACCESS_TOKEN:-}
+      GOOGLE_PLACES_API_KEY: ${GOOGLE_PLACES_API_KEY:-}
+      GOG_KEYRING_BACKEND: file
+      GOG_KEYRING_PASSWORD: openclaw
+      XDG_CONFIG_HOME: /workspace/.config
+    volumes:
+    - ${PICOCLAW_CONFIG_DIR:-~/.picoclaw}:/root/.picoclaw
+    - ${PICOCLAW_WORKSPACE_DIR:-~/.picoclaw/workspace}:/workspace
+    - /var/run/docker.sock:/var/run/docker.sock:rw
+    ports:
+    - 127.0.0.1:18800:18800
+    extra_hosts:
+    - host.docker.internal:host-gateway
+    init: true
+    restart: unless-stopped
+    depends_on:
+      ollama:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:18800/health > /dev/null"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  envoy:
+    image: envoyproxy/envoy:v1.32-latest
+    volumes:
+    - ./envoy.yaml:/etc/envoy/envoy.yaml:ro
+    - ./filter.lua:/etc/envoy/filter.lua:ro
+    ports:
+    - 127.0.0.1:11435:11434
+    - 9901:9901
+    restart: unless-stopped
+    labels:
+      com.centurylinklabs.watchtower.enable: 'true'
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/localhost/9901'"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 128M
+        reservations:
+          cpus: '0.02'
+          memory: 32M
+
+volumes:
+  ollama-data:
+    external: true
+    name: open-claw_ollama-data

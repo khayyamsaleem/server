@@ -1,0 +1,135 @@
+services:
+  victoriametrics:
+    image: victoriametrics/victoria-metrics:latest
+    networks:
+    - webgateway
+    extra_hosts:
+    - "cherryblossom:${CHERRYBLOSSOM_IP}"
+    volumes:
+    - ${DATA_DIR}/victoriametrics:/victoria-metrics-data
+    - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+    - --storageDataPath=/victoria-metrics-data
+    - --retentionPeriod=30d
+    - --promscrape.config=/etc/prometheus/prometheus.yml
+    - --httpListenAddr=:8428
+    - --loggerFormat=json
+    - --opentelemetry.usePrometheusNaming
+    labels:
+      com.centurylinklabs.watchtower.enable: 'true'
+    restart: unless-stopped
+    ports:
+    - 8428:8428
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8428/-/healthy"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 256M
+        reservations:
+          cpus: '0.02'
+          memory: 64M
+
+  grafana:
+    image: grafana/grafana:latest
+    networks:
+    - webgateway
+    volumes:
+    - ${DATA_DIR}/grafana:/var/lib/grafana
+    - ./grafana/provisioning:/etc/grafana/provisioning
+    environment:
+    - GF_SECURITY_ADMIN_USER=admin
+    - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
+    - GF_SERVER_ROOT_URL=https://grafana.khayyam.me
+    - GF_LOG_CONSOLE_FORMAT=json
+    labels:
+      traefik.enable: 'true'
+      traefik.http.routers.grafana.rule: Host(`grafana.khayyam.me`)
+      traefik.http.routers.grafana.entrypoints: https
+      traefik.http.services.grafana.loadbalancer.server.port: '3000'
+      traefik.docker.network: server_webgateway
+      com.centurylinklabs.watchtower.enable: 'true'
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:3000/api/health > /dev/null"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 384M
+        reservations:
+          cpus: '0.02'
+          memory: 128M
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    networks:
+    - webgateway
+    pid: host
+    volumes:
+    - /proc:/host/proc:ro
+    - /sys:/host/sys:ro
+    - /:/rootfs:ro
+    command:
+    - --path.procfs=/host/proc
+    - --path.sysfs=/host/sys
+    - --path.rootfs=/rootfs
+    - --collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)
+    labels:
+      com.centurylinklabs.watchtower.enable: 'true'
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:9100/metrics > /dev/null || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.10'
+          memory: 48M
+        reservations:
+          cpus: '0.01'
+          memory: 16M
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    networks:
+    - webgateway
+    privileged: true
+    volumes:
+    - /:/rootfs:ro
+    - /var/run:/var/run:ro
+    - /sys:/sys:ro
+    - /var/lib/docker/:/var/lib/docker:ro
+    - /dev/disk/:/dev/disk:ro
+    devices:
+    - /dev/kmsg
+    labels:
+      com.centurylinklabs.watchtower.enable: 'true'
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/healthz > /dev/null || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 192M
+        reservations:
+          cpus: '0.02'
+          memory: 64M
+
