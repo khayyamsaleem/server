@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    triggers {
+        githubPush()
+    }
+
     options {
         skipDefaultCheckout()
         timeout(time: 10, unit: 'MINUTES')
