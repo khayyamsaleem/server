@@ -29,11 +29,11 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.50'
-          memory: 512M
+          cpus: '1.00'
+          memory: 1G
         reservations:
-          cpus: '0.05'
-          memory: 256M
+          cpus: '0.10'
+          memory: 512M
 
   otel-collector:
     image: otel/opentelemetry-collector-contrib:latest

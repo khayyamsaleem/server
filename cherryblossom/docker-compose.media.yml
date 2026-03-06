@@ -4,8 +4,8 @@ services:
     container_name: jellyfin
     user: 1000:1000
     volumes:
-    - jellyfin-config:/config
-    - jellyfin-cache:/cache
+    - /home/khayyam/dev/jellyfin/config:/config
+    - /home/khayyam/dev/jellyfin/cache:/cache
     - /mnt/jellydrive-01/jellyfin_media:/media
     environment:
     - PUID=1000
@@ -54,6 +54,3 @@ services:
           cpus: '0.01'
           memory: 16M
 
-volumes:
-  jellyfin-config:
-  jellyfin-cache:
