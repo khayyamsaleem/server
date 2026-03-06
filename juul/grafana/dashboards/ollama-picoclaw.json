@@ -1,0 +1,654 @@
+{
+  "title": "Ollama & PicoClaw",
+  "uid": "ollama-picoclaw",
+  "tags": [
+    "ollama",
+    "picoclaw",
+    "ai"
+  ],
+  "timezone": "browser",
+  "refresh": "30s",
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "templating": {
+    "list": [
+      {
+        "name": "interval",
+        "type": "interval",
+        "query": "1m,5m,10m,30m,1h",
+        "current": {
+          "value": "5m"
+        }
+      }
+    ]
+  },
+  "panels": [
+    {
+      "title": "Inference Requests",
+      "type": "row",
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "collapsed": false
+    },
+    {
+      "title": "Requests / min",
+      "type": "timeseries",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 1
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P4169E866C3094E38"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "custom": {
+            "fillOpacity": 10
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(envoy_cluster_external_upstream_rq{envoy_cluster_name=\"ollama_cluster\"}[$interval])",
+          "legendFormat": "Requests/s",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P4169E866C3094E38"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Response Codes",
+      "type": "timeseries",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 1
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P4169E866C3094E38"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "fillOpacity": 10,
+            "stacking": {
+              "mode": "normal"
+            }
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(envoy_cluster_external_upstream_rq_xx{envoy_cluster_name=\"ollama_cluster\"}[$interval])",
+          "legendFormat": "{{envoy_response_code_class}}xx",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P4169E866C3094E38"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Upstream Latency (p50/p95/p99)",
+      "type": "timeseries",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 1
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P4169E866C3094E38"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms",
+          "custom": {
+            "fillOpacity": 5
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "envoy_cluster_upstream_rq_time_bucket{envoy_cluster_name=\"ollama_cluster\"}",
+          "legendFormat": "{{le}}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P4169E866C3094E38"
+          },
+          "format": "heatmap"
+        },
+        {
+          "expr": "histogram_quantile(0.50, rate(envoy_cluster_upstream_rq_time_bucket{envoy_cluster_name=\"ollama_cluster\"}[$interval]))",
+          "legendFormat": "p50",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P4169E866C3094E38"
+          }
+        },
+        {
+          "expr": "histogram_quantile(0.95, rate(envoy_cluster_upstream_rq_time_bucket{envoy_cluster_name=\"ollama_cluster\"}[$interval]))",
+          "legendFormat": "p95",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P4169E866C3094E38"
+          }
+        },
+        {
+          "expr": "histogram_quantile(0.99, rate(envoy_cluster_upstream_rq_time_bucket{envoy_cluster_name=\"ollama_cluster\"}[$interval]))",
+          "legendFormat": "p99",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P4169E866C3094E38"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Token Metrics (from Loki)",
+      "type": "row",
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "collapsed": false
+    },
+    {
+      "title": "Tokens per Second by Model",
+      "type": "timeseries",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 10
+      },
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "fillOpacity": 10
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "{compose_service=\"envoy\"} |= \"ollama_inference\" | pattern `<_> script log: ollama_inference model=<model> endpoint=<endpoint> prompt_tokens=<prompt_tokens> completion_tokens=<completion_tokens> total_duration_s=<total_duration> tokens_per_second=<tps>` | unwrap tps | __error__=\"\"",
+          "legendFormat": "{{model}}",
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "queryType": "range"
+        }
+      ]
+    },
+    {
+      "title": "Completion Tokens per Request",
+      "type": "timeseries",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 10
+      },
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "fillOpacity": 10,
+            "drawStyle": "bars"
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "{compose_service=\"envoy\"} |= \"ollama_inference\" | pattern `<_> script log: ollama_inference model=<model> endpoint=<endpoint> prompt_tokens=<prompt_tokens> completion_tokens=<completion_tokens> total_duration_s=<total_duration> tokens_per_second=<tps>` | unwrap completion_tokens | __error__=\"\"",
+          "legendFormat": "{{model}}",
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "queryType": "range"
+        }
+      ]
+    },
+    {
+      "title": "Prompt Tokens per Request",
+      "type": "timeseries",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 10
+      },
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "fillOpacity": 10,
+            "drawStyle": "bars"
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "{compose_service=\"envoy\"} |= \"ollama_inference\" | pattern `<_> script log: ollama_inference model=<model> endpoint=<endpoint> prompt_tokens=<prompt_tokens> completion_tokens=<completion_tokens> total_duration_s=<total_duration> tokens_per_second=<tps>` | unwrap prompt_tokens | __error__=\"\"",
+          "legendFormat": "{{model}}",
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "queryType": "range"
+        }
+      ]
+    },
+    {
+      "title": "Request Duration (seconds)",
+      "type": "timeseries",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 18
+      },
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "custom": {
+            "fillOpacity": 10
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "{compose_service=\"envoy\"} |= \"ollama_inference\" | pattern `<_> script log: ollama_inference model=<model> endpoint=<endpoint> prompt_tokens=<prompt_tokens> completion_tokens=<completion_tokens> total_duration_s=<total_duration> tokens_per_second=<tps>` | unwrap total_duration | __error__=\"\"",
+          "legendFormat": "{{model}}",
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "queryType": "range"
+        }
+      ]
+    },
+    {
+      "title": "Inference Requests by Model (count)",
+      "type": "timeseries",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 18
+      },
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "fillOpacity": 10,
+            "drawStyle": "bars",
+            "stacking": {
+              "mode": "normal"
+            }
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "count_over_time({compose_service=\"envoy\"} |= \"ollama_inference\" | pattern `<_> script log: ollama_inference model=<model> endpoint=<_> prompt_tokens=<_> completion_tokens=<_> total_duration_s=<_> tokens_per_second=<_>` [$interval])",
+          "legendFormat": "{{model}}",
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "queryType": "range"
+        }
+      ]
+    },
+    {
+      "title": "Container Resources",
+      "type": "row",
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 26
+      },
+      "collapsed": false
+    },
+    {
+      "title": "Ollama CPU Usage",
+      "type": "timeseries",
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 0,
+        "y": 27
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P4169E866C3094E38"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "custom": {
+            "fillOpacity": 10
+          },
+          "min": 0
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(container_cpu_usage_seconds_total{name=~\"pico-claw-ollama-1\"}[$interval])",
+          "legendFormat": "Ollama CPU",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P4169E866C3094E38"
+          }
+        },
+        {
+          "expr": "rate(container_cpu_usage_seconds_total{name=~\"pico-claw-picoclaw-gateway-1\"}[$interval])",
+          "legendFormat": "PicoClaw CPU",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P4169E866C3094E38"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Ollama Memory Usage",
+      "type": "timeseries",
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 8,
+        "y": 27
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P4169E866C3094E38"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "custom": {
+            "fillOpacity": 10
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "container_memory_working_set_bytes{name=~\"pico-claw-ollama-1\"}",
+          "legendFormat": "Ollama",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P4169E866C3094E38"
+          }
+        },
+        {
+          "expr": "container_memory_working_set_bytes{name=~\"pico-claw-picoclaw-gateway-1\"}",
+          "legendFormat": "PicoClaw",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P4169E866C3094E38"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Ollama Network I/O",
+      "type": "timeseries",
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 16,
+        "y": 27
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P4169E866C3094E38"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "Bps",
+          "custom": {
+            "fillOpacity": 10
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(container_network_receive_bytes_total{name=~\"pico-claw-ollama-1\"}[$interval])",
+          "legendFormat": "Ollama RX",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P4169E866C3094E38"
+          }
+        },
+        {
+          "expr": "rate(container_network_transmit_bytes_total{name=~\"pico-claw-ollama-1\"}[$interval])",
+          "legendFormat": "Ollama TX",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P4169E866C3094E38"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Envoy Proxy Health",
+      "type": "row",
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 34
+      },
+      "collapsed": false
+    },
+    {
+      "title": "Active Connections",
+      "type": "stat",
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 0,
+        "y": 35
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P4169E866C3094E38"
+      },
+      "targets": [
+        {
+          "expr": "envoy_cluster_upstream_cx_active{envoy_cluster_name=\"ollama_cluster\"}",
+          "legendFormat": "Active",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P4169E866C3094E38"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Upstream Connection Errors",
+      "type": "timeseries",
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 6,
+        "y": 35
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P4169E866C3094E38"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "fillOpacity": 10
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(envoy_cluster_upstream_cx_connect_fail{envoy_cluster_name=\"ollama_cluster\"}[$interval])",
+          "legendFormat": "Connect Failures",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P4169E866C3094E38"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Upstream Bytes",
+      "type": "timeseries",
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 12,
+        "y": 35
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P4169E866C3094E38"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "Bps",
+          "custom": {
+            "fillOpacity": 10
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(envoy_cluster_upstream_cx_rx_bytes_total{envoy_cluster_name=\"ollama_cluster\"}[$interval])",
+          "legendFormat": "RX",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P4169E866C3094E38"
+          }
+        },
+        {
+          "expr": "rate(envoy_cluster_upstream_cx_tx_bytes_total{envoy_cluster_name=\"ollama_cluster\"}[$interval])",
+          "legendFormat": "TX",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P4169E866C3094E38"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Envoy Memory",
+      "type": "stat",
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 18,
+        "y": 35
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P4169E866C3094E38"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes"
+        }
+      },
+      "targets": [
+        {
+          "expr": "envoy_server_memory_allocated",
+          "legendFormat": "Allocated",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P4169E866C3094E38"
+          }
+        }
+      ]
+    },
+    {
+      "title": "PicoClaw Logs",
+      "type": "row",
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 40
+      },
+      "collapsed": false
+    },
+    {
+      "title": "PicoClaw Gateway Logs",
+      "type": "logs",
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 41
+      },
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "options": {
+        "showTime": true,
+        "showLabels": false,
+        "showCommonLabels": false,
+        "wrapLogMessage": true,
+        "enableLogDetails": true,
+        "sortOrder": "Descending"
+      },
+      "targets": [
+        {
+          "expr": "{compose_service=\"picoclaw-gateway\"}",
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,408 @@
+{
+  "title": "Docker Containers",
+  "uid": "docker-containers",
+  "tags": ["docker", "containers", "cadvisor"],
+  "timezone": "browser",
+  "refresh": "30s",
+  "time": {"from": "now-1h", "to": "now"},
+  "templating": {
+    "list": [
+      {
+        "name": "host",
+        "type": "query",
+        "datasource": {"type": "prometheus", "uid": "P4169E866C3094E38"},
+        "query": "label_values(container_last_seen{name!=\"\"}, host)",
+        "includeAll": true,
+        "multi": true,
+        "current": {"text": "All", "value": "$__all"}
+      }
+    ]
+  },
+  "panels": [
+    {
+      "title": "Containers Overview",
+      "type": "table",
+      "gridPos": {"h": 12, "w": 24, "x": 0, "y": 0},
+      "datasource": {"type": "prometheus", "uid": "P4169E866C3094E38"},
+      "fieldConfig": {
+        "defaults": {
+          "custom": {"align": "left", "filterable": true}
+        },
+        "overrides": [
+          {
+            "matcher": {"id": "byName", "options": "Uptime"},
+            "properties": [
+              {"id": "unit", "value": "dtdurations"},
+              {"id": "custom.width", "value": 140}
+            ]
+          },
+          {
+            "matcher": {"id": "byName", "options": "CPU %"},
+            "properties": [
+              {"id": "unit", "value": "percentunit"},
+              {"id": "decimals", "value": 2},
+              {"id": "custom.width", "value": 90},
+              {"id": "thresholds", "value": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "yellow", "value": 0.5}, {"color": "red", "value": 0.9}]}},
+              {"id": "custom.cellOptions", "value": {"type": "color-background", "mode": "basic"}}
+            ]
+          },
+          {
+            "matcher": {"id": "byName", "options": "Memory"},
+            "properties": [
+              {"id": "unit", "value": "bytes"},
+              {"id": "decimals", "value": 1},
+              {"id": "custom.width", "value": 110}
+            ]
+          },
+          {
+            "matcher": {"id": "byName", "options": "Memory Limit"},
+            "properties": [
+              {"id": "unit", "value": "bytes"},
+              {"id": "decimals", "value": 1},
+              {"id": "custom.width", "value": 110}
+            ]
+          },
+          {
+            "matcher": {"id": "byName", "options": "Net RX"},
+            "properties": [
+              {"id": "unit", "value": "Bps"},
+              {"id": "decimals", "value": 1},
+              {"id": "custom.width", "value": 100}
+            ]
+          },
+          {
+            "matcher": {"id": "byName", "options": "Net TX"},
+            "properties": [
+              {"id": "unit", "value": "Bps"},
+              {"id": "decimals", "value": 1},
+              {"id": "custom.width", "value": 100}
+            ]
+          },
+          {
+            "matcher": {"id": "byName", "options": "Host"},
+            "properties": [{"id": "custom.width", "value": 130}]
+          },
+          {
+            "matcher": {"id": "byName", "options": "Container"},
+            "properties": [{"id": "custom.width", "value": 300}]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "sortBy": [{"displayName": "Host", "desc": false}]
+      },
+      "targets": [
+        {
+          "refId": "uptime",
+          "expr": "time() - container_start_time_seconds{name!=\"\", host=~\"$host\"}",
+          "format": "table",
+          "instant": true
+        },
+        {
+          "refId": "cpu",
+          "expr": "rate(container_cpu_usage_seconds_total{name!=\"\", host=~\"$host\"}[5m])",
+          "format": "table",
+          "instant": true
+        },
+        {
+          "refId": "memory",
+          "expr": "container_memory_rss{name!=\"\", host=~\"$host\"}",
+          "format": "table",
+          "instant": true
+        },
+        {
+          "refId": "memlimit",
+          "expr": "container_spec_memory_limit_bytes{name!=\"\", host=~\"$host\"} > 0",
+          "format": "table",
+          "instant": true
+        },
+        {
+          "refId": "netrx",
+          "expr": "rate(container_network_receive_bytes_total{name!=\"\", host=~\"$host\"}[5m])",
+          "format": "table",
+          "instant": true
+        },
+        {
+          "refId": "nettx",
+          "expr": "rate(container_network_transmit_bytes_total{name!=\"\", host=~\"$host\"}[5m])",
+          "format": "table",
+          "instant": true
+        }
+      ],
+      "transformations": [
+        {
+          "id": "seriesToColumns",
+          "options": {"byField": "name"}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "Time 1": true,
+              "Time 2": true,
+              "Time 3": true,
+              "Time 4": true,
+              "Time 5": true,
+              "Time 6": true,
+              "__name__": true,
+              "__name__ 1": true,
+              "__name__ 2": true,
+              "__name__ 3": true,
+              "__name__ 4": true,
+              "__name__ 5": true,
+              "__name__ 6": true,
+              "id": true,
+              "id 1": true,
+              "id 2": true,
+              "id 3": true,
+              "id 4": true,
+              "id 5": true,
+              "id 6": true,
+              "image": true,
+              "image 1": true,
+              "image 2": true,
+              "image 3": true,
+              "image 4": true,
+              "image 5": true,
+              "image 6": true,
+              "instance": true,
+              "instance 1": true,
+              "instance 2": true,
+              "instance 3": true,
+              "instance 4": true,
+              "instance 5": true,
+              "instance 6": true,
+              "job": true,
+              "job 1": true,
+              "job 2": true,
+              "job 3": true,
+              "job 4": true,
+              "job 5": true,
+              "job 6": true,
+              "host 1": true,
+              "host 2": true,
+              "host 3": true,
+              "host 4": true,
+              "host 5": true,
+              "host 6": true,
+              "interface": true,
+              "interface 1": true,
+              "interface 2": true,
+              "container_label_com_docker_compose_project": true,
+              "container_label_com_docker_compose_service": true
+            },
+            "renameByName": {
+              "host": "Host",
+              "name": "Container",
+              "Value #uptime": "Uptime",
+              "Value #cpu": "CPU %",
+              "Value #memory": "Memory",
+              "Value #memlimit": "Memory Limit",
+              "Value #netrx": "Net RX",
+              "Value #nettx": "Net TX"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "title": "Container Count by Host",
+      "type": "stat",
+      "gridPos": {"h": 4, "w": 6, "x": 0, "y": 12},
+      "datasource": {"type": "prometheus", "uid": "P4169E866C3094E38"},
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "palette-classic-by-name"}
+        }
+      },
+      "options": {"colorMode": "background", "graphMode": "none", "textMode": "auto"},
+      "targets": [
+        {
+          "expr": "count(container_last_seen{name!=\"\", host=~\"$host\"}) by (host)",
+          "legendFormat": "{{host}}",
+          "instant": true
+        }
+      ]
+    },
+    {
+      "title": "Total Memory Usage by Host",
+      "type": "stat",
+      "gridPos": {"h": 4, "w": 6, "x": 6, "y": 12},
+      "datasource": {"type": "prometheus", "uid": "P4169E866C3094E38"},
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "color": {"mode": "palette-classic-by-name"}
+        }
+      },
+      "options": {"colorMode": "background", "graphMode": "none"},
+      "targets": [
+        {
+          "expr": "sum(container_memory_rss{name!=\"\", host=~\"$host\"}) by (host)",
+          "legendFormat": "{{host}}",
+          "instant": true
+        }
+      ]
+    },
+    {
+      "title": "Total CPU Usage by Host",
+      "type": "stat",
+      "gridPos": {"h": 4, "w": 6, "x": 12, "y": 12},
+      "datasource": {"type": "prometheus", "uid": "P4169E866C3094E38"},
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "decimals": 1,
+          "color": {"mode": "palette-classic-by-name"}
+        }
+      },
+      "options": {"colorMode": "background", "graphMode": "none"},
+      "targets": [
+        {
+          "expr": "sum(rate(container_cpu_usage_seconds_total{name!=\"\", host=~\"$host\"}[5m])) by (host)",
+          "legendFormat": "{{host}}",
+          "instant": true
+        }
+      ]
+    },
+    {
+      "title": "Total Network I/O by Host",
+      "type": "stat",
+      "gridPos": {"h": 4, "w": 6, "x": 18, "y": 12},
+      "datasource": {"type": "prometheus", "uid": "P4169E866C3094E38"},
+      "fieldConfig": {
+        "defaults": {
+          "unit": "Bps",
+          "color": {"mode": "palette-classic-by-name"}
+        }
+      },
+      "options": {"colorMode": "background", "graphMode": "none"},
+      "targets": [
+        {
+          "expr": "sum(rate(container_network_receive_bytes_total{name!=\"\", host=~\"$host\"}[5m])) by (host)",
+          "legendFormat": "{{host}} RX",
+          "instant": true
+        },
+        {
+          "expr": "sum(rate(container_network_transmit_bytes_total{name!=\"\", host=~\"$host\"}[5m])) by (host)",
+          "legendFormat": "{{host}} TX",
+          "instant": true
+        }
+      ]
+    },
+    {
+      "title": "CPU Usage by Container",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16},
+      "datasource": {"type": "prometheus", "uid": "P4169E866C3094E38"},
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "custom": {"fillOpacity": 10, "stacking": {"mode": "none"}}
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(container_cpu_usage_seconds_total{name!=\"\", host=~\"$host\"}[5m])",
+          "legendFormat": "{{host}}/{{name}}"
+        }
+      ]
+    },
+    {
+      "title": "Memory Usage by Container",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16},
+      "datasource": {"type": "prometheus", "uid": "P4169E866C3094E38"},
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "custom": {"fillOpacity": 10, "stacking": {"mode": "none"}}
+        }
+      },
+      "targets": [
+        {
+          "expr": "container_memory_rss{name!=\"\", host=~\"$host\"}",
+          "legendFormat": "{{host}}/{{name}}"
+        }
+      ]
+    },
+    {
+      "title": "Network Receive by Container",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 24},
+      "datasource": {"type": "prometheus", "uid": "P4169E866C3094E38"},
+      "fieldConfig": {
+        "defaults": {
+          "unit": "Bps",
+          "custom": {"fillOpacity": 10}
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(container_network_receive_bytes_total{name!=\"\", host=~\"$host\"}[5m])",
+          "legendFormat": "{{host}}/{{name}}"
+        }
+      ]
+    },
+    {
+      "title": "Network Transmit by Container",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 24},
+      "datasource": {"type": "prometheus", "uid": "P4169E866C3094E38"},
+      "fieldConfig": {
+        "defaults": {
+          "unit": "Bps",
+          "custom": {"fillOpacity": 10}
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(container_network_transmit_bytes_total{name!=\"\", host=~\"$host\"}[5m])",
+          "legendFormat": "{{host}}/{{name}}"
+        }
+      ]
+    },
+    {
+      "title": "Disk I/O by Container",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 32},
+      "datasource": {"type": "prometheus", "uid": "P4169E866C3094E38"},
+      "fieldConfig": {
+        "defaults": {
+          "unit": "Bps",
+          "custom": {"fillOpacity": 10}
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(container_fs_reads_bytes_total{name!=\"\", host=~\"$host\"}[5m])",
+          "legendFormat": "{{host}}/{{name}} read"
+        },
+        {
+          "expr": "rate(container_fs_writes_bytes_total{name!=\"\", host=~\"$host\"}[5m])",
+          "legendFormat": "{{host}}/{{name}} write"
+        }
+      ]
+    },
+    {
+      "title": "Container Restarts (OOM Events)",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 32},
+      "datasource": {"type": "prometheus", "uid": "P4169E866C3094E38"},
+      "fieldConfig": {
+        "defaults": {
+          "custom": {"fillOpacity": 30, "drawStyle": "bars"},
+          "color": {"mode": "fixed", "fixedColor": "red"}
+        }
+      },
+      "targets": [
+        {
+          "expr": "increase(container_oom_events_total{name!=\"\", host=~\"$host\"}[5m]) > 0",
+          "legendFormat": "{{host}}/{{name}}"
+        }
+      ]
+    }
+  ]
+}

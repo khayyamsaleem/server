@@ -1,0 +1,96 @@
+{
+  "title": "Logs Explorer",
+  "uid": "logs-explorer",
+  "tags": ["logs", "loki"],
+  "timezone": "browser",
+  "refresh": "30s",
+  "time": {"from": "now-1h", "to": "now"},
+  "templating": {
+    "list": [
+      {
+        "name": "host",
+        "type": "query",
+        "datasource": {"type": "loki", "uid": "P8E80F9AEF21F6940"},
+        "query": {"label": "host", "type": 1},
+        "includeAll": true,
+        "multi": true,
+        "current": {"text": "All", "value": "$__all"}
+      },
+      {
+        "name": "compose_project",
+        "type": "query",
+        "datasource": {"type": "loki", "uid": "P8E80F9AEF21F6940"},
+        "query": {"label": "compose_project", "type": 1},
+        "includeAll": true,
+        "multi": true,
+        "current": {"text": "All", "value": "$__all"}
+      },
+      {
+        "name": "compose_service",
+        "type": "query",
+        "datasource": {"type": "loki", "uid": "P8E80F9AEF21F6940"},
+        "query": {"label": "compose_service", "type": 1},
+        "includeAll": true,
+        "multi": true,
+        "current": {"text": "All", "value": "$__all"}
+      },
+      {
+        "name": "search",
+        "type": "textbox",
+        "current": {"text": "", "value": ""},
+        "label": "Search"
+      }
+    ]
+  },
+  "panels": [
+    {
+      "title": "Log Volume",
+      "type": "timeseries",
+      "gridPos": {"h": 5, "w": 24, "x": 0, "y": 0},
+      "datasource": {"type": "loki", "uid": "P8E80F9AEF21F6940"},
+      "fieldConfig": {"defaults": {"custom": {"fillOpacity": 30, "stacking": {"mode": "normal"}, "drawStyle": "bars"}}},
+      "targets": [
+        {
+          "expr": "sum by (compose_service) (count_over_time({host=~\"$host\", compose_project=~\"$compose_project\", compose_service=~\"$compose_service\"} |= `$search` [1m]))",
+          "legendFormat": "{{compose_service}}",
+          "datasource": {"type": "loki", "uid": "P8E80F9AEF21F6940"}
+        }
+      ]
+    },
+    {
+      "title": "Error Log Volume",
+      "type": "timeseries",
+      "gridPos": {"h": 5, "w": 24, "x": 0, "y": 5},
+      "datasource": {"type": "loki", "uid": "P8E80F9AEF21F6940"},
+      "fieldConfig": {"defaults": {"color": {"mode": "fixed", "fixedColor": "red"}, "custom": {"fillOpacity": 30, "drawStyle": "bars"}}},
+      "targets": [
+        {
+          "expr": "sum by (compose_service) (count_over_time({host=~\"$host\", compose_project=~\"$compose_project\", compose_service=~\"$compose_service\"} |~ `(?i)(error|err|panic|fatal|exception|fail)` [1m]))",
+          "legendFormat": "{{compose_service}}",
+          "datasource": {"type": "loki", "uid": "P8E80F9AEF21F6940"}
+        }
+      ]
+    },
+    {
+      "title": "Logs",
+      "type": "logs",
+      "gridPos": {"h": 20, "w": 24, "x": 0, "y": 10},
+      "datasource": {"type": "loki", "uid": "P8E80F9AEF21F6940"},
+      "options": {
+        "showTime": true,
+        "showLabels": true,
+        "showCommonLabels": false,
+        "wrapLogMessage": true,
+        "enableLogDetails": true,
+        "sortOrder": "Descending",
+        "dedupStrategy": "none"
+      },
+      "targets": [
+        {
+          "expr": "{host=~\"$host\", compose_project=~\"$compose_project\", compose_service=~\"$compose_service\"} |= `$search`",
+          "datasource": {"type": "loki", "uid": "P8E80F9AEF21F6940"}
+        }
+      ]
+    }
+  ]
+}
