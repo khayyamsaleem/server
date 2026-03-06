@@ -103,6 +103,32 @@ services:
           cpus: '0.01'
           memory: 16M
 
+  tailscale-exporter:
+    image: adinhodovic/tailscale-exporter:latest
+    networks:
+    - webgateway
+    environment:
+    - TAILSCALE_OAUTH_CLIENT_ID=${TAILSCALE_OAUTH_CLIENT_ID}
+    - TAILSCALE_OAUTH_CLIENT_SECRET=${TAILSCALE_OAUTH_CLIENT_SECRET}
+    - TAILSCALE_TAILNET=${TAILSCALE_TAILNET}
+    labels:
+      com.centurylinklabs.watchtower.enable: 'true'
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:9250/metrics > /dev/null || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.10'
+          memory: 32M
+        reservations:
+          cpus: '0.01'
+          memory: 16M
+
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
     networks:

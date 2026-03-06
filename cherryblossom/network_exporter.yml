@@ -1,0 +1,172 @@
+main:
+  nameserver: 10.0.0.1
+  refresh: 5m
+
+icmp:
+  interval: 30s
+  timeout: 1s
+  count: 3
+
+tcp:
+  interval: 60s
+  timeout: 2s
+
+targets:
+  - name: xfinity-gateway
+    host: 10.0.0.1
+    type: ICMP
+    labels:
+      device_type: router
+      vendor: xfinity
+  - name: raspberrypi-adguard
+    host: 10.0.0.47
+    type: ICMP TCP
+    labels:
+      device_type: server
+      vendor: raspberry-pi
+  - name: proxmox-optiplex
+    host: 10.0.0.68
+    type: ICMP TCP
+    labels:
+      device_type: server
+      vendor: dell
+  - name: cherryblossom
+    host: 10.0.0.71
+    type: ICMP
+    labels:
+      device_type: server
+      vendor: custom
+  - name: hp-printer
+    host: 10.0.0.188
+    type: ICMP TCP
+    labels:
+      device_type: printer
+      vendor: hp
+  - name: apple-tv-1
+    host: 10.0.0.135
+    type: ICMP
+    labels:
+      device_type: media
+      vendor: apple
+  - name: apple-tv-2
+    host: 10.0.0.187
+    type: ICMP
+    labels:
+      device_type: media
+      vendor: apple
+  - name: google-nest-hub
+    host: 10.0.0.248
+    type: ICMP
+    labels:
+      device_type: media
+      vendor: google
+  - name: google-home-1
+    host: 10.0.0.27
+    type: ICMP
+    labels:
+      device_type: media
+      vendor: google
+  - name: google-nest-2
+    host: 10.0.0.37
+    type: ICMP
+    labels:
+      device_type: media
+      vendor: google
+  - name: google-home-3
+    host: 10.0.0.197
+    type: ICMP
+    labels:
+      device_type: media
+      vendor: google
+  - name: google-nest-4
+    host: 10.0.0.168
+    type: ICMP
+    labels:
+      device_type: media
+      vendor: google
+  - name: amazon-echo-1
+    host: 10.0.0.196
+    type: ICMP
+    labels:
+      device_type: media
+      vendor: amazon
+  - name: amazon-echo-2
+    host: 10.0.0.221
+    type: ICMP
+    labels:
+      device_type: media
+      vendor: amazon
+  - name: lg-tv
+    host: 10.0.0.205
+    type: ICMP
+    labels:
+      device_type: media
+      vendor: lg
+  - name: d-link-device
+    host: 10.0.0.13
+    type: ICMP
+    labels:
+      device_type: iot
+      vendor: d-link
+  - name: esp32-iot
+    host: 10.0.0.24
+    type: ICMP
+    labels:
+      device_type: iot
+      vendor: espressif
+  - name: samsung-1
+    host: 10.0.0.129
+    type: ICMP
+    labels:
+      device_type: mobile
+      vendor: samsung
+  - name: samsung-2
+    host: 10.0.0.159
+    type: ICMP
+    labels:
+      device_type: mobile
+      vendor: samsung
+  - name: xfi-pod-1
+    host: 10.0.0.124
+    type: ICMP
+    labels:
+      device_type: network
+      vendor: xfinity
+  - name: xfi-pod-2
+    host: 10.0.0.226
+    type: ICMP
+    labels:
+      device_type: network
+      vendor: xfinity
+
+tcp_targets:
+  - name: raspberrypi-ssh
+    host: 10.0.0.47
+    port: 22
+    labels:
+      service: ssh
+  - name: raspberrypi-adguard-http
+    host: 10.0.0.47
+    port: 80
+    labels:
+      service: adguard
+  - name: raspberrypi-dns
+    host: 10.0.0.47
+    port: 53
+    labels:
+      service: dns
+  - name: proxmox-api
+    host: 10.0.0.68
+    port: 8006
+    labels:
+      service: proxmox
+  - name: proxmox-ssh
+    host: 10.0.0.68
+    port: 22
+    labels:
+      service: ssh
+  - name: hp-printer-ipp
+    host: 10.0.0.188
+    port: 631
+    labels:
+      service: ipp
