@@ -21,7 +21,7 @@
       "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
       "targets": [
         {
-          "expr": "count(net_icmp_rtt_best{job=\"network\"} > 0)",
+          "expr": "count(ping_loss_percent{job=\"network\"} < 1)",
           "legendFormat": ""
         }
       ],
@@ -38,7 +38,7 @@
       "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
       "targets": [
         {
-          "expr": "avg(net_icmp_rtt_mean{job=\"network\"})",
+          "expr": "avg(ping_rtt_seconds{job=\"network\", type=\"mean\"})",
           "legendFormat": ""
         }
       ],
@@ -58,7 +58,7 @@
       "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
       "targets": [
         {
-          "expr": "avg(net_icmp_loss{job=\"network\"})",
+          "expr": "avg(ping_loss_percent{job=\"network\"})",
           "legendFormat": ""
         }
       ],
@@ -78,7 +78,7 @@
       "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
       "targets": [
         {
-          "expr": "net_icmp_rtt_mean{name=\"xfinity-gateway\"}",
+          "expr": "ping_rtt_seconds{name=\"xfinity-gateway\", type=\"mean\"}",
           "legendFormat": ""
         }
       ],
@@ -104,21 +104,21 @@
       "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
       "targets": [
         {
-          "expr": "net_icmp_rtt_mean{job=\"network\"}",
+          "expr": "ping_rtt_seconds{job=\"network\", type=\"mean\"}",
           "format": "table",
           "instant": true,
           "legendFormat": "",
           "refId": "A"
         },
         {
-          "expr": "net_icmp_rtt_best{job=\"network\"}",
+          "expr": "ping_rtt_seconds{job=\"network\", type=\"best\"}",
           "format": "table",
           "instant": true,
           "legendFormat": "",
           "refId": "B"
         },
         {
-          "expr": "net_icmp_loss{job=\"network\"}",
+          "expr": "ping_loss_percent{job=\"network\"}",
           "format": "table",
           "instant": true,
           "legendFormat": "",
@@ -133,7 +133,7 @@
         {
           "id": "organize",
           "options": {
-            "excludeByName": { "Time 1": true, "Time 2": true, "Time 3": true, "job 1": true, "job 2": true, "job 3": true, "instance 1": true, "instance 2": true, "instance 3": true, "__name__ 1": true, "__name__ 2": true, "__name__ 3": true, "host 1": true, "host 2": true, "host 3": true },
+            "excludeByName": { "Time 1": true, "Time 2": true, "Time 3": true, "job 1": true, "job 2": true, "job 3": true, "instance 1": true, "instance 2": true, "instance 3": true, "__name__ 1": true, "__name__ 2": true, "__name__ 3": true, "host 1": true, "host 2": true, "host 3": true, "type 1": true, "type 2": true, "target 1": true, "target 2": true, "target 3": true, "target_ip 1": true, "target_ip 2": true, "target_ip 3": true },
             "indexByName": { "name": 0, "device_type 1": 1, "vendor 1": 2, "Value #A": 3, "Value #B": 4, "Value #C": 5 },
             "renameByName": {
               "name": "Device",
@@ -175,7 +175,7 @@
       "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
       "targets": [
         {
-          "expr": "net_icmp_rtt_mean{device_type=~\"router|server|network\"}",
+          "expr": "ping_rtt_seconds{device_type=~\"router|server|network\", type=\"mean\"}",
           "legendFormat": "{{name}}"
         }
       ],
@@ -194,7 +194,7 @@
       "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
       "targets": [
         {
-          "expr": "net_icmp_rtt_mean{device_type=~\"media|iot|printer|mobile\"}",
+          "expr": "ping_rtt_seconds{device_type=~\"media|iot|printer|mobile\", type=\"mean\"}",
           "legendFormat": "{{name}}"
         }
       ],
@@ -219,7 +219,7 @@
       "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
       "targets": [
         {
-          "expr": "net_icmp_loss{job=\"network\"} > 0",
+          "expr": "ping_loss_percent{job=\"network\"} > 0",
           "legendFormat": "{{name}}"
         }
       ],
@@ -245,7 +245,7 @@
       "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
       "targets": [
         {
-          "expr": "net_tcp_connection_status{job=\"network\"}",
+          "expr": "tcp_connection_status{job=\"network\"}",
           "legendFormat": "{{name}}"
         }
       ],
@@ -266,7 +266,7 @@
       "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
       "targets": [
         {
-          "expr": "net_tcp_connection_seconds{job=\"network\"}",
+          "expr": "tcp_connection_seconds{job=\"network\"}",
           "legendFormat": "{{name}}"
         }
       ],

@@ -15,7 +15,7 @@
       "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
       "targets": [
         {
-          "expr": "count(tailscale_devices)",
+          "expr": "count(tailscale_devices_info)",
           "legendFormat": ""
         }
       ],
@@ -32,7 +32,7 @@
       "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
       "targets": [
         {
-          "expr": "count(tailscale_devices{online=\"true\"})",
+          "expr": "count(tailscale_devices_online == 1)",
           "legendFormat": ""
         }
       ],
@@ -49,7 +49,7 @@
       "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
       "targets": [
         {
-          "expr": "count(tailscale_devices{online=\"false\"})",
+          "expr": "count(tailscale_devices_online == 0)",
           "legendFormat": ""
         }
       ],
@@ -66,25 +66,36 @@
       "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
       "targets": [
         {
-          "expr": "tailscale_devices",
+          "expr": "tailscale_devices_info",
           "format": "table",
           "instant": true,
-          "legendFormat": ""
+          "legendFormat": "",
+          "refId": "A"
+        },
+        {
+          "expr": "tailscale_devices_online",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "refId": "B"
         }
       ],
       "transformations": [
         {
+          "id": "seriesToColumns",
+          "options": { "byField": "hostname" }
+        },
+        {
           "id": "organize",
           "options": {
-            "excludeByName": { "Time": true, "Value": true, "__name__": true, "job": true, "instance": true },
+            "excludeByName": { "Time 1": true, "Time 2": true, "Value #A": true, "__name__ 1": true, "__name__ 2": true, "job 1": true, "job 2": true, "instance 1": true, "instance 2": true, "id 1": true, "id 2": true, "machine_key 1": true, "node_key 1": true, "tailnet 1": true, "tailnet 2": true, "name 1": true, "name 2": true, "machine_key 2": true, "node_key 2": true, "client_version 1": true },
+            "indexByName": { "hostname": 0, "tailscale_ip 1": 1, "os 1": 2, "Value #B": 3, "user 1": 4 },
             "renameByName": {
               "hostname": "Hostname",
-              "os": "OS",
-              "online": "Online",
-              "tailscale_ips": "Tailscale IP",
-              "authorized": "Authorized",
-              "tags": "Tags",
-              "user": "User"
+              "os 1": "OS",
+              "tailscale_ip 1": "Tailscale IP",
+              "user 1": "User",
+              "Value #B": "Online"
             }
           }
         }
@@ -97,9 +108,10 @@
               {
                 "id": "mappings",
                 "value": [
-                  { "type": "value", "options": { "true": { "text": "Online", "color": "green" }, "false": { "text": "Offline", "color": "red" } } }
+                  { "type": "value", "options": { "1": { "text": "Online", "color": "green" }, "0": { "text": "Offline", "color": "red" } } }
                 ]
-              }
+              },
+              { "id": "custom.cellOptions", "value": { "type": "color-background" } }
             ]
           }
         ]
@@ -113,11 +125,11 @@
       "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
       "targets": [
         {
-          "expr": "count(tailscale_devices{online=\"true\"})",
+          "expr": "count(tailscale_devices_online == 1)",
           "legendFormat": "Online"
         },
         {
-          "expr": "count(tailscale_devices{online=\"false\"})",
+          "expr": "count(tailscale_devices_online == 0)",
           "legendFormat": "Offline"
         }
       ],
@@ -139,7 +151,7 @@
       "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
       "targets": [
         {
-          "expr": "count by (os) (tailscale_devices)",
+          "expr": "count by (os) (tailscale_devices_info)",
           "legendFormat": "{{os}}"
         }
       ],
