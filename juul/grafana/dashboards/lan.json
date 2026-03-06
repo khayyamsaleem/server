@@ -1,52 +1,107 @@
 {
   "uid": "lan-701-maple",
   "title": "701 Maple Hill Drive LAN",
-  "tags": ["lan", "network"],
+  "tags": [
+    "lan",
+    "network"
+  ],
   "timezone": "browser",
   "editable": true,
   "refresh": "30s",
-  "time": { "from": "now-1h", "to": "now" },
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
   "panels": [
     {
       "id": 100,
       "type": "row",
       "title": "Overview",
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 }
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      }
     },
     {
       "id": 1,
       "type": "stat",
       "title": "Devices Online",
-      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 1 },
-      "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 1
+      },
+      "datasource": {
+        "type": "prometheus"
+      },
       "targets": [
         {
           "expr": "count(ping_loss_percent{job=\"network\"} < 1)",
           "legendFormat": ""
         }
       ],
-      "options": { "colorMode": "value", "graphMode": "none" },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none"
+      },
       "fieldConfig": {
-        "defaults": { "thresholds": { "steps": [{ "color": "green", "value": null }] } }
+        "defaults": {
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        }
       }
     },
     {
       "id": 2,
       "type": "stat",
       "title": "Avg Latency",
-      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 1 },
-      "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 1
+      },
+      "datasource": {
+        "type": "prometheus"
+      },
       "targets": [
         {
           "expr": "avg(ping_rtt_seconds{job=\"network\", type=\"mean\"})",
           "legendFormat": ""
         }
       ],
-      "options": { "colorMode": "value", "graphMode": "area" },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area"
+      },
       "fieldConfig": {
         "defaults": {
           "unit": "s",
-          "thresholds": { "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 0.01 }, { "color": "red", "value": 0.1 }] }
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 0.01
+              },
+              {
+                "color": "red",
+                "value": 0.1
+              }
+            ]
+          }
         }
       }
     },
@@ -54,19 +109,44 @@
       "id": 3,
       "type": "stat",
       "title": "Total Packet Loss",
-      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 1 },
-      "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 12,
+        "y": 1
+      },
+      "datasource": {
+        "type": "prometheus"
+      },
       "targets": [
         {
           "expr": "avg(ping_loss_percent{job=\"network\"})",
           "legendFormat": ""
         }
       ],
-      "options": { "colorMode": "value", "graphMode": "area" },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area"
+      },
       "fieldConfig": {
         "defaults": {
           "unit": "percentunit",
-          "thresholds": { "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 0.01 }, { "color": "red", "value": 0.1 }] }
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 0.01
+              },
+              {
+                "color": "red",
+                "value": 0.1
+              }
+            ]
+          }
         }
       }
     },
@@ -74,19 +154,44 @@
       "id": 4,
       "type": "stat",
       "title": "Gateway Latency",
-      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 1 },
-      "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 18,
+        "y": 1
+      },
+      "datasource": {
+        "type": "prometheus"
+      },
       "targets": [
         {
           "expr": "ping_rtt_seconds{name=\"xfinity-gateway\", type=\"mean\"}",
           "legendFormat": ""
         }
       ],
-      "options": { "colorMode": "value", "graphMode": "area" },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area"
+      },
       "fieldConfig": {
         "defaults": {
           "unit": "s",
-          "thresholds": { "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 0.005 }, { "color": "red", "value": 0.05 }] }
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 0.005
+              },
+              {
+                "color": "red",
+                "value": 0.05
+              }
+            ]
+          }
         }
       }
     },
@@ -94,14 +199,26 @@
       "id": 101,
       "type": "row",
       "title": "Device Status",
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 5 }
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 5
+      }
     },
     {
       "id": 5,
       "type": "table",
       "title": "All Devices",
-      "gridPos": { "h": 12, "w": 24, "x": 0, "y": 6 },
-      "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 6
+      },
+      "datasource": {
+        "type": "prometheus"
+      },
       "targets": [
         {
           "expr": "ping_rtt_seconds{job=\"network\", type=\"mean\"}",
@@ -128,13 +245,46 @@
       "transformations": [
         {
           "id": "seriesToColumns",
-          "options": { "byField": "name" }
+          "options": {
+            "byField": "name"
+          }
         },
         {
           "id": "organize",
           "options": {
-            "excludeByName": { "Time 1": true, "Time 2": true, "Time 3": true, "job 1": true, "job 2": true, "job 3": true, "instance 1": true, "instance 2": true, "instance 3": true, "__name__ 1": true, "__name__ 2": true, "__name__ 3": true, "host 1": true, "host 2": true, "host 3": true, "type 1": true, "type 2": true, "target 1": true, "target 2": true, "target 3": true, "target_ip 1": true, "target_ip 2": true, "target_ip 3": true },
-            "indexByName": { "name": 0, "device_type 1": 1, "vendor 1": 2, "Value #A": 3, "Value #B": 4, "Value #C": 5 },
+            "excludeByName": {
+              "Time 1": true,
+              "Time 2": true,
+              "Time 3": true,
+              "job 1": true,
+              "job 2": true,
+              "job 3": true,
+              "instance 1": true,
+              "instance 2": true,
+              "instance 3": true,
+              "__name__ 1": true,
+              "__name__ 2": true,
+              "__name__ 3": true,
+              "host 1": true,
+              "host 2": true,
+              "host 3": true,
+              "type 1": true,
+              "type 2": true,
+              "target 1": true,
+              "target 2": true,
+              "target 3": true,
+              "target_ip 1": true,
+              "target_ip 2": true,
+              "target_ip 3": true
+            },
+            "indexByName": {
+              "name": 0,
+              "device_type 1": 1,
+              "vendor 1": 2,
+              "Value #A": 3,
+              "Value #B": 4,
+              "Value #C": 5
+            },
             "renameByName": {
               "name": "Device",
               "device_type 1": "Type",
@@ -148,14 +298,69 @@
       ],
       "fieldConfig": {
         "overrides": [
-          { "matcher": { "id": "byName", "options": "Avg RTT" }, "properties": [{ "id": "unit", "value": "s" }, { "id": "decimals", "value": 3 }] },
-          { "matcher": { "id": "byName", "options": "Best RTT" }, "properties": [{ "id": "unit", "value": "s" }, { "id": "decimals", "value": 3 }] },
           {
-            "matcher": { "id": "byName", "options": "Packet Loss" },
+            "matcher": {
+              "id": "byName",
+              "options": "Avg RTT"
+            },
             "properties": [
-              { "id": "unit", "value": "percentunit" },
-              { "id": "thresholds", "value": { "steps": [{ "color": "green", "value": null }, { "color": "red", "value": 0.01 }] } },
-              { "id": "custom.cellOptions", "value": { "type": "color-background" } }
+              {
+                "id": "unit",
+                "value": "s"
+              },
+              {
+                "id": "decimals",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Best RTT"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "s"
+              },
+              {
+                "id": "decimals",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Packet Loss"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "red",
+                      "value": 0.01
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background"
+                }
+              }
             ]
           }
         ]
@@ -165,14 +370,26 @@
       "id": 102,
       "type": "row",
       "title": "Latency",
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 18 }
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 18
+      }
     },
     {
       "id": 6,
       "type": "timeseries",
       "title": "ICMP Latency - Infrastructure",
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 19 },
-      "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 19
+      },
+      "datasource": {
+        "type": "prometheus"
+      },
       "targets": [
         {
           "expr": "ping_rtt_seconds{device_type=~\"router|server|network\", type=\"mean\"}",
@@ -182,7 +399,9 @@
       "fieldConfig": {
         "defaults": {
           "unit": "s",
-          "custom": { "fillOpacity": 10 }
+          "custom": {
+            "fillOpacity": 10
+          }
         }
       }
     },
@@ -190,8 +409,15 @@
       "id": 7,
       "type": "timeseries",
       "title": "ICMP Latency - Media & IoT",
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 19 },
-      "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 19
+      },
+      "datasource": {
+        "type": "prometheus"
+      },
       "targets": [
         {
           "expr": "ping_rtt_seconds{device_type=~\"media|iot|printer|mobile\", type=\"mean\"}",
@@ -201,7 +427,9 @@
       "fieldConfig": {
         "defaults": {
           "unit": "s",
-          "custom": { "fillOpacity": 10 }
+          "custom": {
+            "fillOpacity": 10
+          }
         }
       }
     },
@@ -209,14 +437,26 @@
       "id": 103,
       "type": "row",
       "title": "Packet Loss",
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 27 }
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 27
+      }
     },
     {
       "id": 8,
       "type": "timeseries",
       "title": "Packet Loss by Device",
-      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 28 },
-      "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 28
+      },
+      "datasource": {
+        "type": "prometheus"
+      },
       "targets": [
         {
           "expr": "ping_loss_percent{job=\"network\"} > 0",
@@ -226,8 +466,13 @@
       "fieldConfig": {
         "defaults": {
           "unit": "percentunit",
-          "custom": { "fillOpacity": 30, "drawStyle": "bars" },
-          "color": { "mode": "palette-classic" }
+          "custom": {
+            "fillOpacity": 30,
+            "drawStyle": "bars"
+          },
+          "color": {
+            "mode": "palette-classic"
+          }
         }
       }
     },
@@ -235,14 +480,26 @@
       "id": 104,
       "type": "row",
       "title": "Service Health",
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 36 }
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 36
+      }
     },
     {
       "id": 9,
       "type": "state-timeline",
       "title": "TCP Service Availability",
-      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 37 },
-      "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 37
+      },
+      "datasource": {
+        "type": "prometheus"
+      },
       "targets": [
         {
           "expr": "tcp_connection_status{job=\"network\"}",
@@ -252,9 +509,23 @@
       "fieldConfig": {
         "defaults": {
           "mappings": [
-            { "type": "value", "options": { "1": { "text": "UP", "color": "green" }, "0": { "text": "DOWN", "color": "red" } } }
+            {
+              "type": "value",
+              "options": {
+                "1": {
+                  "text": "UP",
+                  "color": "green"
+                },
+                "0": {
+                  "text": "DOWN",
+                  "color": "red"
+                }
+              }
+            }
           ],
-          "custom": { "fillOpacity": 80 }
+          "custom": {
+            "fillOpacity": 80
+          }
         }
       }
     },
@@ -262,8 +533,15 @@
       "id": 10,
       "type": "timeseries",
       "title": "TCP Connection Time",
-      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 45 },
-      "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 45
+      },
+      "datasource": {
+        "type": "prometheus"
+      },
       "targets": [
         {
           "expr": "tcp_connection_seconds{job=\"network\"}",
@@ -273,7 +551,9 @@
       "fieldConfig": {
         "defaults": {
           "unit": "s",
-          "custom": { "fillOpacity": 10 }
+          "custom": {
+            "fillOpacity": 10
+          }
         }
       }
     }

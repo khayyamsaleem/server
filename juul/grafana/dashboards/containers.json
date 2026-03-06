@@ -1,20 +1,32 @@
 {
   "title": "Docker Containers",
   "uid": "docker-containers",
-  "tags": ["docker", "containers", "cadvisor"],
+  "tags": [
+    "docker",
+    "containers",
+    "cadvisor"
+  ],
   "timezone": "browser",
   "refresh": "30s",
-  "time": {"from": "now-1h", "to": "now"},
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
   "templating": {
     "list": [
       {
         "name": "host",
         "type": "query",
-        "datasource": {"type": "prometheus", "uid": "P4169E866C3094E38"},
+        "datasource": {
+          "type": "prometheus"
+        },
         "query": "label_values(container_last_seen{name!=\"\"}, host)",
         "includeAll": true,
         "multi": true,
-        "current": {"text": "All", "value": "$__all"}
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        }
       }
     ]
   },
@@ -22,75 +34,200 @@
     {
       "title": "Containers Overview",
       "type": "table",
-      "gridPos": {"h": 12, "w": 24, "x": 0, "y": 0},
-      "datasource": {"type": "prometheus", "uid": "P4169E866C3094E38"},
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "datasource": {
+        "type": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
-          "custom": {"align": "left", "filterable": true}
+          "custom": {
+            "align": "left",
+            "filterable": true
+          }
         },
         "overrides": [
           {
-            "matcher": {"id": "byName", "options": "Uptime"},
+            "matcher": {
+              "id": "byName",
+              "options": "Uptime"
+            },
             "properties": [
-              {"id": "unit", "value": "dtdurations"},
-              {"id": "custom.width", "value": 140}
+              {
+                "id": "unit",
+                "value": "dtdurations"
+              },
+              {
+                "id": "custom.width",
+                "value": 140
+              }
             ]
           },
           {
-            "matcher": {"id": "byName", "options": "CPU %"},
+            "matcher": {
+              "id": "byName",
+              "options": "CPU %"
+            },
             "properties": [
-              {"id": "unit", "value": "percentunit"},
-              {"id": "decimals", "value": 2},
-              {"id": "custom.width", "value": 90},
-              {"id": "thresholds", "value": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "yellow", "value": 0.5}, {"color": "red", "value": 0.9}]}},
-              {"id": "custom.cellOptions", "value": {"type": "color-background", "mode": "basic"}}
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.width",
+                "value": 90
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 0.5
+                    },
+                    {
+                      "color": "red",
+                      "value": 0.9
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background",
+                  "mode": "basic"
+                }
+              }
             ]
           },
           {
-            "matcher": {"id": "byName", "options": "Memory"},
+            "matcher": {
+              "id": "byName",
+              "options": "Memory"
+            },
             "properties": [
-              {"id": "unit", "value": "bytes"},
-              {"id": "decimals", "value": 1},
-              {"id": "custom.width", "value": 110}
+              {
+                "id": "unit",
+                "value": "bytes"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              },
+              {
+                "id": "custom.width",
+                "value": 110
+              }
             ]
           },
           {
-            "matcher": {"id": "byName", "options": "Memory Limit"},
+            "matcher": {
+              "id": "byName",
+              "options": "Memory Limit"
+            },
             "properties": [
-              {"id": "unit", "value": "bytes"},
-              {"id": "decimals", "value": 1},
-              {"id": "custom.width", "value": 110}
+              {
+                "id": "unit",
+                "value": "bytes"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              },
+              {
+                "id": "custom.width",
+                "value": 110
+              }
             ]
           },
           {
-            "matcher": {"id": "byName", "options": "Net RX"},
+            "matcher": {
+              "id": "byName",
+              "options": "Net RX"
+            },
             "properties": [
-              {"id": "unit", "value": "Bps"},
-              {"id": "decimals", "value": 1},
-              {"id": "custom.width", "value": 100}
+              {
+                "id": "unit",
+                "value": "Bps"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              },
+              {
+                "id": "custom.width",
+                "value": 100
+              }
             ]
           },
           {
-            "matcher": {"id": "byName", "options": "Net TX"},
+            "matcher": {
+              "id": "byName",
+              "options": "Net TX"
+            },
             "properties": [
-              {"id": "unit", "value": "Bps"},
-              {"id": "decimals", "value": 1},
-              {"id": "custom.width", "value": 100}
+              {
+                "id": "unit",
+                "value": "Bps"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              },
+              {
+                "id": "custom.width",
+                "value": 100
+              }
             ]
           },
           {
-            "matcher": {"id": "byName", "options": "Host"},
-            "properties": [{"id": "custom.width", "value": 130}]
+            "matcher": {
+              "id": "byName",
+              "options": "Host"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 130
+              }
+            ]
           },
           {
-            "matcher": {"id": "byName", "options": "Container"},
-            "properties": [{"id": "custom.width", "value": 300}]
+            "matcher": {
+              "id": "byName",
+              "options": "Container"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 300
+              }
+            ]
           }
         ]
       },
       "options": {
         "showHeader": true,
-        "sortBy": [{"displayName": "Host", "desc": false}]
+        "sortBy": [
+          {
+            "displayName": "Host",
+            "desc": false
+          }
+        ]
       },
       "targets": [
         {
@@ -133,7 +270,9 @@
       "transformations": [
         {
           "id": "seriesToColumns",
-          "options": {"byField": "name"}
+          "options": {
+            "byField": "name"
+          }
         },
         {
           "id": "organize",
@@ -210,14 +349,27 @@
     {
       "title": "Container Count by Host",
       "type": "stat",
-      "gridPos": {"h": 4, "w": 6, "x": 0, "y": 12},
-      "datasource": {"type": "prometheus", "uid": "P4169E866C3094E38"},
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 12
+      },
+      "datasource": {
+        "type": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
-          "color": {"mode": "palette-classic-by-name"}
+          "color": {
+            "mode": "palette-classic-by-name"
+          }
         }
       },
-      "options": {"colorMode": "background", "graphMode": "none", "textMode": "auto"},
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "textMode": "auto"
+      },
       "targets": [
         {
           "expr": "count(container_last_seen{name!=\"\", host=~\"$host\"}) by (host)",
@@ -229,15 +381,27 @@
     {
       "title": "Total Memory Usage by Host",
       "type": "stat",
-      "gridPos": {"h": 4, "w": 6, "x": 6, "y": 12},
-      "datasource": {"type": "prometheus", "uid": "P4169E866C3094E38"},
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 12
+      },
+      "datasource": {
+        "type": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
           "unit": "bytes",
-          "color": {"mode": "palette-classic-by-name"}
+          "color": {
+            "mode": "palette-classic-by-name"
+          }
         }
       },
-      "options": {"colorMode": "background", "graphMode": "none"},
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none"
+      },
       "targets": [
         {
           "expr": "sum(container_memory_rss{name!=\"\", host=~\"$host\"}) by (host)",
@@ -249,16 +413,28 @@
     {
       "title": "Total CPU Usage by Host",
       "type": "stat",
-      "gridPos": {"h": 4, "w": 6, "x": 12, "y": 12},
-      "datasource": {"type": "prometheus", "uid": "P4169E866C3094E38"},
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 12,
+        "y": 12
+      },
+      "datasource": {
+        "type": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
           "unit": "percentunit",
           "decimals": 1,
-          "color": {"mode": "palette-classic-by-name"}
+          "color": {
+            "mode": "palette-classic-by-name"
+          }
         }
       },
-      "options": {"colorMode": "background", "graphMode": "none"},
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none"
+      },
       "targets": [
         {
           "expr": "sum(rate(container_cpu_usage_seconds_total{name!=\"\", host=~\"$host\"}[5m])) by (host)",
@@ -270,15 +446,27 @@
     {
       "title": "Total Network I/O by Host",
       "type": "stat",
-      "gridPos": {"h": 4, "w": 6, "x": 18, "y": 12},
-      "datasource": {"type": "prometheus", "uid": "P4169E866C3094E38"},
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 18,
+        "y": 12
+      },
+      "datasource": {
+        "type": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
           "unit": "Bps",
-          "color": {"mode": "palette-classic-by-name"}
+          "color": {
+            "mode": "palette-classic-by-name"
+          }
         }
       },
-      "options": {"colorMode": "background", "graphMode": "none"},
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none"
+      },
       "targets": [
         {
           "expr": "sum(rate(container_network_receive_bytes_total{name!=\"\", host=~\"$host\"}[5m])) by (host)",
@@ -295,12 +483,24 @@
     {
       "title": "CPU Usage by Container",
       "type": "timeseries",
-      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16},
-      "datasource": {"type": "prometheus", "uid": "P4169E866C3094E38"},
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 16
+      },
+      "datasource": {
+        "type": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
           "unit": "percentunit",
-          "custom": {"fillOpacity": 10, "stacking": {"mode": "none"}}
+          "custom": {
+            "fillOpacity": 10,
+            "stacking": {
+              "mode": "none"
+            }
+          }
         }
       },
       "targets": [
@@ -313,12 +513,24 @@
     {
       "title": "Memory Usage by Container",
       "type": "timeseries",
-      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16},
-      "datasource": {"type": "prometheus", "uid": "P4169E866C3094E38"},
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 16
+      },
+      "datasource": {
+        "type": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
           "unit": "bytes",
-          "custom": {"fillOpacity": 10, "stacking": {"mode": "none"}}
+          "custom": {
+            "fillOpacity": 10,
+            "stacking": {
+              "mode": "none"
+            }
+          }
         }
       },
       "targets": [
@@ -331,12 +543,21 @@
     {
       "title": "Network Receive by Container",
       "type": "timeseries",
-      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 24},
-      "datasource": {"type": "prometheus", "uid": "P4169E866C3094E38"},
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 24
+      },
+      "datasource": {
+        "type": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
           "unit": "Bps",
-          "custom": {"fillOpacity": 10}
+          "custom": {
+            "fillOpacity": 10
+          }
         }
       },
       "targets": [
@@ -349,12 +570,21 @@
     {
       "title": "Network Transmit by Container",
       "type": "timeseries",
-      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 24},
-      "datasource": {"type": "prometheus", "uid": "P4169E866C3094E38"},
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 24
+      },
+      "datasource": {
+        "type": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
           "unit": "Bps",
-          "custom": {"fillOpacity": 10}
+          "custom": {
+            "fillOpacity": 10
+          }
         }
       },
       "targets": [
@@ -367,12 +597,21 @@
     {
       "title": "Disk I/O by Container",
       "type": "timeseries",
-      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 32},
-      "datasource": {"type": "prometheus", "uid": "P4169E866C3094E38"},
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 32
+      },
+      "datasource": {
+        "type": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
           "unit": "Bps",
-          "custom": {"fillOpacity": 10}
+          "custom": {
+            "fillOpacity": 10
+          }
         }
       },
       "targets": [
@@ -389,12 +628,25 @@
     {
       "title": "Container Restarts (OOM Events)",
       "type": "timeseries",
-      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 32},
-      "datasource": {"type": "prometheus", "uid": "P4169E866C3094E38"},
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 32
+      },
+      "datasource": {
+        "type": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
-          "custom": {"fillOpacity": 30, "drawStyle": "bars"},
-          "color": {"mode": "fixed", "fixedColor": "red"}
+          "custom": {
+            "fillOpacity": 30,
+            "drawStyle": "bars"
+          },
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "red"
+          }
         }
       },
       "targets": [

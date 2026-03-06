@@ -1,69 +1,139 @@
 {
   "uid": "tailscale",
   "title": "Tailscale",
-  "tags": ["tailscale", "network"],
+  "tags": [
+    "tailscale",
+    "network"
+  ],
   "timezone": "browser",
   "editable": true,
   "refresh": "30s",
-  "time": { "from": "now-1h", "to": "now" },
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
   "panels": [
     {
       "id": 1,
       "type": "stat",
       "title": "Total Devices",
-      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 0 },
-      "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 0
+      },
+      "datasource": {
+        "type": "prometheus"
+      },
       "targets": [
         {
           "expr": "count(tailscale_devices_info)",
           "legendFormat": ""
         }
       ],
-      "options": { "colorMode": "value", "graphMode": "none" },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none"
+      },
       "fieldConfig": {
-        "defaults": { "thresholds": { "steps": [{ "color": "blue", "value": null }] } }
+        "defaults": {
+          "thresholds": {
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          }
+        }
       }
     },
     {
       "id": 2,
       "type": "stat",
       "title": "Online Devices",
-      "gridPos": { "h": 4, "w": 4, "x": 4, "y": 0 },
-      "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 0
+      },
+      "datasource": {
+        "type": "prometheus"
+      },
       "targets": [
         {
           "expr": "count(tailscale_devices_online == 1)",
           "legendFormat": ""
         }
       ],
-      "options": { "colorMode": "value", "graphMode": "none" },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none"
+      },
       "fieldConfig": {
-        "defaults": { "thresholds": { "steps": [{ "color": "green", "value": null }] } }
+        "defaults": {
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        }
       }
     },
     {
       "id": 3,
       "type": "stat",
       "title": "Offline Devices",
-      "gridPos": { "h": 4, "w": 4, "x": 8, "y": 0 },
-      "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 0
+      },
+      "datasource": {
+        "type": "prometheus"
+      },
       "targets": [
         {
           "expr": "count(tailscale_devices_online == 0)",
           "legendFormat": ""
         }
       ],
-      "options": { "colorMode": "value", "graphMode": "none" },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none"
+      },
       "fieldConfig": {
-        "defaults": { "thresholds": { "steps": [{ "color": "orange", "value": null }] } }
+        "defaults": {
+          "thresholds": {
+            "steps": [
+              {
+                "color": "orange",
+                "value": null
+              }
+            ]
+          }
+        }
       }
     },
     {
       "id": 4,
       "type": "table",
       "title": "Device Inventory",
-      "gridPos": { "h": 12, "w": 24, "x": 0, "y": 4 },
-      "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 4
+      },
+      "datasource": {
+        "type": "prometheus"
+      },
       "targets": [
         {
           "expr": "tailscale_devices_info",
@@ -83,13 +153,42 @@
       "transformations": [
         {
           "id": "seriesToColumns",
-          "options": { "byField": "hostname" }
+          "options": {
+            "byField": "hostname"
+          }
         },
         {
           "id": "organize",
           "options": {
-            "excludeByName": { "Time 1": true, "Time 2": true, "Value #A": true, "__name__ 1": true, "__name__ 2": true, "job 1": true, "job 2": true, "instance 1": true, "instance 2": true, "id 1": true, "id 2": true, "machine_key 1": true, "node_key 1": true, "tailnet 1": true, "tailnet 2": true, "name 1": true, "name 2": true, "machine_key 2": true, "node_key 2": true, "client_version 1": true },
-            "indexByName": { "hostname": 0, "tailscale_ip 1": 1, "os 1": 2, "Value #B": 3, "user 1": 4 },
+            "excludeByName": {
+              "Time 1": true,
+              "Time 2": true,
+              "Value #A": true,
+              "__name__ 1": true,
+              "__name__ 2": true,
+              "job 1": true,
+              "job 2": true,
+              "instance 1": true,
+              "instance 2": true,
+              "id 1": true,
+              "id 2": true,
+              "machine_key 1": true,
+              "node_key 1": true,
+              "tailnet 1": true,
+              "tailnet 2": true,
+              "name 1": true,
+              "name 2": true,
+              "machine_key 2": true,
+              "node_key 2": true,
+              "client_version 1": true
+            },
+            "indexByName": {
+              "hostname": 0,
+              "tailscale_ip 1": 1,
+              "os 1": 2,
+              "Value #B": 3,
+              "user 1": 4
+            },
             "renameByName": {
               "hostname": "Hostname",
               "os 1": "OS",
@@ -103,15 +202,35 @@
       "fieldConfig": {
         "overrides": [
           {
-            "matcher": { "id": "byName", "options": "Online" },
+            "matcher": {
+              "id": "byName",
+              "options": "Online"
+            },
             "properties": [
               {
                 "id": "mappings",
                 "value": [
-                  { "type": "value", "options": { "1": { "text": "Online", "color": "green" }, "0": { "text": "Offline", "color": "red" } } }
+                  {
+                    "type": "value",
+                    "options": {
+                      "1": {
+                        "text": "Online",
+                        "color": "green"
+                      },
+                      "0": {
+                        "text": "Offline",
+                        "color": "red"
+                      }
+                    }
+                  }
                 ]
               },
-              { "id": "custom.cellOptions", "value": { "type": "color-background" } }
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background"
+                }
+              }
             ]
           }
         ]
@@ -121,8 +240,15 @@
       "id": 5,
       "type": "timeseries",
       "title": "Online Device Count",
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 16 },
-      "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 16
+      },
+      "datasource": {
+        "type": "prometheus"
+      },
       "targets": [
         {
           "expr": "count(tailscale_devices_online == 1)",
@@ -135,11 +261,44 @@
       ],
       "fieldConfig": {
         "defaults": {
-          "custom": { "fillOpacity": 20, "stacking": { "mode": "normal" } }
+          "custom": {
+            "fillOpacity": 20,
+            "stacking": {
+              "mode": "normal"
+            }
+          }
         },
         "overrides": [
-          { "matcher": { "id": "byName", "options": "Online" }, "properties": [{ "id": "color", "value": { "fixedColor": "green", "mode": "fixed" } }] },
-          { "matcher": { "id": "byName", "options": "Offline" }, "properties": [{ "id": "color", "value": { "fixedColor": "orange", "mode": "fixed" } }] }
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Online"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Offline"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
         ]
       }
     },
@@ -147,15 +306,27 @@
       "id": 6,
       "type": "piechart",
       "title": "Devices by OS",
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 16 },
-      "datasource": { "uid": "P4169E866C3094E38", "type": "prometheus" },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 16
+      },
+      "datasource": {
+        "type": "prometheus"
+      },
       "targets": [
         {
           "expr": "count by (os) (tailscale_devices_info)",
           "legendFormat": "{{os}}"
         }
       ],
-      "options": { "legend": { "displayMode": "table", "placement": "right" } }
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right"
+        }
+      }
     }
   ],
   "schemaVersion": 39

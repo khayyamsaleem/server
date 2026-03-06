@@ -46,8 +46,7 @@
         "y": 1
       },
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -62,8 +61,7 @@
           "expr": "rate(envoy_cluster_external_upstream_rq{envoy_cluster_name=\"ollama_cluster\"}[$interval])",
           "legendFormat": "Requests/s",
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           }
         }
       ]
@@ -78,8 +76,7 @@
         "y": 1
       },
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -96,8 +93,7 @@
           "expr": "rate(envoy_cluster_external_upstream_rq_xx{envoy_cluster_name=\"ollama_cluster\"}[$interval])",
           "legendFormat": "{{envoy_response_code_class}}xx",
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           }
         }
       ]
@@ -112,8 +108,7 @@
         "y": 1
       },
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -128,8 +123,7 @@
           "expr": "envoy_cluster_upstream_rq_time_bucket{envoy_cluster_name=\"ollama_cluster\"}",
           "legendFormat": "{{le}}",
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           },
           "format": "heatmap"
         },
@@ -137,24 +131,21 @@
           "expr": "histogram_quantile(0.50, rate(envoy_cluster_upstream_rq_time_bucket{envoy_cluster_name=\"ollama_cluster\"}[$interval]))",
           "legendFormat": "p50",
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           }
         },
         {
           "expr": "histogram_quantile(0.95, rate(envoy_cluster_upstream_rq_time_bucket{envoy_cluster_name=\"ollama_cluster\"}[$interval]))",
           "legendFormat": "p95",
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           }
         },
         {
           "expr": "histogram_quantile(0.99, rate(envoy_cluster_upstream_rq_time_bucket{envoy_cluster_name=\"ollama_cluster\"}[$interval]))",
           "legendFormat": "p99",
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           }
         }
       ]
@@ -362,8 +353,7 @@
         "y": 27
       },
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -379,16 +369,14 @@
           "expr": "rate(container_cpu_usage_seconds_total{name=~\"cherryblossom-ollama-1\"}[$interval])",
           "legendFormat": "Ollama CPU",
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           }
         },
         {
           "expr": "rate(container_cpu_usage_seconds_total{name=~\"cherryblossom-picoclaw-gateway-1\"}[$interval])",
           "legendFormat": "PicoClaw CPU",
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           }
         }
       ]
@@ -403,8 +391,7 @@
         "y": 27
       },
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -419,16 +406,14 @@
           "expr": "container_memory_working_set_bytes{name=~\"cherryblossom-ollama-1\"}",
           "legendFormat": "Ollama",
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           }
         },
         {
           "expr": "container_memory_working_set_bytes{name=~\"cherryblossom-picoclaw-gateway-1\"}",
           "legendFormat": "PicoClaw",
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           }
         }
       ]
@@ -443,8 +428,7 @@
         "y": 27
       },
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -459,16 +443,14 @@
           "expr": "rate(container_network_receive_bytes_total{name=~\"cherryblossom-ollama-1\"}[$interval])",
           "legendFormat": "Ollama RX",
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           }
         },
         {
           "expr": "rate(container_network_transmit_bytes_total{name=~\"cherryblossom-ollama-1\"}[$interval])",
           "legendFormat": "Ollama TX",
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           }
         }
       ]
@@ -494,16 +476,14 @@
         "y": 35
       },
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "targets": [
         {
           "expr": "envoy_cluster_upstream_cx_active{envoy_cluster_name=\"ollama_cluster\"}",
           "legendFormat": "Active",
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           }
         }
       ]
@@ -518,8 +498,7 @@
         "y": 35
       },
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -533,8 +512,7 @@
           "expr": "rate(envoy_cluster_upstream_cx_connect_fail{envoy_cluster_name=\"ollama_cluster\"}[$interval])",
           "legendFormat": "Connect Failures",
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           }
         }
       ]
@@ -549,8 +527,7 @@
         "y": 35
       },
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -565,16 +542,14 @@
           "expr": "rate(envoy_cluster_upstream_cx_rx_bytes_total{envoy_cluster_name=\"ollama_cluster\"}[$interval])",
           "legendFormat": "RX",
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           }
         },
         {
           "expr": "rate(envoy_cluster_upstream_cx_tx_bytes_total{envoy_cluster_name=\"ollama_cluster\"}[$interval])",
           "legendFormat": "TX",
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           }
         }
       ]
@@ -589,8 +564,7 @@
         "y": 35
       },
       "datasource": {
-        "type": "prometheus",
-        "uid": "P4169E866C3094E38"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -602,8 +576,7 @@
           "expr": "envoy_server_memory_allocated",
           "legendFormat": "Allocated",
           "datasource": {
-            "type": "prometheus",
-            "uid": "P4169E866C3094E38"
+            "type": "prometheus"
           }
         }
       ]
