@@ -376,7 +376,7 @@
       },
       "targets": [
         {
-          "expr": "rate(container_cpu_usage_seconds_total{name=~\"pico-claw-ollama-1\"}[$interval])",
+          "expr": "rate(container_cpu_usage_seconds_total{name=~\"cherryblossom-ollama-1\"}[$interval])",
           "legendFormat": "Ollama CPU",
           "datasource": {
             "type": "prometheus",
@@ -384,7 +384,7 @@
           }
         },
         {
-          "expr": "rate(container_cpu_usage_seconds_total{name=~\"pico-claw-picoclaw-gateway-1\"}[$interval])",
+          "expr": "rate(container_cpu_usage_seconds_total{name=~\"cherryblossom-picoclaw-gateway-1\"}[$interval])",
           "legendFormat": "PicoClaw CPU",
           "datasource": {
             "type": "prometheus",
@@ -416,7 +416,7 @@
       },
       "targets": [
         {
-          "expr": "container_memory_working_set_bytes{name=~\"pico-claw-ollama-1\"}",
+          "expr": "container_memory_working_set_bytes{name=~\"cherryblossom-ollama-1\"}",
           "legendFormat": "Ollama",
           "datasource": {
             "type": "prometheus",
@@ -424,7 +424,7 @@
           }
         },
         {
-          "expr": "container_memory_working_set_bytes{name=~\"pico-claw-picoclaw-gateway-1\"}",
+          "expr": "container_memory_working_set_bytes{name=~\"cherryblossom-picoclaw-gateway-1\"}",
           "legendFormat": "PicoClaw",
           "datasource": {
             "type": "prometheus",
@@ -456,7 +456,7 @@
       },
       "targets": [
         {
-          "expr": "rate(container_network_receive_bytes_total{name=~\"pico-claw-ollama-1\"}[$interval])",
+          "expr": "rate(container_network_receive_bytes_total{name=~\"cherryblossom-ollama-1\"}[$interval])",
           "legendFormat": "Ollama RX",
           "datasource": {
             "type": "prometheus",
@@ -464,7 +464,7 @@
           }
         },
         {
-          "expr": "rate(container_network_transmit_bytes_total{name=~\"pico-claw-ollama-1\"}[$interval])",
+          "expr": "rate(container_network_transmit_bytes_total{name=~\"cherryblossom-ollama-1\"}[$interval])",
           "legendFormat": "Ollama TX",
           "datasource": {
             "type": "prometheus",

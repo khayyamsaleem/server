@@ -40,3 +40,9 @@ scrape_configs:
     - cherryblossom:9901
     labels:
       host: cherryblossom
+- job_name: transmission
+  static_configs:
+  - targets:
+    - cherryblossom:19091
+    labels:
+      host: cherryblossom

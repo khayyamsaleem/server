@@ -89,6 +89,35 @@ services:
           cpus: '0.05'
           memory: 64M
 
+  transmission-exporter:
+    image: ghcr.io/khayyamsaleem/transmission-exporter:latest
+    environment:
+    - TRANSMISSION_ADDR=http://gluetun:9091
+    - TRANSMISSION_USERNAME=${TRANSMISSION_USER}
+    - TRANSMISSION_PASSWORD=${TRANSMISSION_PASS}
+    depends_on:
+      gluetun:
+        condition: service_healthy
+    ports:
+    - 19091:19091
+    restart: unless-stopped
+    labels:
+      com.centurylinklabs.watchtower.enable: 'true'
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:19091/metrics > /dev/null || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.10'
+          memory: 32M
+        reservations:
+          cpus: '0.01'
+          memory: 16M
+
 volumes:
   gluetun-data:
   transmission-config:
