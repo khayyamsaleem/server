@@ -12,10 +12,23 @@
         "iconColor": "rgba(0, 211, 255, 1)",
         "name": "Annotations & Alerts",
         "type": "dashboard"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P4169E866C3094E38"
+        },
+        "enable": false,
+        "expr": "changes(count(transmission_torrent_error > 0)[5m:]) > 0",
+        "iconColor": "red",
+        "name": "Torrent errors changed",
+        "titleFormat": "Torrent error count changed",
+        "type": "tags",
+        "useValueForTime": false
       }
     ]
   },
-  "description": "Transmission statistics prometheus dashboard ",
+  "description": "Transmission BitTorrent client monitoring dashboard. Tracks session stats, per-torrent health, peers, ratios, download progress, and error status.",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
@@ -38,12 +51,37 @@
   ],
   "panels": [
     {
+      "datasource": {
+        "type": "datasource",
+        "uid": "grafana"
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 50,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "# Transmission Torrent Monitor\n\nDashboard for [transmission-exporter](https://github.com/khayyamsaleem/transmission-exporter). Use the **Instance**, **Job**, and **Torrent** dropdowns above to filter. The *Session Overview* shows aggregate stats. The main *Torrent Stats* table shows per-torrent health, peers, ratio, and queue position. Expand *Extended Statistics* for upload averages, and *Torrent Health & Progress* for error details, download/seed time charts, and incomplete torrent progress bars.",
+        "mode": "markdown"
+      },
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 0
+        "y": 3
       },
       "id": 27,
       "title": "Session Overview",
@@ -88,7 +126,7 @@
         "h": 4,
         "w": 5,
         "x": 0,
-        "y": 1
+        "y": 4
       },
       "id": 13,
       "maxDataPoints": 100,
@@ -127,7 +165,8 @@
         }
       ],
       "title": "Number of torrents",
-      "type": "stat"
+      "type": "stat",
+      "description": "Total number of torrents being managed by Transmission."
     },
     {
       "datasource": {
@@ -171,7 +210,7 @@
         "h": 4,
         "w": 3,
         "x": 5,
-        "y": 1
+        "y": 4
       },
       "id": 6,
       "maxDataPoints": 100,
@@ -208,7 +247,8 @@
         }
       ],
       "title": "Current session upload",
-      "type": "stat"
+      "type": "stat",
+      "description": "Bytes uploaded during the current Transmission session (since last restart)."
     },
     {
       "datasource": {
@@ -252,7 +292,7 @@
         "h": 4,
         "w": 3,
         "x": 8,
-        "y": 1
+        "y": 4
       },
       "id": 22,
       "maxDataPoints": 100,
@@ -290,7 +330,8 @@
         }
       ],
       "title": "1 day upload",
-      "type": "stat"
+      "type": "stat",
+      "description": "Upload volume over the last 24 hours."
     },
     {
       "datasource": {
@@ -334,7 +375,7 @@
         "h": 4,
         "w": 3,
         "x": 11,
-        "y": 1
+        "y": 4
       },
       "id": 23,
       "maxDataPoints": 100,
@@ -372,7 +413,8 @@
         }
       ],
       "title": "7 days upload",
-      "type": "stat"
+      "type": "stat",
+      "description": "Upload volume over the last 7 days."
     },
     {
       "datasource": {
@@ -416,7 +458,7 @@
         "h": 4,
         "w": 5,
         "x": 14,
-        "y": 1
+        "y": 4
       },
       "id": 5,
       "maxDataPoints": 100,
@@ -453,14 +495,15 @@
         }
       ],
       "title": "Total upload",
-      "type": "stat"
+      "type": "stat",
+      "description": "Cumulative bytes uploaded across all sessions."
     },
     {
       "datasource": {
         "type": "prometheus",
         "uid": "P4169E866C3094E38"
       },
-      "description": "",
+      "description": "Combined upload rate across all active torrents right now.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -488,7 +531,7 @@
         "h": 4,
         "w": 5,
         "x": 19,
-        "y": 1
+        "y": 4
       },
       "id": 18,
       "options": {
@@ -535,6 +578,222 @@
       "fieldConfig": {
         "defaults": {
           "color": {
+            "fixedColor": "red",
+            "mode": "fixed"
+          },
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "0"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 5,
+        "x": 0,
+        "y": 8
+      },
+      "id": 40,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P4169E866C3094E38"
+          },
+          "editorMode": "code",
+          "expr": "count(transmission_torrent_error{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"} > 0) OR vector(0)",
+          "instant": true,
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "Torrents with errors",
+      "type": "stat",
+      "description": "Number of torrents currently reporting an error (tracker warning, tracker error, or local error)."
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P4169E866C3094E38"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "orange",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 5,
+        "x": 5,
+        "y": 8
+      },
+      "id": 41,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P4169E866C3094E38"
+          },
+          "editorMode": "code",
+          "expr": "sum(transmission_torrent_left_until_done_bytes{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
+          "instant": false,
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Total remaining",
+      "type": "stat",
+      "description": "Sum of bytes still needed to complete all active downloads."
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P4169E866C3094E38"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "red",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 5,
+        "x": 10,
+        "y": 8
+      },
+      "id": 42,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P4169E866C3094E38"
+          },
+          "editorMode": "code",
+          "expr": "sum(transmission_torrent_corrupt_ever_bytes{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
+          "instant": true,
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "Total corrupt",
+      "type": "stat",
+      "description": "Sum of corrupt bytes received across all torrents. High values may indicate network or disk issues."
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P4169E866C3094E38"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
             "fixedColor": "rgb(31, 120, 193)",
             "mode": "thresholds"
           },
@@ -569,7 +828,7 @@
         "h": 4,
         "w": 3,
         "x": 0,
-        "y": 5
+        "y": 10
       },
       "id": 10,
       "maxDataPoints": 100,
@@ -606,14 +865,15 @@
         }
       ],
       "title": "Current session ratio",
-      "type": "stat"
+      "type": "stat",
+      "description": "Ratio of uploaded to downloaded bytes in the current session."
     },
     {
       "datasource": {
         "type": "prometheus",
         "uid": "P4169E866C3094E38"
       },
-      "description": "",
+      "description": "Ratio of uploaded to downloaded bytes across all sessions.",
       "fieldConfig": {
         "defaults": {
           "mappings": [
@@ -647,7 +907,7 @@
         "h": 4,
         "w": 2,
         "x": 3,
-        "y": 5
+        "y": 10
       },
       "id": 11,
       "maxDataPoints": 100,
@@ -726,7 +986,7 @@
         "h": 4,
         "w": 3,
         "x": 5,
-        "y": 5
+        "y": 10
       },
       "id": 3,
       "maxDataPoints": 100,
@@ -763,7 +1023,8 @@
         }
       ],
       "title": "Current session download",
-      "type": "stat"
+      "type": "stat",
+      "description": "Bytes downloaded during the current Transmission session."
     },
     {
       "datasource": {
@@ -807,7 +1068,7 @@
         "h": 4,
         "w": 3,
         "x": 8,
-        "y": 5
+        "y": 10
       },
       "id": 24,
       "maxDataPoints": 100,
@@ -845,14 +1106,15 @@
         }
       ],
       "title": "1 day download",
-      "type": "stat"
+      "type": "stat",
+      "description": "Download volume over the last 24 hours."
     },
     {
       "datasource": {
         "type": "prometheus",
         "uid": "P4169E866C3094E38"
       },
-      "description": "",
+      "description": "Download volume over the last 7 days.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -890,7 +1152,7 @@
         "h": 4,
         "w": 3,
         "x": 11,
-        "y": 5
+        "y": 10
       },
       "id": 25,
       "maxDataPoints": 100,
@@ -972,7 +1234,7 @@
         "h": 4,
         "w": 5,
         "x": 14,
-        "y": 5
+        "y": 10
       },
       "id": 4,
       "maxDataPoints": 100,
@@ -1007,14 +1269,15 @@
         }
       ],
       "title": "Total download",
-      "type": "stat"
+      "type": "stat",
+      "description": "Cumulative bytes downloaded across all sessions."
     },
     {
       "datasource": {
         "type": "prometheus",
         "uid": "P4169E866C3094E38"
       },
-      "description": "",
+      "description": "Combined download rate across all active torrents right now.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1042,7 +1305,7 @@
         "h": 4,
         "w": 5,
         "x": 19,
-        "y": 5
+        "y": 10
       },
       "id": 21,
       "options": {
@@ -1145,7 +1408,7 @@
         "h": 9,
         "w": 24,
         "x": 0,
-        "y": 9
+        "y": 14
       },
       "id": 14,
       "options": {
@@ -1182,14 +1445,15 @@
         }
       ],
       "title": "Upload rate / minute",
-      "type": "timeseries"
+      "type": "timeseries",
+      "description": "Per-torrent upload rate over time. Stacked area shows contribution of each torrent."
     },
     {
       "datasource": {
         "type": "prometheus",
         "uid": "P4169E866C3094E38"
       },
-      "description": "",
+      "description": "Per-torrent statistics including ratio, peers, size, error status, queue position, and completion date.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1572,6 +1836,118 @@
                 "value": 83
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Error"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "gradient",
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "custom.width",
+                "value": 55
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green"
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 1
+                    },
+                    {
+                      "color": "orange",
+                      "value": 2
+                    },
+                    {
+                      "color": "red",
+                      "value": 3
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "text": "OK",
+                        "index": 0
+                      },
+                      "1": {
+                        "text": "Warn",
+                        "index": 1
+                      },
+                      "2": {
+                        "text": "TrkErr",
+                        "index": 2
+                      },
+                      "3": {
+                        "text": "Local",
+                        "index": 3
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Queue"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 55
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Done"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              },
+              {
+                "id": "unit",
+                "value": "dateTimeFromNow"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Remaining"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "bytes"
+              },
+              {
+                "id": "custom.width",
+                "value": 85
+              }
+            ]
           }
         ]
       },
@@ -1579,7 +1955,7 @@
         "h": 22,
         "w": 24,
         "x": 0,
-        "y": 18
+        "y": 23
       },
       "id": 15,
       "options": {
@@ -1766,6 +2142,62 @@
           "legendFormat": "{{name}}",
           "range": false,
           "refId": "M"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P4169E866C3094E38"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "max by (id, name) (transmission_torrent_error{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "O"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P4169E866C3094E38"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "max by (id, name) (transmission_torrent_queue_position{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "P"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P4169E866C3094E38"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "max by (id, name) (transmission_torrent_done_date{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"} * 1000)",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "Q"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P4169E866C3094E38"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "max by (id, name) (transmission_torrent_left_until_done_bytes{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "R"
         }
       ],
       "title": "Torrent stats",
@@ -1877,7 +2309,29 @@
               "tracker": true,
               "tracker 1": true,
               "tracker 2": true,
-              "tracker 3": true
+              "tracker 3": true,
+              "Time 14": true,
+              "tracker 14": true,
+              "Time 15": true,
+              "name 15": true,
+              "instance 15": true,
+              "job 15": true,
+              "tracker 15": true,
+              "Time 16": true,
+              "name 16": true,
+              "instance 16": true,
+              "job 16": true,
+              "tracker 16": true,
+              "Time 17": true,
+              "name 17": true,
+              "instance 17": true,
+              "job 17": true,
+              "tracker 17": true,
+              "Time 18": true,
+              "name 18": true,
+              "instance 18": true,
+              "job 18": true,
+              "tracker 18": true
             },
             "includeByName": {},
             "indexByName": {
@@ -1967,15 +2421,12 @@
             },
             "renameByName": {
               "Time 2": "",
-              "Value #A": "",
               "Value #B": "Ratio",
               "Value #C": "Files",
               "Value #D": "Seeders (avg)",
               "Value #E": "Leechers (avg)",
               "Value #F": "Added",
               "Value #G": "Downloads",
-              "Value #H": "",
-              "Value #I": "",
               "Value #J": "Peers",
               "Value #K": "Peers DL (downloading from us)",
               "Value #L": "Size",
@@ -1985,7 +2436,11 @@
               "name 1": "Torrrent name",
               "name 10": "",
               "tracker": "",
-              "tracker 3": ""
+              "tracker 3": "",
+              "Value #O": "Error",
+              "Value #P": "Queue",
+              "Value #Q": "Done",
+              "Value #R": "Remaining"
             }
           }
         },
@@ -1997,6 +2452,11 @@
                 "dateFormat": "$(UNIX)",
                 "destinationType": "time",
                 "targetField": "Added"
+              },
+              {
+                "dateFormat": "$(UNIX)",
+                "destinationType": "time",
+                "targetField": "Done"
               }
             ],
             "fields": {}
@@ -2011,7 +2471,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 40
+        "y": 45
       },
       "id": 28,
       "panels": [
@@ -2020,7 +2480,7 @@
             "type": "prometheus",
             "uid": "P4169E866C3094E38"
           },
-          "description": "",
+          "description": "Extended per-torrent statistics with 30-day average upload rate, 1-day average upload, current upload speed, and all peer/tracker details.",
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -2410,7 +2870,7 @@
             "h": 22,
             "w": 24,
             "x": 0,
-            "y": 41
+            "y": 46
           },
           "id": 26,
           "options": {
@@ -2881,7 +3341,728 @@
           "type": "table"
         }
       ],
-      "title": "Extended statistics",
+      "title": "Extended Statistics",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 46
+      },
+      "id": 30,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P4169E866C3094E38"
+          },
+          "description": "Detailed health view per torrent: error status, bytes remaining/valid/corrupt, queue position, last activity, completion date, and time spent downloading and seeding.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "text",
+                "mode": "fixed"
+              },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "color-text"
+                },
+                "inspect": false
+              },
+              "mappings": [
+                {
+                  "options": {
+                    "0": {
+                      "text": "OK",
+                      "color": "green",
+                      "index": 0
+                    },
+                    "1": {
+                      "text": "Tracker Warning",
+                      "color": "yellow",
+                      "index": 1
+                    },
+                    "2": {
+                      "text": "Tracker Error",
+                      "color": "orange",
+                      "index": 2
+                    },
+                    "3": {
+                      "text": "Local Error",
+                      "color": "red",
+                      "index": 3
+                    }
+                  },
+                  "type": "value"
+                }
+              ],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 1
+                  },
+                  {
+                    "color": "orange",
+                    "value": 2
+                  },
+                  {
+                    "color": "red",
+                    "value": 3
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Error"
+                },
+                "properties": [
+                  {
+                    "id": "custom.cellOptions",
+                    "value": {
+                      "mode": "gradient",
+                      "type": "color-background"
+                    }
+                  },
+                  {
+                    "id": "custom.width",
+                    "value": 120
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Name"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 400
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Remaining"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "bytes"
+                  },
+                  {
+                    "id": "custom.width",
+                    "value": 100
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Corrupt"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "bytes"
+                  },
+                  {
+                    "id": "custom.width",
+                    "value": 100
+                  },
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "red",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Valid"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "bytes"
+                  },
+                  {
+                    "id": "custom.width",
+                    "value": 100
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Last Active"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "dateTimeFromNow"
+                  },
+                  {
+                    "id": "custom.width",
+                    "value": 110
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Done At"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "dateTimeFromNow"
+                  },
+                  {
+                    "id": "custom.width",
+                    "value": 110
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Queue"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 60
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 16,
+            "w": 24,
+            "x": 0,
+            "y": 47
+          },
+          "id": 35,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": false
+            },
+            "showHeader": true,
+            "sortBy": [
+              {
+                "desc": false,
+                "displayName": "Queue"
+              }
+            ]
+          },
+          "pluginVersion": "12.0.2",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "P4169E866C3094E38"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "max by (id, name) (transmission_torrent_error{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
+              "format": "table",
+              "instant": true,
+              "legendFormat": "__auto",
+              "range": false,
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "P4169E866C3094E38"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "max by (id, name) (transmission_torrent_left_until_done_bytes{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
+              "format": "table",
+              "instant": true,
+              "legendFormat": "__auto",
+              "range": false,
+              "refId": "B"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "P4169E866C3094E38"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "max by (id, name) (transmission_torrent_corrupt_ever_bytes{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
+              "format": "table",
+              "instant": true,
+              "legendFormat": "__auto",
+              "range": false,
+              "refId": "C"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "P4169E866C3094E38"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "max by (id, name) (transmission_torrent_have_valid_bytes{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
+              "format": "table",
+              "instant": true,
+              "legendFormat": "__auto",
+              "range": false,
+              "refId": "D"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "P4169E866C3094E38"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "max by (id, name) (transmission_torrent_queue_position{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
+              "format": "table",
+              "instant": true,
+              "legendFormat": "__auto",
+              "range": false,
+              "refId": "E"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "P4169E866C3094E38"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "max by (id, name) (transmission_torrent_activity_date{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"} * 1000)",
+              "format": "table",
+              "instant": true,
+              "legendFormat": "__auto",
+              "range": false,
+              "refId": "F"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "P4169E866C3094E38"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "max by (id, name) (transmission_torrent_done_date{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"} * 1000)",
+              "format": "table",
+              "instant": true,
+              "legendFormat": "__auto",
+              "range": false,
+              "refId": "G"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "P4169E866C3094E38"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "max by (id, name) (transmission_torrent_seconds_downloading{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
+              "format": "table",
+              "instant": true,
+              "legendFormat": "__auto",
+              "range": false,
+              "refId": "H"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "P4169E866C3094E38"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "max by (id, name) (transmission_torrent_seconds_seeding{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
+              "format": "table",
+              "instant": true,
+              "legendFormat": "__auto",
+              "range": false,
+              "refId": "I"
+            }
+          ],
+          "title": "Torrent health details",
+          "transformations": [
+            {
+              "id": "joinByField",
+              "options": {
+                "byField": "id",
+                "mode": "outer"
+              }
+            },
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time 1": true,
+                  "Time 2": true,
+                  "Time 3": true,
+                  "Time 4": true,
+                  "Time 5": true,
+                  "Time 6": true,
+                  "Time 7": true,
+                  "Time 8": true,
+                  "Time 9": true,
+                  "name 2": true,
+                  "name 3": true,
+                  "name 4": true,
+                  "name 5": true,
+                  "name 6": true,
+                  "name 7": true,
+                  "name 8": true,
+                  "name 9": true
+                },
+                "includeByName": {},
+                "indexByName": {
+                  "id": 0,
+                  "name 1": 1,
+                  "Value #E": 2,
+                  "Value #A": 3,
+                  "Value #B": 4,
+                  "Value #D": 5,
+                  "Value #C": 6,
+                  "Value #F": 7,
+                  "Value #G": 8,
+                  "Value #H": 9,
+                  "Value #I": 10
+                },
+                "renameByName": {
+                  "name 1": "Name",
+                  "Value #A": "Error",
+                  "Value #B": "Remaining",
+                  "Value #C": "Corrupt",
+                  "Value #D": "Valid",
+                  "Value #E": "Queue",
+                  "Value #F": "Last Active",
+                  "Value #G": "Done At",
+                  "Value #H": "Time DL (s)",
+                  "Value #I": "Time Seed (s)"
+                }
+              }
+            },
+            {
+              "id": "convertFieldType",
+              "options": {
+                "conversions": [
+                  {
+                    "dateFormat": "$(UNIX)",
+                    "destinationType": "time",
+                    "targetField": "Last Active"
+                  },
+                  {
+                    "dateFormat": "$(UNIX)",
+                    "destinationType": "time",
+                    "targetField": "Done At"
+                  }
+                ],
+                "fields": {}
+              }
+            }
+          ],
+          "type": "table"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P4169E866C3094E38"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 12,
+            "x": 0,
+            "y": 63
+          },
+          "id": 36,
+          "options": {
+            "legend": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true,
+              "sortBy": "Last *",
+              "sortDesc": true
+            },
+            "tooltip": {
+              "hideZeros": true,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.0.2",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "P4169E866C3094E38"
+              },
+              "editorMode": "code",
+              "expr": "max by (name) (transmission_torrent_seconds_seeding{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
+              "legendFormat": "{{name}}",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Seeding time",
+          "type": "timeseries",
+          "description": "Total seconds each torrent has spent seeding over time."
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P4169E866C3094E38"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 12,
+            "x": 12,
+            "y": 63
+          },
+          "id": 37,
+          "options": {
+            "legend": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true,
+              "sortBy": "Last *",
+              "sortDesc": true
+            },
+            "tooltip": {
+              "hideZeros": true,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.0.2",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "P4169E866C3094E38"
+              },
+              "editorMode": "code",
+              "expr": "max by (name) (transmission_torrent_seconds_downloading{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
+              "legendFormat": "{{name}}",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Downloading time",
+          "type": "timeseries",
+          "description": "Total seconds each torrent has spent downloading over time."
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P4169E866C3094E38"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "continuous-GrYlRd"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  }
+                ]
+              },
+              "unit": "percentunit",
+              "min": 0,
+              "max": 1
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 24,
+            "x": 0,
+            "y": 72
+          },
+          "id": 38,
+          "options": {
+            "displayMode": "lcd",
+            "maxVizHeight": 300,
+            "minVizHeight": 16,
+            "minVizWidth": 8,
+            "namePlacement": "auto",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showUnfilled": true,
+            "sizing": "auto",
+            "valueMode": "color"
+          },
+          "pluginVersion": "12.0.2",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "P4169E866C3094E38"
+              },
+              "editorMode": "code",
+              "expr": "max by (name) (transmission_torrent_done{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"}) < 1",
+              "legendFormat": "{{name}}",
+              "instant": true,
+              "range": false,
+              "refId": "A"
+            }
+          ],
+          "title": "Incomplete torrents - download progress",
+          "type": "bargauge",
+          "description": "Download progress of incomplete torrents displayed as LCD bar gauges. Only torrents with less than 100% completion are shown."
+        }
+      ],
+      "title": "Torrent Health & Progress",
       "type": "row"
     }
   ],
@@ -2890,7 +4071,8 @@
   "tags": [
     "prometheus",
     "transmission",
-    "homelab"
+    "bittorrent",
+    "torrent"
   ],
   "templating": {
     "list": [
@@ -2959,13 +4141,13 @@
     ]
   },
   "time": {
-    "from": "now-3h",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Transmission",
   "uid": "transmission",
-  "version": 10,
+  "version": 1,
   "weekStart": ""
 }
