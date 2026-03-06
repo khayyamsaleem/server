@@ -10,7 +10,7 @@ receivers:
           scrape_interval: 15s
           static_configs:
             - targets:
-                - server-jenkins-1:8080
+                - jenkins:8080
 
 exporters:
   otlphttp:
