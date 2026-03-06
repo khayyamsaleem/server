@@ -33,8 +33,7 @@ pipeline {
                                     cd ${JUUL_DEPLOY_DIR}/juul &&
                                     git -C ${JUUL_DEPLOY_DIR} fetch origin &&
                                     git -C ${JUUL_DEPLOY_DIR} reset --hard origin/master &&
-                                    docker compose up -d --remove-orphans &&
-                                    docker compose restart --no-deps \$(docker compose config --services | grep -v jenkins)
+                                    docker compose up -d --remove-orphans
                                 '
                             """
                         }
@@ -48,8 +47,7 @@ pipeline {
                                     cd ${CHERRYBLOSSOM_DEPLOY_DIR}/cherryblossom &&
                                     GIT_SSH_COMMAND="ssh -i ~/.ssh/server-deploy-key" git -C ${CHERRYBLOSSOM_DEPLOY_DIR} fetch origin &&
                                     GIT_SSH_COMMAND="ssh -i ~/.ssh/server-deploy-key" git -C ${CHERRYBLOSSOM_DEPLOY_DIR} reset --hard origin/master &&
-                                    docker compose up -d --remove-orphans &&
-                                    docker compose restart
+                                    docker compose up -d --remove-orphans
                                 '
                             """
                         }
