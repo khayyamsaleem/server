@@ -8,7 +8,7 @@ icmp:
   count: 3
 
 tcp:
-  interval: 60s
+  interval: 30s
   timeout: 2s
 
 targets:
