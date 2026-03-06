@@ -64,37 +64,37 @@ docker compose up -d
 ### Architecture
 
 ```
-                    Internet
-                       │
-                       ▼
-              ┌─── juul (VPS) ───┐
-              │                  │
-              │  Traefik ←─ TLS  │
-              │    │             │
-              │    ├── Jenkins   │
-              │    ├── Grafana   │
-              │    ├── jelly ──────────┐
-              │    └── transmission ───┤
-              │                  │     │
-              │  VictoriaMetrics │     │ Tailscale
-              │    ▲  ▲          │     │
-              │    │  └─ OTel    │     │
-              │    │   Collector │     │
-              │  Loki            │     │
-              │    ▲             │     │
-              └────┼─────────────┘     │
-                   │                   │
-              ┌────┼── cherryblossom ──┼──┐
-              │    │                   │  │
-              │  Promtail    Jellyfin ◄┘  │
-              │                           │
-              │  Gluetun (NordVPN)        │
-              │    └── Transmission       │
-              │                           │
-              │  Ollama (GPU)             │
-              │    └── Envoy proxy        │
-              │    └── PicoClaw           │
-              │                           │
-              │  node-exporter, cAdvisor  │
-              └───────────────────────────┘
+                     Internet
+                        |
+                        v
+              +----- juul (VPS) -----+
+              |                      |
+              |  Traefik <-- TLS     |
+              |    |                 |
+              |    +-- Jenkins       |
+              |    +-- Grafana       |
+              |    +-- jelly --------+-------+
+              |    +-- transmission -+-------+
+              |                      |       |
+              |  VictoriaMetrics     |       | Tailscale
+              |    ^  ^              |       |
+              |    |  +- OTel        |       |
+              |    |    Collector    |       |
+              |  Loki                |       |
+              |    ^                 |       |
+              +----+-----------------+       |
+                   |                         |
+              +----+--- cherryblossom ---+---+
+              |    |                     |   |
+              |  Promtail    Jellyfin <--+   |
+              |                              |
+              |  Gluetun (NordVPN)           |
+              |    +-- Transmission          |
+              |                              |
+              |  Ollama (GPU)                |
+              |    +-- Envoy proxy           |
+              |    +-- PicoClaw              |
+              |                              |
+              |  node-exporter, cAdvisor     |
+              +------------------------------+
 ```
