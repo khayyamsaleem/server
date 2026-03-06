@@ -40,12 +40,23 @@ scrape_configs:
                 template: '{{ .Value | ToLower }}'
             - labels:
                 level:
-      # Go slog services (time=... level=... format): Loki, node-exporter, promtail
+      # Go slog services (time=... level=... format)
       - match:
-          selector: '{compose_service=~"loki|node-exporter|promtail"}'
+          selector: '{compose_service=~"loki|node-exporter|promtail|tailscale-exporter"}'
           stages:
             - regex:
                 expression: '^(time=\S+ )?level=(?P<level>\S+)\s'
+            - labels:
+                level:
+      # OTel Collector: Zap format (timestamp\tlevel\tlogger\tmessage)
+      - match:
+          selector: '{compose_service="otel-collector"}'
+          stages:
+            - regex:
+                expression: '^\S+\t(?P<level>\w+)\t'
+            - template:
+                source: level
+                template: '{{ .Value | ToLower }}'
             - labels:
                 level:
       # cAdvisor: glog format (E/W/I/F prefix)

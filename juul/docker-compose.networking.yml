@@ -39,7 +39,8 @@ services:
     image: traefik:latest
     network_mode: service:tailscale
     depends_on:
-    - tailscale
+      tailscale:
+        condition: service_healthy
     environment:
     - DO_AUTH_TOKEN
     - CF_DNS_API_TOKEN

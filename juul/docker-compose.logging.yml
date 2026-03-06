@@ -39,7 +39,8 @@ services:
     command:
     - -config.file=/etc/promtail/config.yml
     depends_on:
-    - loki
+      loki:
+        condition: service_healthy
     labels:
       com.centurylinklabs.watchtower.enable: 'true'
     restart: unless-stopped

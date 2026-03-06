@@ -40,9 +40,9 @@ scrape_configs:
                 template: '{{ .Value | ToLower }}'
             - labels:
                 level:
-      # Go slog services (time=... level=... format): node-exporter, jellyfin-exporter, ollama
+      # Go slog services (time=... level=... format)
       - match:
-          selector: '{compose_service=~"node-exporter|jellyfin-exporter|ollama"}'
+          selector: '{compose_service=~"node-exporter|jellyfin-exporter|ollama|network-exporter|transmission-exporter"}'
           stages:
             - regex:
                 expression: '^(time=\S+ )?level=(?P<level>\S+)\s'
