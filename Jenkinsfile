@@ -25,7 +25,7 @@ pipeline {
     stages {
         stage('Deploy') {
             parallel {
-                stage('Deploy juul') {
+                stage('Deploy juul (non-Jenkins)') {
                     steps {
                         sshagent(credentials: ['server-deploy-key']) {
                             sh """
@@ -33,7 +33,7 @@ pipeline {
                                     cd ${JUUL_DEPLOY_DIR}/juul &&
                                     git -C ${JUUL_DEPLOY_DIR} fetch origin &&
                                     git -C ${JUUL_DEPLOY_DIR} reset --hard origin/master &&
-                                    docker compose up -d --remove-orphans
+                                    docker compose up -d --remove-orphans --no-recreate jenkins
                                 '
                             """
                         }
@@ -52,6 +52,25 @@ pipeline {
                             """
                         }
                     }
+                }
+            }
+        }
+        stage('Update Jenkins') {
+            steps {
+                sshagent(credentials: ['server-deploy-key']) {
+                    sh """
+                        ssh ${SSH_OPTS} ${JUUL_USER}@${JUUL_HOST} '
+                            cd ${JUUL_DEPLOY_DIR}/juul &&
+                            NEEDS_UPDATE=\$(docker compose up -d --dry-run jenkins 2>&1 | grep -c "Recreate\\|Creating" || true)
+                            if [ "\$NEEDS_UPDATE" -gt 0 ]; then
+                                echo "Jenkins config changed — scheduling recreate in 10s..."
+                                nohup sh -c "sleep 10 && cd ${JUUL_DEPLOY_DIR}/juul && docker compose up -d jenkins" > /tmp/jenkins-update.log 2>&1 &
+                                echo "Scheduled. Jenkins will restart momentarily."
+                            else
+                                echo "Jenkins config unchanged — no restart needed."
+                            fi
+                        '
+                    """
                 }
             }
         }
