@@ -1,5 +1,6 @@
 #!/bin/bash
 # Dynamic MOTD for cherryblossom — shows ASCII art + Docker container health
+[[ -z "$SSH_CONNECTION" ]] && return 2>/dev/null || true
 
 E=$'\033'
 
