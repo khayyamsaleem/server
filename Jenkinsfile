@@ -1,0 +1,64 @@
+pipeline {
+    agent any
+
+    options {
+        skipDefaultCheckout()
+        timeout(time: 10, unit: 'MINUTES')
+    }
+
+    environment {
+        JUUL_HOST = '172.18.0.1'
+        JUUL_USER = 'root'
+        JUUL_DEPLOY_DIR = '/opt/server'
+
+        CHERRYBLOSSOM_HOST = 'cherryblossom'
+        CHERRYBLOSSOM_USER = 'khayyam'
+        CHERRYBLOSSOM_DEPLOY_DIR = '/home/khayyam/server'
+
+        SSH_OPTS = '-o StrictHostKeyChecking=no -o ConnectTimeout=10'
+    }
+
+    stages {
+        stage('Deploy') {
+            parallel {
+                stage('Deploy juul') {
+                    steps {
+                        sshagent(credentials: ['server-deploy-key']) {
+                            sh """
+                                ssh ${SSH_OPTS} ${JUUL_USER}@${JUUL_HOST} '
+                                    cd ${JUUL_DEPLOY_DIR}/juul &&
+                                    git -C ${JUUL_DEPLOY_DIR} fetch origin &&
+                                    git -C ${JUUL_DEPLOY_DIR} reset --hard origin/master &&
+                                    docker compose up -d --remove-orphans
+                                '
+                            """
+                        }
+                    }
+                }
+                stage('Deploy cherryblossom') {
+                    steps {
+                        sshagent(credentials: ['server-deploy-key']) {
+                            sh """
+                                ssh ${SSH_OPTS} ${CHERRYBLOSSOM_USER}@${CHERRYBLOSSOM_HOST} '
+                                    cd ${CHERRYBLOSSOM_DEPLOY_DIR}/cherryblossom &&
+                                    GIT_SSH_COMMAND="ssh -i ~/.ssh/server-deploy-key" git -C ${CHERRYBLOSSOM_DEPLOY_DIR} fetch origin &&
+                                    GIT_SSH_COMMAND="ssh -i ~/.ssh/server-deploy-key" git -C ${CHERRYBLOSSOM_DEPLOY_DIR} reset --hard origin/master &&
+                                    docker compose up -d --remove-orphans
+                                '
+                            """
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        failure {
+            echo 'Deployment failed — check stage logs for details.'
+        }
+        success {
+            echo 'Both nodes updated successfully.'
+        }
+    }
+}
