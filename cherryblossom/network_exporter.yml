@@ -1,4 +1,4 @@
-main:
+conf:
   nameserver: 10.0.0.1
   refresh: 5m
 
@@ -20,13 +20,13 @@ targets:
       vendor: xfinity
   - name: raspberrypi-adguard
     host: 10.0.0.47
-    type: ICMP TCP
+    type: ICMP
     labels:
       device_type: server
       vendor: raspberry-pi
   - name: proxmox-optiplex
     host: 10.0.0.68
-    type: ICMP TCP
+    type: ICMP
     labels:
       device_type: server
       vendor: dell
@@ -38,7 +38,7 @@ targets:
       vendor: custom
   - name: hp-printer
     host: 10.0.0.188
-    type: ICMP TCP
+    type: ICMP
     labels:
       device_type: printer
       vendor: hp
@@ -138,35 +138,45 @@ targets:
     labels:
       device_type: network
       vendor: xfinity
-
-tcp_targets:
   - name: raspberrypi-ssh
-    host: 10.0.0.47
-    port: 22
+    host: 10.0.0.47:22
+    type: TCP
     labels:
+      device_type: server
+      vendor: raspberry-pi
       service: ssh
   - name: raspberrypi-adguard-http
-    host: 10.0.0.47
-    port: 80
+    host: 10.0.0.47:80
+    type: TCP
     labels:
+      device_type: server
+      vendor: raspberry-pi
       service: adguard
   - name: raspberrypi-dns
-    host: 10.0.0.47
-    port: 53
+    host: 10.0.0.47:53
+    type: TCP
     labels:
+      device_type: server
+      vendor: raspberry-pi
       service: dns
   - name: proxmox-api
-    host: 10.0.0.68
-    port: 8006
+    host: 10.0.0.68:8006
+    type: TCP
     labels:
+      device_type: server
+      vendor: dell
       service: proxmox
   - name: proxmox-ssh
-    host: 10.0.0.68
-    port: 22
+    host: 10.0.0.68:22
+    type: TCP
     labels:
+      device_type: server
+      vendor: dell
       service: ssh
   - name: hp-printer-ipp
-    host: 10.0.0.188
-    port: 631
+    host: 10.0.0.188:631
+    type: TCP
     labels:
+      device_type: printer
+      vendor: hp
       service: ipp
