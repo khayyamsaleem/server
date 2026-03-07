@@ -1,5 +1,6 @@
 {
   "TCP": {
-    "3100": { "TCPForward": "loki:3100" }
+    "3100": { "TCPForward": "loki:3100" },
+    "8428": { "TCPForward": "victoriametrics:8428" }
   }
 }

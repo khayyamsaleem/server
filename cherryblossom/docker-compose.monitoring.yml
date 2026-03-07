@@ -80,6 +80,28 @@ services:
           cpus: '0.01'
           memory: 16M
 
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    network_mode: host
+    depends_on:
+      network-exporter:
+        condition: service_healthy
+    volumes:
+    - ./otel-collector-config.yml:/etc/otelcol-contrib/config.yaml:ro
+    environment:
+    - VICTORIA_HOST=${VICTORIA_HOST}
+    restart: unless-stopped
+    labels:
+      com.centurylinklabs.watchtower.enable: 'true'
+    deploy:
+      resources:
+        limits:
+          cpus: '0.10'
+          memory: 128M
+        reservations:
+          cpus: '0.01'
+          memory: 32M
+
   promtail:
     image: grafana/promtail:latest
     extra_hosts:
