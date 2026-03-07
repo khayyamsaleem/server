@@ -42,10 +42,29 @@ scrape_configs:
                 level:
       # Go slog services (time=... level=... format)
       - match:
-          selector: '{compose_service=~"node-exporter|jellyfin-exporter|ollama|network-exporter|transmission-exporter"}'
+          selector: '{compose_service=~"node-exporter|jellyfin-exporter|network-exporter|transmission-exporter"}'
           stages:
             - regex:
                 expression: '^(time=\S+ )?level=(?P<level>\S+)\s'
+            - labels:
+                level:
+      # Ollama: Go slog at startup
+      - match:
+          selector: '{compose_service="ollama"} |~ "^time=|^level="'
+          stages:
+            - regex:
+                expression: '^(time=\S+ )?level=(?P<level>\S+)\s'
+            - labels:
+                level:
+      # Ollama: GIN HTTP request logs at runtime
+      - match:
+          selector: '{compose_service="ollama"} |~ "^\\[GIN\\]"'
+          stages:
+            - regex:
+                expression: '^\[GIN\] .+ \| (?P<status>\d+) \|'
+            - template:
+                source: level
+                template: '{{ if ge .status "400" }}error{{ else if ge .status "300" }}warn{{ else }}info{{ end }}'
             - labels:
                 level:
       # Jellyfin: [HH:MM:SS] [LEVEL] [tid] class: msg
