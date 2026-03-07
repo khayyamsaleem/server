@@ -50,10 +50,3 @@ scrape_configs:
   static_configs:
   - targets:
     - tailscale-exporter:9250
-- job_name: network
-  scrape_interval: 30s
-  static_configs:
-  - targets:
-    - cherryblossom-host:9427
-    labels:
-      host: cherryblossom
