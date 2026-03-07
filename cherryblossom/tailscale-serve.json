@@ -1,5 +1,7 @@
 {
   "TCP": {
+    "8096": { "TCPForward": "jellyfin:8096" },
+    "9091": { "TCPForward": "gluetun:9091" },
     "9100": { "TCPForward": "node-exporter:9100" },
     "9101": { "TCPForward": "cadvisor:8080" },
     "9594": { "TCPForward": "jellyfin-exporter:9594" },
