@@ -10,6 +10,14 @@ receivers:
               labels:
                 host: cherryblossom
 
+processors:
+  transform:
+    metric_statements:
+      - context: datapoint
+        statements:
+          - set(attributes["job"], resource.attributes["service.name"])
+          - set(attributes["instance"], resource.attributes["service.instance.id"])
+
 exporters:
   otlphttp:
     metrics_endpoint: http://${env:VICTORIA_HOST}:8428/opentelemetry/api/v1/push
@@ -20,4 +28,5 @@ service:
   pipelines:
     metrics:
       receivers: [prometheus]
+      processors: [transform]
       exporters: [otlphttp]
