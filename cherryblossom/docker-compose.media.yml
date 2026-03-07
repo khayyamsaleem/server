@@ -46,8 +46,6 @@ services:
     depends_on:
       jellyfin:
         condition: service_healthy
-    ports:
-    - 9594:9594
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:9594/metrics > /dev/null || exit 1"]

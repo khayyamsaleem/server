@@ -1,4 +1,35 @@
 services:
+  tailscale:
+    image: tailscale/tailscale
+    hostname: cherryblossom-docker
+    extra_hosts:
+    - "host.docker.internal:host-gateway"
+    environment:
+    - TS_AUTHKEY=${TS_AUTHKEY}
+    - TS_STATE_DIR=/var/lib/tailscale
+    - TS_USERSPACE=true
+    - TS_SERVE_CONFIG=/config/serve.json
+    volumes:
+    - tailscale-state:/var/lib/tailscale
+    - ./tailscale-serve.json:/config/serve.json:ro
+    restart: unless-stopped
+    labels:
+      com.centurylinklabs.watchtower.enable: 'true'
+    healthcheck:
+      test: ["CMD", "tailscale", "status"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.10'
+          memory: 96M
+        reservations:
+          cpus: '0.01'
+          memory: 32M
+
   watchtower:
     image: containrrr/watchtower
     volumes:
@@ -24,3 +55,6 @@ services:
         reservations:
           cpus: '0.01'
           memory: 16M
+
+volumes:
+  tailscale-state:
