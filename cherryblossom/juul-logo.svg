@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 56">
+  <defs>
+    <radialGradient id="tip" cx="1" cy="0.5" r="0.6" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#66bbff"/>
+      <stop offset="50%" stop-color="#0087ff"/>
+      <stop offset="100%" stop-color="#0055aa" stop-opacity="0.4"/>
+    </radialGradient>
+    <radialGradient id="tipglow" cx="0.9" cy="0.5" r="0.8" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#0087ff" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#0087ff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- JUUL text — blocky/thick like MOTD -->
+  <text x="2" y="33" font-family="monospace" font-weight="900" font-size="38" fill="#0087ff" letter-spacing="5" stroke="#0087ff" stroke-width="1.5" paint-order="stroke">JUUL</text>
+  <!-- Juul device as underline -->
+  <g transform="translate(6, 46)">
+    <!-- Battery/body -->
+    <rect x="0" y="-2.5" width="100" height="5" rx="2.5" fill="#c0c0c0"/>
+    <!-- Pod section -->
+    <rect x="100" y="-2.5" width="28" height="5" rx="2" fill="#d8d8d8"/>
+    <!-- Seam between body and pod -->
+    <line x1="100" y1="-2.5" x2="100" y2="2.5" stroke="#aaa" stroke-width="0.5"/>
+    <!-- Mouthpiece tip -->
+    <rect x="128" y="-2" width="12" height="4" rx="2" fill="#e0e0e0"/>
+    <!-- Blue LED glow halo -->
+    <ellipse cx="142" cy="0" rx="8" ry="6" fill="url(#tipglow)"/>
+    <!-- Blue LED light -->
+    <circle cx="141" cy="0" r="2.5" fill="url(#tip)"/>
+  </g>
+</svg>

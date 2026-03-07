@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <!-- Radiant blue glow -->
+    <radialGradient id="glow" cx="22" cy="18" r="28" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0087ff" stop-opacity="0.5"/>
+      <stop offset="40%" stop-color="#0087ff" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#0087ff" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Mouthpiece LED glow -->
+    <radialGradient id="led" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#66bbff"/>
+      <stop offset="50%" stop-color="#0087ff"/>
+      <stop offset="100%" stop-color="#0055aa" stop-opacity="0.6"/>
+    </radialGradient>
+  </defs>
+  <!-- Background -->
+  <circle cx="32" cy="32" r="32" fill="#111111"/>
+  <!-- Radiant light from mouthpiece -->
+  <circle cx="22" cy="18" r="28" fill="url(#glow)"/>
+  <!-- JUUL device at 45 degrees -->
+  <g transform="translate(32,32) rotate(45)">
+    <!-- Pod/mouthpiece (top) -->
+    <rect x="-5" y="-24" width="10" height="10" rx="2.5" fill="#e0e0e0"/>
+    <!-- LED indicator -->
+    <ellipse cx="0" cy="-22" rx="2.5" ry="1.5" fill="url(#led)"/>
+    <!-- Main body -->
+    <rect x="-5" y="-14" width="10" height="28" rx="2" fill="#c8c8c8"/>
+    <!-- Body seam line -->
+    <line x1="-5" y1="-14" x2="5" y2="-14" stroke="#aaa" stroke-width="0.5"/>
+    <!-- Battery section (bottom) -->
+    <rect x="-5" y="14" width="10" height="8" rx="2" fill="#b0b0b0"/>
+    <line x1="-5" y1="14" x2="5" y2="14" stroke="#999" stroke-width="0.5"/>
+    <!-- Bottom cap -->
+    <rect x="-4" y="20" width="8" height="2" rx="1" fill="#999"/>
+  </g>
+</svg>
