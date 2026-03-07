@@ -2,8 +2,6 @@ services:
   tailscale:
     image: tailscale/tailscale
     hostname: cherryblossom-docker
-    extra_hosts:
-    - "host.docker.internal:host-gateway"
     environment:
     - TS_AUTHKEY=${TS_AUTHKEY}
     - TS_STATE_DIR=/var/lib/tailscale
