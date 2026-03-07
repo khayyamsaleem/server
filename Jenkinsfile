@@ -78,7 +78,13 @@ pipeline {
                             sh """
                                 ssh ${SSH_OPTS} ${CHERRYBLOSSOM_USER}@${CHERRYBLOSSOM_HOST} '
                                     cd ${CHERRYBLOSSOM_DEPLOY_DIR}/cherryblossom &&
-                                    docker compose up -d --remove-orphans
+                                    GLU_BEFORE=\$(docker inspect --format="{{.Id}}" gluetun 2>/dev/null || true) &&
+                                    docker compose up -d --remove-orphans &&
+                                    GLU_AFTER=\$(docker inspect --format="{{.Id}}" gluetun 2>/dev/null || true) &&
+                                    if [ "\$GLU_BEFORE" != "\$GLU_AFTER" ]; then
+                                        echo "Gluetun container changed — force-recreating transmission..."
+                                        docker compose up -d --force-recreate transmission
+                                    fi
                                 '
                             """
                         }
