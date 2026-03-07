@@ -50,3 +50,15 @@ scrape_configs:
   static_configs:
   - targets:
     - tailscale-exporter:9250
+- job_name: grafana
+  static_configs:
+  - targets:
+    - grafana:3000
+    labels:
+      host: juul
+- job_name: loki
+  static_configs:
+  - targets:
+    - loki:3100
+    labels:
+      host: juul
