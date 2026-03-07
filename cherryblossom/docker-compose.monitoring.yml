@@ -11,8 +11,6 @@ services:
     - --path.sysfs=/host/sys
     - --path.rootfs=/rootfs
     - --collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)
-    ports:
-    - 9100:9100
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:9100/metrics > /dev/null || exit 1"]
@@ -40,8 +38,6 @@ services:
     - /dev/disk/:/dev/disk:ro
     devices:
     - /dev/kmsg
-    ports:
-    - 9101:8080
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:8080/healthz > /dev/null || exit 1"]

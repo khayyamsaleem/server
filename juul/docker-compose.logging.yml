@@ -8,8 +8,6 @@ services:
     - ./loki-config.yml:/etc/loki/local-config.yaml
     command:
     - -config.file=/etc/loki/local-config.yaml
-    ports:
-    - 3100:3100
     labels:
       com.centurylinklabs.watchtower.enable: 'true'
     restart: unless-stopped

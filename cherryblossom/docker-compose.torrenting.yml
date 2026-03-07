@@ -110,8 +110,6 @@ services:
     depends_on:
       gluetun:
         condition: service_healthy
-    ports:
-    - 19091:19091
     restart: unless-stopped
     labels:
       com.centurylinklabs.watchtower.enable: 'true'
