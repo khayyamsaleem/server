@@ -11,291 +11,65 @@
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
         "name": "Annotations & Alerts",
-        "type": "dashboard"
-      },
-      {
-        "datasource": {
-          "type": "prometheus"
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
         },
-        "enable": false,
-        "expr": "changes(count(transmission_torrent_error > 0)[5m:]) > 0",
-        "iconColor": "red",
-        "name": "Torrent errors changed",
-        "titleFormat": "Torrent error count changed",
-        "type": "tags",
-        "useValueForTime": false
+        "type": "dashboard"
       }
     ]
   },
-  "description": "Transmission BitTorrent client monitoring dashboard. Tracks session stats, per-torrent health, peers, ratios, download progress, and error status.",
   "editable": true,
   "fiscalYearStartMonth": 0,
+  "gnetId": 15116,
   "graphTooltip": 0,
-  "id": null,
-  "links": [
-    {
-      "asDropdown": true,
-      "icon": "external link",
-      "includeVars": false,
-      "keepTime": false,
-      "tags": [
-        "homelab"
-      ],
-      "targetBlank": false,
-      "title": "Homelab",
-      "tooltip": "",
-      "type": "dashboards",
-      "url": ""
-    }
-  ],
+  "links": [],
+  "liveNow": false,
   "panels": [
     {
       "datasource": {
-        "type": "datasource",
-        "uid": "grafana"
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 2,
+          "mappings": [
+            {
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "decbytes"
+        },
+        "overrides": []
       },
       "gridPos": {
-        "h": 2,
-        "w": 24,
+        "h": 5,
+        "w": 6,
         "x": 0,
         "y": 0
       },
-      "id": 50,
-      "options": {
-        "code": {
-          "language": "plaintext",
-          "showLineNumbers": false,
-          "showMiniMap": false
-        },
-        "content": "# Transmission Torrent Monitor\n\nDashboard for [transmission-exporter](https://github.com/khayyamsaleem/transmission-exporter). Use the **Instance**, **Job**, and **Torrent** dropdowns above to filter. The *Session Overview* shows aggregate stats. The main *Torrent Stats* table shows per-torrent health, peers, ratio, and queue position. Expand *Extended Statistics* for upload averages, and *Torrent Health & Progress* for error details, download/seed time charts, and incomplete torrent progress bars.",
-        "mode": "markdown"
-      },
-      "title": "",
-      "transparent": true,
-      "type": "text"
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 2
-      },
-      "id": 27,
-      "title": "Session Overview",
-      "panels": [],
-      "type": "row"
-    },
-    {
-      "datasource": {
-        "type": "prometheus"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "mappings": [
-            {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "none"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 5,
-        "x": 0,
-        "y": 3
-      },
-      "id": 13,
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "none",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.0.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus"
-          },
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "count(transmission_torrent_done{instance=~\"$instance\",job=~\"$job\"})",
-          "format": "time_series",
-          "instant": true,
-          "intervalFactor": 1,
-          "range": false,
-          "refId": "A"
-        }
-      ],
-      "title": "Number of torrents",
-      "type": "stat",
-      "description": "Total number of torrents being managed by Transmission."
-    },
-    {
-      "datasource": {
-        "type": "prometheus"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "blue",
-            "mode": "shades"
-          },
-          "mappings": [
-            {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "bytes"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 3,
-        "x": 5,
-        "y": 3
-      },
-      "id": 6,
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.0.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus"
-          },
-          "editorMode": "code",
-          "expr": "transmission_session_stats_uploaded_bytes{instance=~\"$instance\",job=~\"$job\",type=\"current\"}",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Current session upload",
-      "type": "stat",
-      "description": "Bytes uploaded during the current Transmission session (since last restart)."
-    },
-    {
-      "datasource": {
-        "type": "prometheus"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "blue",
-            "mode": "fixed"
-          },
-          "mappings": [
-            {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "bytes"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 3,
-        "x": 8,
-        "y": 3
-      },
-      "id": 22,
-      "maxDataPoints": 100,
+      "id": 34,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "horizontal",
-        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -304,230 +78,65 @@
           "values": false
         },
         "showPercentChange": false,
+        "text": {},
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "10.4.3",
       "targets": [
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "sum (increase(transmission_session_stats_uploaded_bytes{instance=~\"$instance\",job=~\"$job\",type=\"cumulative\"}[1d]))",
-          "format": "time_series",
-          "intervalFactor": 1,
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "transmission_session_stats_downloaded_bytes{type=\"current\"}",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
           "legendFormat": "__auto",
           "range": true,
-          "refId": "A"
+          "refId": "A",
+          "useBackend": false
         }
       ],
-      "title": "1 day upload",
-      "type": "stat",
-      "description": "Upload volume over the last 24 hours."
+      "title": "Session Downloaded",
+      "type": "stat"
     },
     {
       "datasource": {
-        "type": "prometheus"
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "fixedColor": "blue",
-            "mode": "fixed"
-          },
-          "mappings": [
-            {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "bytes"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 3,
-        "x": 11,
-        "y": 3
-      },
-      "id": 23,
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.0.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus"
-          },
-          "editorMode": "code",
-          "expr": "sum (increase(transmission_session_stats_uploaded_bytes{instance=~\"$instance\",job=~\"$job\",type=\"cumulative\"}[7d]))",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "7 days upload",
-      "type": "stat",
-      "description": "Upload volume over the last 7 days."
-    },
-    {
-      "datasource": {
-        "type": "prometheus"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "blue",
-            "mode": "fixed"
-          },
-          "mappings": [
-            {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "bytes"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 5,
-        "x": 14,
-        "y": 3
-      },
-      "id": 5,
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.0.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus"
-          },
-          "editorMode": "code",
-          "expr": "transmission_session_stats_uploaded_bytes{instance=~\"$instance\",job=~\"$job\",type=\"cumulative\"}",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Total upload",
-      "type": "stat",
-      "description": "Cumulative bytes uploaded across all sessions."
-    },
-    {
-      "datasource": {
-        "type": "prometheus"
-      },
-      "description": "Combined upload rate across all active torrents right now.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "blue",
-            "mode": "fixed"
-          },
+          "decimals": 2,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
+                "color": "green",
+                "value": null
               }
             ]
           },
-          "unit": "binBps"
+          "unit": "decbytes"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 4,
-        "w": 5,
-        "x": 19,
-        "y": 3
+        "h": 5,
+        "w": 6,
+        "x": 6,
+        "y": 0
       },
-      "id": 18,
+      "id": 30,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "auto",
-        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -536,142 +145,65 @@
           "values": false
         },
         "showPercentChange": false,
+        "text": {},
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "10.4.3",
       "targets": [
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "sum (transmission_torrent_upload_bytes{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
-          "instant": false,
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "transmission_session_stats_downloaded_bytes{type=\"cumulative\"}",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
           "legendFormat": "__auto",
           "range": true,
-          "refId": "A"
+          "refId": "A",
+          "useBackend": false
         }
       ],
-      "title": "Current upload speed",
+      "title": "All Time Downloaded",
       "type": "stat"
     },
     {
       "datasource": {
-        "type": "prometheus"
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "fixedColor": "red",
-            "mode": "fixed"
-          },
-          "mappings": [
-            {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "0"
-                }
-              },
-              "type": "special"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 1
-              }
-            ]
-          },
-          "unit": "none",
-          "noValue": "0"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 2,
-        "w": 5,
-        "x": 0,
-        "y": 7
-      },
-      "id": 40,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.0.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus"
-          },
-          "editorMode": "code",
-          "expr": "count(transmission_torrent_error{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"} > 0) OR vector(0)",
-          "instant": true,
-          "range": false,
-          "refId": "A"
-        }
-      ],
-      "title": "Torrents with errors",
-      "type": "stat",
-      "description": "Number of torrents currently reporting an error (tracker warning, tracker error, or local error)."
-    },
-    {
-      "datasource": {
-        "type": "prometheus"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "orange",
-            "mode": "fixed"
-          },
+          "decimals": 2,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "rgb(255, 172, 10)",
+                "value": null
               }
             ]
           },
-          "unit": "bytes"
+          "unit": "decbytes"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 2,
-        "w": 5,
-        "x": 5,
-        "y": 7
+        "h": 5,
+        "w": 6,
+        "x": 12,
+        "y": 0
       },
-      "id": 41,
+      "id": 32,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
         "justifyMode": "auto",
-        "orientation": "horizontal",
-        "percentChangeColorMode": "standard",
+        "orientation": "auto",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -680,66 +212,65 @@
           "values": false
         },
         "showPercentChange": false,
+        "text": {},
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "10.4.3",
       "targets": [
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "sum(transmission_torrent_left_until_done_bytes{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "transmission_session_stats_uploaded_bytes{type=\"cumulative\"}",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
           "instant": false,
-          "range": true,
-          "refId": "A"
+          "legendFormat": "__auto",
+          "refId": "A",
+          "useBackend": false
         }
       ],
-      "title": "Total remaining",
-      "type": "stat",
-      "description": "Sum of bytes still needed to complete all active downloads."
+      "title": "All Time Uploaded",
+      "type": "stat"
     },
     {
       "datasource": {
-        "type": "prometheus"
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "fixedColor": "red",
-            "mode": "fixed"
-          },
+          "decimals": 2,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 1
+                "color": "rgb(255, 172, 10)",
+                "value": null
               }
             ]
           },
-          "unit": "bytes"
+          "unit": "decbytes"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 2,
-        "w": 5,
-        "x": 10,
-        "y": 7
+        "h": 5,
+        "w": 6,
+        "x": 18,
+        "y": 0
       },
-      "id": 42,
+      "id": 35,
       "options": {
         "colorMode": "value",
-        "graphMode": "none",
+        "graphMode": "area",
         "justifyMode": "auto",
-        "orientation": "horizontal",
-        "percentChangeColorMode": "standard",
+        "orientation": "auto",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -748,34 +279,39 @@
           "values": false
         },
         "showPercentChange": false,
+        "text": {},
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "10.4.3",
       "targets": [
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "sum(transmission_torrent_corrupt_ever_bytes{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
-          "instant": true,
-          "range": false,
-          "refId": "A"
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "transmission_session_stats_uploaded_bytes{type=\"current\"}",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "refId": "A",
+          "useBackend": false
         }
       ],
-      "title": "Total corrupt",
-      "type": "stat",
-      "description": "Sum of corrupt bytes received across all torrents. High values may indicate network or disk issues."
+      "title": "Session Uploaded",
+      "type": "stat"
     },
     {
       "datasource": {
-        "type": "prometheus"
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
           "color": {
-            "fixedColor": "rgb(31, 120, 193)",
             "mode": "thresholds"
           },
           "mappings": [
@@ -793,11 +329,12 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "red"
+                "color": "green",
+                "value": null
               },
               {
-                "color": "green",
-                "value": 1
+                "color": "red",
+                "value": 80
               }
             ]
           },
@@ -809,58 +346,62 @@
         "h": 4,
         "w": 3,
         "x": 0,
-        "y": 9
+        "y": 5
       },
-      "id": 10,
+      "id": 6,
       "maxDataPoints": 100,
       "options": {
-        "colorMode": "value",
-        "graphMode": "area",
+        "colorMode": "none",
+        "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "horizontal",
-        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
-            "lastNotNull"
+            "mean"
           ],
           "fields": "",
           "values": false
         },
         "showPercentChange": false,
+        "text": {},
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "10.4.3",
       "targets": [
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "transmission_session_stats_uploaded_bytes{instance=~\"$instance\",job=~\"$job\",type=\"current\"}/transmission_session_stats_downloaded_bytes{instance=~\"$instance\",job=~\"$job\",type=\"current\"}",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "range": true,
+          "expr": "count(transmission_torrent_status != -1)",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "__auto",
           "refId": "A"
         }
       ],
-      "title": "Current session ratio",
-      "type": "stat",
-      "description": "Ratio of uploaded to downloaded bytes in the current session."
+      "title": "Total Torrents",
+      "type": "stat"
     },
     {
       "datasource": {
-        "type": "prometheus"
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
       },
-      "description": "Ratio of uploaded to downloaded bytes across all sessions.",
       "fieldConfig": {
         "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
           "mappings": [
             {
               "options": {
                 "match": "null",
                 "result": {
-                  "text": "N/A"
+                  "color": "rgb(33, 33, 35)",
+                  "text": "0"
                 }
               },
               "type": "special"
@@ -870,11 +411,15 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "red"
+                "color": "rgb(33, 33, 35)",
+                "value": null
               },
               {
-                "color": "green",
+                "color": "#37872D",
                 "value": 1
+              },
+              {
+                "color": "#d44a3a"
               }
             ]
           },
@@ -884,95 +429,17 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 2,
-        "x": 3,
-        "y": 9
-      },
-      "id": 11,
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.0.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus"
-          },
-          "expr": "transmission_session_stats_uploaded_bytes{instance=~\"$instance\",job=~\"$job\",type=\"cumulative\"}/transmission_session_stats_downloaded_bytes{instance=~\"$instance\",job=~\"$job\",type=\"cumulative\"}",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "refId": "A"
-        }
-      ],
-      "title": "Overall ratio",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "prometheus"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "purple",
-            "mode": "fixed"
-          },
-          "mappings": [
-            {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "bytes"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
         "w": 3,
-        "x": 5,
-        "y": 9
+        "x": 3,
+        "y": 5
       },
-      "id": 3,
+      "id": 8,
       "maxDataPoints": 100,
       "options": {
-        "colorMode": "value",
+        "colorMode": "background",
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "horizontal",
-        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "mean"
@@ -981,199 +448,38 @@
           "values": false
         },
         "showPercentChange": false,
+        "text": {},
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "10.4.3",
       "targets": [
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "transmission_session_stats_downloaded_bytes{instance=~\"$instance\",job=~\"$job\",type=\"current\"}",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Current session download",
-      "type": "stat",
-      "description": "Bytes downloaded during the current Transmission session."
-    },
-    {
-      "datasource": {
-        "type": "prometheus"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "purple",
-            "mode": "fixed"
-          },
-          "mappings": [
-            {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "bytes"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 3,
-        "x": 8,
-        "y": 9
-      },
-      "id": 24,
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.0.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus"
-          },
-          "editorMode": "code",
-          "expr": "sum (increase(transmission_session_stats_downloaded_bytes{instance=~\"$instance\",job=~\"$job\",type=\"cumulative\"}[1d]))",
-          "format": "time_series",
-          "intervalFactor": 1,
+          "expr": "sum(transmission_torrent_peers_sending_to_us)",
+          "instant": true,
           "legendFormat": "__auto",
-          "range": true,
           "refId": "A"
         }
       ],
-      "title": "1 day download",
-      "type": "stat",
-      "description": "Download volume over the last 24 hours."
-    },
-    {
-      "datasource": {
-        "type": "prometheus"
-      },
-      "description": "Download volume over the last 7 days.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "purple",
-            "mode": "fixed"
-          },
-          "mappings": [
-            {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "bytes"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 3,
-        "x": 11,
-        "y": 9
-      },
-      "id": 25,
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.0.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus"
-          },
-          "editorMode": "code",
-          "expr": "sum (increase(transmission_session_stats_downloaded_bytes{instance=~\"$instance\",job=~\"$job\",type=\"cumulative\"}[7d]))",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "7 days download",
+      "title": "Downloading From",
       "type": "stat"
     },
     {
       "datasource": {
-        "type": "prometheus"
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
           "color": {
-            "fixedColor": "purple",
-            "mode": "fixed"
+            "mode": "thresholds"
           },
+          "decimals": 2,
           "mappings": [
             {
               "options": {
@@ -1189,100 +495,273 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "transparent",
+                "value": null
               },
               {
-                "color": "red",
-                "value": 80
+                "color": "#37872D",
+                "value": 1
               }
             ]
           },
-          "unit": "bytes"
+          "unit": "Bps"
         },
         "overrides": []
       },
       "gridPos": {
         "h": 4,
-        "w": 5,
-        "x": 14,
-        "y": 9
+        "w": 6,
+        "x": 6,
+        "y": 5
       },
-      "id": 4,
+      "id": 12,
       "maxDataPoints": 100,
       "options": {
-        "colorMode": "value",
-        "graphMode": "area",
+        "colorMode": "background",
+        "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "horizontal",
-        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
-            "lastNotNull"
+            "mean"
           ],
           "fields": "",
           "values": false
         },
         "showPercentChange": false,
+        "text": {},
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "10.4.3",
       "targets": [
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "transmission_session_stats_downloaded_bytes{instance=~\"$instance\",job=~\"$job\",type=\"cumulative\"}",
-          "format": "time_series",
-          "intervalFactor": 1,
+          "editorMode": "code",
+          "expr": "transmission_session_stats_download_speed_bytes",
+          "instant": true,
+          "legendFormat": "__auto",
           "refId": "A"
         }
       ],
-      "title": "Total download",
-      "type": "stat",
-      "description": "Cumulative bytes downloaded across all sessions."
+      "title": "Global Download Speed",
+      "type": "stat"
     },
     {
       "datasource": {
-        "type": "prometheus"
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
       },
-      "description": "Combined download rate across all active torrents right now.",
       "fieldConfig": {
         "defaults": {
           "color": {
-            "fixedColor": "purple",
-            "mode": "fixed"
+            "mode": "thresholds"
           },
+          "decimals": 2,
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "rgb(33, 33, 35)",
+                "value": null
+              },
+              {
+                "color": "rgba(237, 158, 40, 0.89)",
+                "value": 1
+              },
+              {
+                "color": "#d44a3a"
+              }
+            ]
+          },
+          "unit": "Bps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 12,
+        "y": 5
+      },
+      "id": 14,
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {},
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "transmission_session_stats_upload_speed_bytes",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Global Upload Speed",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "color": "rgb(33, 33, 35)",
+                  "text": "0"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "rgb(33, 33, 35)",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 0
+              },
+              {
+                "color": "orange",
+                "value": 7
+              },
+              {
+                "color": "yellow",
+                "value": 15
+              },
+              {
+                "color": "green",
+                "value": 25
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 18,
+        "y": 5
+      },
+      "id": 10,
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {},
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "sum(transmission_torrent_peers_getting_from_us)",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Seeding To",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 2,
           "mappings": [],
+          "max": 1,
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
+                "color": "green",
+                "value": null
               }
             ]
-          },
-          "unit": "binBps"
+          }
         },
         "overrides": []
       },
       "gridPos": {
         "h": 4,
-        "w": 5,
-        "x": 19,
-        "y": 9
+        "w": 3,
+        "x": 21,
+        "y": 5
       },
-      "id": 21,
+      "id": 37,
       "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
+        "minVizHeight": 75,
+        "minVizWidth": 75,
         "orientation": "auto",
-        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -1290,31 +769,38 @@
           "fields": "",
           "values": false
         },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto",
+        "text": {}
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "10.4.3",
       "targets": [
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
+          "disableTextWrap": false,
           "editorMode": "code",
-          "exemplar": false,
-          "expr": "sum (transmission_torrent_download_bytes{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
-          "instant": false,
+          "exemplar": true,
+          "expr": "transmission_session_stats_uploaded_bytes{type=\"cumulative\"} / transmission_session_stats_downloaded_bytes{type=\"cumulative\"}",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "interval": "",
           "legendFormat": "__auto",
           "range": true,
-          "refId": "A"
+          "refId": "A",
+          "useBackend": false
         }
       ],
-      "title": "Current download speed",
-      "type": "stat"
+      "title": "Global Ratio",
+      "type": "gauge"
     },
     {
       "datasource": {
-        "type": "prometheus"
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1328,9 +814,8 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
-            "barWidthFactor": 0.6,
             "drawStyle": "line",
-            "fillOpacity": 72,
+            "fillOpacity": 10,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -1344,22 +829,147 @@
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "auto",
+            "showPoints": "never",
             "spanNulls": false,
             "stacking": {
               "group": "A",
-              "mode": "normal"
+              "mode": "none"
             },
             "thresholdsStyle": {
               "mode": "off"
             }
           },
+          "decimals": 2,
+          "links": [],
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 50
+              },
+              {
+                "color": "red",
+                "value": 70
+              }
+            ]
+          },
+          "unit": "Bps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 14
+      },
+      "id": 2,
+      "interval": "5",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.4.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "transmission_session_stats_download_speed_bytes",
+          "interval": "",
+          "legendFormat": "Downloaded",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "transmission_session_stats_upload_speed_bytes",
+          "interval": "",
+          "legendFormat": "Upload",
+          "range": true,
+          "refId": "B"
+        }
+      ],
+      "title": "Upload / Download Speeds",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisGridShow": true,
+            "axisLabel": "",
+            "axisPlacement": "left",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 11,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1.4,
+            "pointSize": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2,
+          "fieldMinMax": false,
+          "links": [],
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1367,86 +977,84 @@
               }
             ]
           },
-          "unit": "binBps"
+          "unit": "Bps"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 9,
+        "h": 7,
         "w": 24,
         "x": 0,
-        "y": 13
+        "y": 21
       },
-      "id": 14,
+      "id": 26,
+      "interval": "5",
       "options": {
         "legend": {
-          "calcs": [
-            "lastNotNull",
-            "mean"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true,
-          "sortBy": "Mean",
-          "sortDesc": true
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false,
+          "width": 200
         },
         "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
+          "hoverProximity": 1,
+          "mode": "multi",
+          "sort": "desc"
         }
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "10.4.3",
       "targets": [
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "max by (name) (transmission_torrent_upload_bytes{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "exemplar": false,
+          "expr": "topk(5, transmission_torrent_upload_bytes{name=~\"$Torrent\"})",
+          "format": "time_series",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
           "instant": false,
           "legendFormat": "{{name}}",
           "range": true,
-          "refId": "A"
+          "refId": "A",
+          "useBackend": false
         }
       ],
-      "title": "Upload rate / minute",
-      "type": "timeseries",
-      "description": "Per-torrent upload rate over time. Stacked area shows contribution of each torrent."
+      "title": "Upload Speed by Torrent",
+      "type": "timeseries"
     },
     {
       "datasource": {
-        "type": "prometheus"
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
       },
-      "description": "Per-torrent statistics including ratio, peers, size, error status, queue position, and completion date.",
       "fieldConfig": {
         "defaults": {
           "color": {
-            "fixedColor": "text",
-            "mode": "fixed"
+            "mode": "thresholds"
           },
           "custom": {
             "align": "auto",
             "cellOptions": {
-              "type": "color-text"
+              "type": "auto"
             },
             "inspect": false
           },
-          "fieldMinMax": true,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "red"
-              },
-              {
-                "color": "yellow",
-                "value": 10000
-              },
-              {
                 "color": "green",
-                "value": 1000000
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
               }
             ]
           }
@@ -1455,26 +1063,92 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "Avg Upload 30 days"
+              "options": "Progress"
             },
             "properties": [
               {
-                "id": "custom.cellOptions",
-                "value": {
-                  "mode": "lcd",
-                  "type": "gauge"
-                }
+                "id": "unit",
+                "value": "percentunit"
               },
+              {
+                "id": "decimals",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Download Speed"
+            },
+            "properties": [
               {
                 "id": "unit",
-                "value": "bytes"
+                "value": "Bps"
               },
               {
-                "id": "color"
+                "id": "decimals",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Upload Speed"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "Bps"
               },
               {
-                "id": "custom.align",
-                "value": "left"
+                "id": "decimals",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Bytes Downloaded"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "decbytes"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Bytes Uploaded"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "decbytes"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Date Added"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "dateTimeAsSystem"
               }
             ]
           },
@@ -1485,383 +1159,56 @@
             },
             "properties": [
               {
-                "id": "custom.cellOptions",
-                "value": {
-                  "mode": "gradient",
-                  "type": "color-background"
-                }
-              },
-              {
                 "id": "decimals",
                 "value": 2
-              },
-              {
-                "id": "thresholds",
-                "value": {
-                  "mode": "absolute",
-                  "steps": [
-                    {
-                      "color": "red"
-                    },
-                    {
-                      "color": "#EAB839",
-                      "value": 1
-                    },
-                    {
-                      "color": "green",
-                      "value": 2
-                    }
-                  ]
-                }
-              },
-              {
-                "id": "custom.width",
-                "value": 80
-              },
-              {
-                "id": "color"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "Torrrent name"
+              "options": "Status"
             },
             "properties": [
-              {
-                "id": "custom.width",
-                "value": null
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "id"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 30
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Files"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 30
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Seeders (avg)"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 75
-              },
-              {
-                "id": "decimals",
-                "value": 0
-              },
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "green",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Leechers (avg)"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 80
-              },
-              {
-                "id": "decimals",
-                "value": 0
-              },
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "red",
-                  "mode": "shades"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Added"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 100
-              },
-              {
-                "id": "unit",
-                "value": "dateTimeFromNow"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Downloads"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 95
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Current upload"
-            },
-            "properties": [
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "mode": "gradient",
-                  "type": "gauge"
-                }
-              },
-              {
-                "id": "color",
-                "value": {
-                  "mode": "continuous-RdYlGr"
-                }
-              },
-              {
-                "id": "unit",
-                "value": "binBps"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Avg upload 1 day"
-            },
-            "properties": [
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "mode": "lcd",
-                  "type": "gauge"
-                }
-              },
-              {
-                "id": "unit",
-                "value": "binBps"
-              },
-              {
-                "id": "color"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Peers"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 75
-              },
-              {
-                "id": "color"
-              },
-              {
-                "id": "thresholds",
-                "value": {
-                  "mode": "absolute",
-                  "steps": [
-                    {
-                      "color": "text"
-                    },
-                    {
-                      "color": "green",
-                      "value": 1
-                    }
-                  ]
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Peers DL (downloading from us)"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 80
-              },
-              {
-                "id": "color"
-              },
-              {
-                "id": "thresholds",
-                "value": {
-                  "mode": "absolute",
-                  "steps": [
-                    {
-                      "color": "text"
-                    },
-                    {
-                      "color": "green",
-                      "value": 1
-                    }
-                  ]
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Peers UL (sending to us)"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 80
-              },
-              {
-                "id": "color"
-              },
-              {
-                "id": "thresholds",
-                "value": {
-                  "mode": "absolute",
-                  "steps": [
-                    {
-                      "color": "text"
-                    },
-                    {
-                      "color": "green",
-                      "value": 1
-                    }
-                  ]
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Size"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "bytes"
-              },
-              {
-                "id": "custom.width",
-                "value": 75
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Uploaded"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "bytes"
-              },
-              {
-                "id": "custom.width",
-                "value": 83
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Error"
-            },
-            "properties": [
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "mode": "gradient",
-                  "type": "color-background"
-                }
-              },
-              {
-                "id": "custom.width",
-                "value": 55
-              },
-              {
-                "id": "thresholds",
-                "value": {
-                  "mode": "absolute",
-                  "steps": [
-                    {
-                      "color": "green"
-                    },
-                    {
-                      "color": "yellow",
-                      "value": 1
-                    },
-                    {
-                      "color": "orange",
-                      "value": 2
-                    },
-                    {
-                      "color": "red",
-                      "value": 3
-                    }
-                  ]
-                }
-              },
               {
                 "id": "mappings",
                 "value": [
                   {
                     "options": {
                       "0": {
-                        "text": "OK",
-                        "index": 0
+                        "color": "red",
+                        "index": 0,
+                        "text": "Stopped"
                       },
                       "1": {
-                        "text": "Warn",
-                        "index": 1
+                        "color": "orange",
+                        "index": 1,
+                        "text": "Checking"
                       },
                       "2": {
-                        "text": "TrkErr",
-                        "index": 2
+                        "color": "orange",
+                        "index": 2,
+                        "text": "Checking"
                       },
                       "3": {
-                        "text": "Local",
-                        "index": 3
+                        "color": "blue",
+                        "index": 3,
+                        "text": "Downloading"
+                      },
+                      "4": {
+                        "color": "blue",
+                        "index": 4,
+                        "text": "Downloading"
+                      },
+                      "5": {
+                        "color": "green",
+                        "index": 5,
+                        "text": "Seeding"
+                      },
+                      "6": {
+                        "color": "green",
+                        "index": 6,
+                        "text": "Seeding"
                       }
                     },
                     "type": "value"
@@ -1873,56 +1220,52 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "Queue"
+              "options": "Size"
             },
             "properties": [
               {
-                "id": "custom.width",
-                "value": 55
+                "id": "unit",
+                "value": "decbytes"
+              },
+              {
+                "id": "decimals",
+                "value": 2
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "Done"
+              "options": "Peers"
             },
             "properties": [
               {
-                "id": "custom.width",
-                "value": 100
-              },
-              {
-                "id": "unit",
-                "value": "dateTimeFromNow"
+                "id": "decimals",
+                "value": 0
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "Remaining"
+              "options": "Files"
             },
             "properties": [
               {
-                "id": "unit",
-                "value": "bytes"
-              },
-              {
-                "id": "custom.width",
-                "value": 85
+                "id": "decimals",
+                "value": 0
               }
             ]
           }
         ]
       },
       "gridPos": {
-        "h": 22,
+        "h": 7,
         "w": 24,
         "x": 0,
-        "y": 22
+        "y": 35
       },
-      "id": 15,
+      "id": 24,
       "options": {
         "cellHeight": "sm",
         "footer": {
@@ -1933,2138 +1276,917 @@
           ],
           "show": false
         },
+        "frameIndex": 0,
         "showHeader": true,
         "sortBy": [
           {
             "desc": true,
-            "displayName": "Added"
+            "displayName": "Upload Speed"
           }
         ]
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "10.4.3",
       "targets": [
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "exemplar": false,
+          "expr": "transmission_torrent_added * 1000",
+          "format": "table",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": false,
+          "instant": true,
+          "legendFormat": "Added",
+          "range": false,
+          "refId": "A",
+          "useBackend": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "max by (id, name) (transmission_torrent_ratio{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
+          "expr": "transmission_torrent_done",
           "format": "table",
           "hide": false,
           "instant": true,
-          "legendFormat": "{{name}}",
+          "legendFormat": "Done",
           "range": false,
           "refId": "B"
         },
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "max by (id, name) (transmission_torrent_files_total{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
+          "expr": "transmission_torrent_downloaded_ever_bytes",
           "format": "table",
           "hide": false,
           "instant": true,
-          "legendFormat": "__auto",
+          "legendFormat": "Bytes Downloaded",
           "range": false,
           "refId": "C"
         },
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "max by (name) (avg_over_time (transmission_torrent_seeders{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"}[30d]))",
+          "expr": "transmission_torrent_peers_getting_from_us",
           "format": "table",
           "hide": false,
           "instant": true,
-          "legendFormat": "{{name}}",
+          "legendFormat": "Leechers",
           "range": false,
           "refId": "D"
         },
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "max by (name) (avg_over_time (transmission_torrent_leechers{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"}[30d]))",
+          "expr": "transmission_torrent_peers_sending_to_us",
           "format": "table",
           "hide": false,
           "instant": true,
-          "legendFormat": "{{name}}",
+          "legendFormat": "Seeders",
           "range": false,
           "refId": "E"
         },
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "max by (id, name) (transmission_torrent_added{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"} * 1000)",
+          "expr": "transmission_torrent_ratio",
           "format": "table",
           "hide": false,
           "instant": true,
-          "legendFormat": "{{name}}",
+          "legendFormat": "Ratio",
           "range": false,
           "refId": "F"
         },
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "max by (id, name) (transmission_torrent_downloads_total{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
+          "expr": "transmission_torrent_uploaded_ever_bytes",
           "format": "table",
           "hide": false,
           "instant": true,
-          "legendFormat": "{{name}}",
+          "legendFormat": "Bytes Uploaded",
           "range": false,
           "refId": "G"
         },
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "max by (id, name) (transmission_torrent_peers_connected{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
+          "expr": "transmission_torrent_status",
           "format": "table",
           "hide": false,
           "instant": true,
-          "legendFormat": "{{name}}",
+          "legendFormat": "Status",
+          "range": false,
+          "refId": "H"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "transmission_torrent_upload_bytes",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "Upload Speed",
+          "range": false,
+          "refId": "I"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "transmission_torrent_download_bytes",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "Download Speed",
           "range": false,
           "refId": "J"
         },
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "max by (id, name) (transmission_torrent_peers_getting_from_us{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
+          "expr": "transmission_torrent_peers_connected",
           "format": "table",
           "hide": false,
           "instant": true,
-          "legendFormat": "{{name}}",
+          "legendFormat": "Peers",
           "range": false,
           "refId": "K"
         },
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "max by (id, name) (transmission_torrent_peers_sending_to_us{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
+          "expr": "transmission_torrent_total_size_bytes",
           "format": "table",
           "hide": false,
           "instant": true,
-          "legendFormat": "{{name}}",
-          "range": false,
-          "refId": "N"
-        },
-        {
-          "datasource": {
-            "type": "prometheus"
-          },
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "max by (id, name) (transmission_torrent_total_size{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
-          "format": "table",
-          "hide": false,
-          "instant": true,
-          "legendFormat": "{{name}}",
+          "legendFormat": "Size",
           "range": false,
           "refId": "L"
         },
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "max by (id, name) (transmission_torrent_uploaded_ever{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
+          "expr": "transmission_torrent_files_total",
           "format": "table",
           "hide": false,
           "instant": true,
-          "legendFormat": "{{name}}",
+          "legendFormat": "Files",
           "range": false,
           "refId": "M"
-        },
-        {
-          "datasource": {
-            "type": "prometheus"
-          },
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "max by (id, name) (transmission_torrent_error{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
-          "format": "table",
-          "instant": true,
-          "legendFormat": "__auto",
-          "range": false,
-          "refId": "O"
-        },
-        {
-          "datasource": {
-            "type": "prometheus"
-          },
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "max by (id, name) (transmission_torrent_queue_position{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
-          "format": "table",
-          "instant": true,
-          "legendFormat": "__auto",
-          "range": false,
-          "refId": "P"
-        },
-        {
-          "datasource": {
-            "type": "prometheus"
-          },
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "max by (id, name) (transmission_torrent_done_date{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"} * 1000)",
-          "format": "table",
-          "instant": true,
-          "legendFormat": "__auto",
-          "range": false,
-          "refId": "Q"
-        },
-        {
-          "datasource": {
-            "type": "prometheus"
-          },
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "max by (id, name) (transmission_torrent_left_until_done_bytes{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
-          "format": "table",
-          "instant": true,
-          "legendFormat": "__auto",
-          "range": false,
-          "refId": "R"
         }
       ],
-      "title": "Torrent stats",
+      "title": "Torrents",
       "transformations": [
         {
-          "id": "joinByField",
+          "id": "concatenate",
           "options": {
-            "byField": "id",
-            "mode": "outer"
+            "frameNameLabel": "",
+            "frameNameMode": "drop"
           }
         },
         {
-          "id": "sortBy",
+          "id": "filterFieldsByName",
           "options": {
-            "fields": {},
-            "sort": [
-              {
-                "desc": true,
-                "field": "Value #A"
-              }
-            ]
+            "byVariable": false,
+            "include": {
+              "names": [
+                "name 1",
+                "Value #A",
+                "Value #B",
+                "Value #C",
+                "Value #D",
+                "Value #E",
+                "Value #F",
+                "Value #G",
+                "Value #H",
+                "Value #J",
+                "Value #I",
+                "Value #K",
+                "Value #L",
+                "Value #M"
+              ]
+            }
           }
         },
         {
           "id": "organize",
           "options": {
-            "excludeByName": {
-              "Time 1": true,
-              "Time 10": true,
-              "Time 11": true,
-              "Time 12": true,
-              "Time 13": true,
-              "Time 2": true,
-              "Time 3": true,
-              "Time 4": true,
-              "Time 5": true,
-              "Time 6": true,
-              "Time 7": true,
-              "Time 8": true,
-              "Time 9": true,
-              "Value #C": true,
-              "Value #G": true,
-              "__name__": true,
-              "__name__ 1": true,
-              "__name__ 2": true,
-              "__name__ 3": true,
-              "__name__ 4": true,
-              "__name__ 5": true,
-              "__name__ 6": true,
-              "__name__ 7": true,
-              "__name__ 8": true,
-              "chain 1": true,
-              "chain 10": true,
-              "chain 11": true,
-              "chain 12": true,
-              "chain 13": true,
-              "chain 2": true,
-              "chain 3": true,
-              "chain 4": true,
-              "chain 5": true,
-              "chain 6": true,
-              "chain 7": true,
-              "chain 8": true,
-              "chain 9": true,
-              "id 1": true,
-              "id 2": true,
-              "instance 1": true,
-              "instance 10": true,
-              "instance 11": true,
-              "instance 12": true,
-              "instance 13": true,
-              "instance 14": true,
-              "instance 2": true,
-              "instance 3": true,
-              "instance 4": true,
-              "instance 5": true,
-              "instance 6": true,
-              "instance 7": true,
-              "instance 8": true,
-              "instance 9": true,
-              "job 1": true,
-              "job 10": true,
-              "job 11": true,
-              "job 12": true,
-              "job 13": true,
-              "job 14": true,
-              "job 2": true,
-              "job 3": true,
-              "job 4": true,
-              "job 5": true,
-              "job 6": true,
-              "job 7": true,
-              "job 8": true,
-              "job 9": true,
-              "name 1": false,
-              "name 10": true,
-              "name 11": true,
-              "name 12": true,
-              "name 13": true,
-              "name 14": true,
-              "name 2": true,
-              "name 3": true,
-              "name 4": true,
-              "name 5": true,
-              "name 6": true,
-              "name 7": true,
-              "name 8": true,
-              "name 9": true,
-              "tracker": true,
-              "tracker 1": true,
-              "tracker 2": true,
-              "tracker 3": true,
-              "Time 14": true,
-              "tracker 14": true,
-              "Time 15": true,
-              "name 15": true,
-              "instance 15": true,
-              "job 15": true,
-              "tracker 15": true,
-              "Time 16": true,
-              "name 16": true,
-              "instance 16": true,
-              "job 16": true,
-              "tracker 16": true,
-              "Time 17": true,
-              "name 17": true,
-              "instance 17": true,
-              "job 17": true,
-              "tracker 17": true,
-              "Time 18": true,
-              "name 18": true,
-              "instance 18": true,
-              "job 18": true,
-              "tracker 18": true
-            },
+            "excludeByName": {},
             "includeByName": {},
             "indexByName": {
-              "Time 1": 16,
-              "Time 10": 58,
-              "Time 11": 63,
-              "Time 12": 68,
-              "Time 13": 73,
-              "Time 14": 78,
-              "Time 2": 19,
-              "Time 3": 24,
-              "Time 4": 29,
-              "Time 5": 34,
-              "Time 6": 39,
-              "Time 7": 43,
-              "Time 8": 49,
-              "Time 9": 54,
-              "Value #A": 15,
-              "Value #B": 8,
+              "Value #A": 8,
+              "Value #B": 1,
               "Value #C": 4,
-              "Value #D": 5,
+              "Value #D": 7,
               "Value #E": 6,
-              "Value #F": 2,
-              "Value #G": 7,
-              "Value #H": 13,
-              "Value #I": 14,
-              "Value #J": 10,
+              "Value #F": 9,
+              "Value #G": 5,
+              "Value #H": 10,
+              "Value #I": 3,
+              "Value #J": 2,
+              "name 1": 0,
               "Value #K": 11,
-              "Value #L": 3,
-              "Value #M": 9,
-              "Value #N": 12,
-              "__name__ 1": 23,
-              "__name__ 2": 25,
-              "__name__ 3": 44,
-              "__name__ 4": 50,
-              "__name__ 5": 59,
-              "__name__ 6": 64,
-              "__name__ 7": 69,
-              "__name__ 8": 74,
-              "__name__ 9": 79,
-              "id": 0,
-              "instance 1": 17,
-              "instance 10": 60,
-              "instance 11": 65,
-              "instance 12": 70,
-              "instance 13": 75,
-              "instance 14": 80,
-              "instance 2": 20,
-              "instance 3": 26,
-              "instance 4": 30,
-              "instance 5": 35,
-              "instance 6": 40,
-              "instance 7": 45,
-              "instance 8": 51,
-              "instance 9": 55,
-              "job 1": 19,
-              "job 10": 61,
-              "job 11": 66,
-              "job 12": 71,
-              "job 13": 76,
-              "job 14": 81,
-              "job 2": 21,
-              "job 3": 27,
-              "job 4": 31,
-              "job 5": 36,
-              "job 6": 41,
-              "job 7": 46,
-              "job 8": 52,
-              "job 9": 56,
-              "name 1": 1,
-              "name 10": 62,
-              "name 11": 67,
-              "name 12": 72,
-              "name 13": 77,
-              "name 14": 82,
-              "name 2": 22,
-              "name 3": 28,
-              "name 4": 32,
-              "name 5": 37,
-              "name 6": 42,
-              "name 7": 47,
-              "name 8": 53,
-              "name 9": 57,
-              "tracker 1": 33,
-              "tracker 2": 38,
-              "tracker 3": 48
+              "Value #L": 12,
+              "Value #M": 13
             },
             "renameByName": {
-              "Time 2": "",
-              "Value #B": "Ratio",
-              "Value #C": "Files",
-              "Value #D": "Seeders (avg)",
-              "Value #E": "Leechers (avg)",
-              "Value #F": "Added",
-              "Value #G": "Downloads",
-              "Value #J": "Peers",
-              "Value #K": "Peers DL (downloading from us)",
+              "Value #A": "Date Added",
+              "Value #B": "Progress",
+              "Value #C": "Bytes Downloaded",
+              "Value #D": "Leechers",
+              "Value #E": "Seeders",
+              "Value #F": "Ratio",
+              "Value #G": "Bytes Uploaded",
+              "Value #H": "Status",
+              "Value #I": "Upload Speed",
+              "Value #J": "Download Speed",
+              "name 1": "Name",
+              "Value #K": "Peers",
               "Value #L": "Size",
-              "Value #M": "Uploaded",
-              "Value #N": "Peers UL (sending to us)",
-              "name": "Torrent",
-              "name 1": "Torrrent name",
-              "name 10": "",
-              "tracker": "",
-              "tracker 3": "",
-              "Value #O": "Error",
-              "Value #P": "Queue",
-              "Value #Q": "Done",
-              "Value #R": "Remaining"
+              "Value #M": "Files"
             }
-          }
-        },
-        {
-          "id": "convertFieldType",
-          "options": {
-            "conversions": [
-              {
-                "dateFormat": "$(UNIX)",
-                "destinationType": "time",
-                "targetField": "Added"
-              },
-              {
-                "dateFormat": "$(UNIX)",
-                "destinationType": "time",
-                "targetField": "Done"
-              }
-            ],
-            "fields": {}
           }
         }
       ],
       "type": "table"
     },
     {
-      "collapsed": true,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 2,
+          "mappings": [
+            {
+              "from": "",
+              "id": 2,
+              "operator": "",
+              "text": "N/A",
+              "to": "",
+              "type": 1,
+              "value": "null"
+            }
+          ],
+          "max": 1,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": null
+              },
+              {
+                "color": "dark-orange",
+                "value": 0.25
+              },
+              {
+                "color": "#EAB839",
+                "value": 0.5
+              },
+              {
+                "color": "semi-dark-green",
+                "value": 0.75
+              },
+              {
+                "color": "rgb(206, 206, 206)",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
       "gridPos": {
-        "h": 1,
+        "h": 10,
         "w": 24,
         "x": 0,
-        "y": 44
+        "y": 42
       },
-      "id": 28,
-      "panels": [
+      "id": 22,
+      "options": {
+        "displayMode": "lcd",
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "text": {},
+        "valueMode": "color"
+      },
+      "pluginVersion": "10.4.3",
+      "targets": [
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
-          "description": "Extended per-torrent statistics with 30-day average upload rate, 1-day average upload, current upload speed, and all peer/tracker details.",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "fixedColor": "text",
-                "mode": "fixed"
-              },
-              "custom": {
-                "align": "auto",
-                "cellOptions": {
-                  "type": "color-text"
-                },
-                "inspect": false
-              },
-              "fieldMinMax": true,
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "red"
-                  },
-                  {
-                    "color": "yellow",
-                    "value": 10000
-                  },
-                  {
-                    "color": "green",
-                    "value": 1000000
-                  }
-                ]
-              }
-            },
-            "overrides": [
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Avg Upload 30 days"
-                },
-                "properties": [
-                  {
-                    "id": "custom.cellOptions",
-                    "value": {
-                      "mode": "lcd",
-                      "type": "gauge"
-                    }
-                  },
-                  {
-                    "id": "unit",
-                    "value": "bytes"
-                  },
-                  {
-                    "id": "color"
-                  },
-                  {
-                    "id": "custom.align",
-                    "value": "left"
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Ratio"
-                },
-                "properties": [
-                  {
-                    "id": "custom.cellOptions",
-                    "value": {
-                      "mode": "gradient",
-                      "type": "color-background"
-                    }
-                  },
-                  {
-                    "id": "decimals",
-                    "value": 2
-                  },
-                  {
-                    "id": "thresholds",
-                    "value": {
-                      "mode": "absolute",
-                      "steps": [
-                        {
-                          "color": "red"
-                        },
-                        {
-                          "color": "#EAB839",
-                          "value": 1
-                        },
-                        {
-                          "color": "green",
-                          "value": 2
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "id": "custom.width",
-                    "value": 80
-                  },
-                  {
-                    "id": "color"
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Torrrent name"
-                },
-                "properties": [
-                  {
-                    "id": "custom.width",
-                    "value": 300
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "id"
-                },
-                "properties": [
-                  {
-                    "id": "custom.width",
-                    "value": 30
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Files"
-                },
-                "properties": [
-                  {
-                    "id": "custom.width",
-                    "value": 30
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Seeders (avg)"
-                },
-                "properties": [
-                  {
-                    "id": "custom.width",
-                    "value": 75
-                  },
-                  {
-                    "id": "decimals",
-                    "value": 0
-                  },
-                  {
-                    "id": "color",
-                    "value": {
-                      "fixedColor": "green",
-                      "mode": "fixed"
-                    }
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Leechers (avg)"
-                },
-                "properties": [
-                  {
-                    "id": "custom.width",
-                    "value": 80
-                  },
-                  {
-                    "id": "decimals",
-                    "value": 0
-                  },
-                  {
-                    "id": "color",
-                    "value": {
-                      "fixedColor": "red",
-                      "mode": "shades"
-                    }
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Added"
-                },
-                "properties": [
-                  {
-                    "id": "custom.width",
-                    "value": 100
-                  },
-                  {
-                    "id": "unit",
-                    "value": "dateTimeFromNow"
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Downloads"
-                },
-                "properties": [
-                  {
-                    "id": "custom.width",
-                    "value": 95
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Current upload"
-                },
-                "properties": [
-                  {
-                    "id": "custom.cellOptions",
-                    "value": {
-                      "mode": "gradient",
-                      "type": "gauge"
-                    }
-                  },
-                  {
-                    "id": "color",
-                    "value": {
-                      "mode": "continuous-RdYlGr"
-                    }
-                  },
-                  {
-                    "id": "unit",
-                    "value": "binBps"
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Avg upload 1 day"
-                },
-                "properties": [
-                  {
-                    "id": "custom.cellOptions",
-                    "value": {
-                      "mode": "lcd",
-                      "type": "gauge"
-                    }
-                  },
-                  {
-                    "id": "unit",
-                    "value": "binBps"
-                  },
-                  {
-                    "id": "color"
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Peers"
-                },
-                "properties": [
-                  {
-                    "id": "custom.width",
-                    "value": 75
-                  },
-                  {
-                    "id": "color"
-                  },
-                  {
-                    "id": "thresholds",
-                    "value": {
-                      "mode": "absolute",
-                      "steps": [
-                        {
-                          "color": "text"
-                        },
-                        {
-                          "color": "green",
-                          "value": 1
-                        }
-                      ]
-                    }
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Peers DL (downloading from us)"
-                },
-                "properties": [
-                  {
-                    "id": "custom.width",
-                    "value": 80
-                  },
-                  {
-                    "id": "color"
-                  },
-                  {
-                    "id": "thresholds",
-                    "value": {
-                      "mode": "absolute",
-                      "steps": [
-                        {
-                          "color": "text"
-                        },
-                        {
-                          "color": "green",
-                          "value": 1
-                        }
-                      ]
-                    }
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Peers UL (sending to us)"
-                },
-                "properties": [
-                  {
-                    "id": "custom.width",
-                    "value": 80
-                  },
-                  {
-                    "id": "color"
-                  },
-                  {
-                    "id": "thresholds",
-                    "value": {
-                      "mode": "absolute",
-                      "steps": [
-                        {
-                          "color": "text"
-                        },
-                        {
-                          "color": "green",
-                          "value": 1
-                        }
-                      ]
-                    }
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Size"
-                },
-                "properties": [
-                  {
-                    "id": "unit",
-                    "value": "bytes"
-                  },
-                  {
-                    "id": "custom.width",
-                    "value": 75
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Uploaded"
-                },
-                "properties": [
-                  {
-                    "id": "unit",
-                    "value": "bytes"
-                  },
-                  {
-                    "id": "custom.width",
-                    "value": 80
-                  }
-                ]
-              }
-            ]
-          },
-          "gridPos": {
-            "h": 22,
-            "w": 24,
-            "x": 0,
-            "y": 45
-          },
-          "id": 26,
-          "options": {
-            "cellHeight": "sm",
-            "footer": {
-              "countRows": false,
-              "fields": "",
-              "reducer": [
-                "sum"
-              ],
-              "show": false
-            },
-            "showHeader": true,
-            "sortBy": [
-              {
-                "desc": true,
-                "displayName": "Added"
-              }
-            ]
-          },
-          "pluginVersion": "12.0.2",
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus"
-              },
-              "editorMode": "code",
-              "exemplar": false,
-              "expr": "max by (name) (avg_over_time (transmission_torrent_upload_bytes{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"}[30d]))",
-              "format": "table",
-              "instant": true,
-              "legendFormat": "{{name}}",
-              "range": false,
-              "refId": "A"
-            },
-            {
-              "datasource": {
-                "type": "prometheus"
-              },
-              "editorMode": "code",
-              "exemplar": false,
-              "expr": "max by (id, name) (transmission_torrent_ratio{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
-              "format": "table",
-              "hide": false,
-              "instant": true,
-              "legendFormat": "{{name}}",
-              "range": false,
-              "refId": "B"
-            },
-            {
-              "datasource": {
-                "type": "prometheus"
-              },
-              "editorMode": "code",
-              "exemplar": false,
-              "expr": "max by (id, name) (transmission_torrent_files_total{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
-              "format": "table",
-              "hide": false,
-              "instant": true,
-              "legendFormat": "__auto",
-              "range": false,
-              "refId": "C"
-            },
-            {
-              "datasource": {
-                "type": "prometheus"
-              },
-              "editorMode": "code",
-              "exemplar": false,
-              "expr": "max by (name) (avg_over_time (transmission_torrent_seeders{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"}[30d]))",
-              "format": "table",
-              "hide": false,
-              "instant": true,
-              "legendFormat": "{{name}}",
-              "range": false,
-              "refId": "D"
-            },
-            {
-              "datasource": {
-                "type": "prometheus"
-              },
-              "editorMode": "code",
-              "exemplar": false,
-              "expr": "max by (name) (avg_over_time (transmission_torrent_leechers{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"}[30d]))",
-              "format": "table",
-              "hide": false,
-              "instant": true,
-              "legendFormat": "{{name}}",
-              "range": false,
-              "refId": "E"
-            },
-            {
-              "datasource": {
-                "type": "prometheus"
-              },
-              "editorMode": "code",
-              "exemplar": false,
-              "expr": "max by (id, name) (transmission_torrent_added{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"} * 1000)",
-              "format": "table",
-              "hide": false,
-              "instant": true,
-              "legendFormat": "{{name}}",
-              "range": false,
-              "refId": "F"
-            },
-            {
-              "datasource": {
-                "type": "prometheus"
-              },
-              "editorMode": "code",
-              "exemplar": false,
-              "expr": "max by (id, name) (transmission_torrent_downloads_total{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
-              "format": "table",
-              "hide": false,
-              "instant": true,
-              "legendFormat": "{{name}}",
-              "range": false,
-              "refId": "G"
-            },
-            {
-              "datasource": {
-                "type": "prometheus"
-              },
-              "editorMode": "code",
-              "exemplar": false,
-              "expr": "max by (id, name) (transmission_torrent_upload_bytes{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
-              "format": "table",
-              "hide": false,
-              "instant": true,
-              "legendFormat": "{{name}}",
-              "range": false,
-              "refId": "H"
-            },
-            {
-              "datasource": {
-                "type": "prometheus"
-              },
-              "editorMode": "code",
-              "exemplar": false,
-              "expr": "max by (name) (avg_over_time (transmission_torrent_upload_bytes{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"}[1d]))",
-              "format": "table",
-              "hide": false,
-              "instant": true,
-              "legendFormat": "{{name}}",
-              "range": false,
-              "refId": "I"
-            },
-            {
-              "datasource": {
-                "type": "prometheus"
-              },
-              "editorMode": "code",
-              "exemplar": false,
-              "expr": "max by (id, name) (transmission_torrent_peers_connected{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
-              "format": "table",
-              "hide": false,
-              "instant": true,
-              "legendFormat": "{{name}}",
-              "range": false,
-              "refId": "J"
-            },
-            {
-              "datasource": {
-                "type": "prometheus"
-              },
-              "editorMode": "code",
-              "exemplar": false,
-              "expr": "max by (id, name) (transmission_torrent_peers_getting_from_us{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
-              "format": "table",
-              "hide": false,
-              "instant": true,
-              "legendFormat": "{{name}}",
-              "range": false,
-              "refId": "K"
-            },
-            {
-              "datasource": {
-                "type": "prometheus"
-              },
-              "editorMode": "code",
-              "exemplar": false,
-              "expr": "max by (id, name) (transmission_torrent_peers_sending_to_us{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
-              "format": "table",
-              "hide": false,
-              "instant": true,
-              "legendFormat": "{{name}}",
-              "range": false,
-              "refId": "N"
-            },
-            {
-              "datasource": {
-                "type": "prometheus"
-              },
-              "editorMode": "code",
-              "exemplar": false,
-              "expr": "max by (id, name) (transmission_torrent_total_size{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
-              "format": "table",
-              "hide": false,
-              "instant": true,
-              "legendFormat": "{{name}}",
-              "range": false,
-              "refId": "L"
-            },
-            {
-              "datasource": {
-                "type": "prometheus"
-              },
-              "editorMode": "code",
-              "exemplar": false,
-              "expr": "max by (id, name) (transmission_torrent_uploaded_ever{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
-              "format": "table",
-              "hide": false,
-              "instant": true,
-              "legendFormat": "{{name}}",
-              "range": false,
-              "refId": "M"
-            }
-          ],
-          "title": "Torrent stats",
-          "transformations": [
-            {
-              "id": "joinByField",
-              "options": {
-                "byField": "id",
-                "mode": "outer"
-              }
-            },
-            {
-              "id": "sortBy",
-              "options": {
-                "fields": {},
-                "sort": [
-                  {
-                    "desc": true,
-                    "field": "Value #A"
-                  }
-                ]
-              }
-            },
-            {
-              "id": "organize",
-              "options": {
-                "excludeByName": {
-                  "Time 1": true,
-                  "Time 10": true,
-                  "Time 11": true,
-                  "Time 12": true,
-                  "Time 13": true,
-                  "Time 2": true,
-                  "Time 3": true,
-                  "Time 4": true,
-                  "Time 5": true,
-                  "Time 6": true,
-                  "Time 7": true,
-                  "Time 8": true,
-                  "Time 9": true,
-                  "Value #C": true,
-                  "Value #G": true,
-                  "__name__": true,
-                  "__name__ 1": true,
-                  "__name__ 2": true,
-                  "__name__ 3": true,
-                  "__name__ 4": true,
-                  "__name__ 5": true,
-                  "__name__ 6": true,
-                  "__name__ 7": true,
-                  "__name__ 8": true,
-                  "chain 1": true,
-                  "chain 10": true,
-                  "chain 11": true,
-                  "chain 12": true,
-                  "chain 13": true,
-                  "chain 2": true,
-                  "chain 3": true,
-                  "chain 4": true,
-                  "chain 5": true,
-                  "chain 6": true,
-                  "chain 7": true,
-                  "chain 8": true,
-                  "chain 9": true,
-                  "id 1": true,
-                  "id 2": true,
-                  "instance 1": true,
-                  "instance 10": true,
-                  "instance 11": true,
-                  "instance 12": true,
-                  "instance 13": true,
-                  "instance 14": true,
-                  "instance 2": true,
-                  "instance 3": true,
-                  "instance 4": true,
-                  "instance 5": true,
-                  "instance 6": true,
-                  "instance 7": true,
-                  "instance 8": true,
-                  "instance 9": true,
-                  "job 1": true,
-                  "job 10": true,
-                  "job 11": true,
-                  "job 12": true,
-                  "job 13": true,
-                  "job 14": true,
-                  "job 2": true,
-                  "job 3": true,
-                  "job 4": true,
-                  "job 5": true,
-                  "job 6": true,
-                  "job 7": true,
-                  "job 8": true,
-                  "job 9": true,
-                  "name 1": false,
-                  "name 10": true,
-                  "name 11": true,
-                  "name 12": true,
-                  "name 13": true,
-                  "name 14": true,
-                  "name 2": true,
-                  "name 3": true,
-                  "name 4": true,
-                  "name 5": true,
-                  "name 6": true,
-                  "name 7": true,
-                  "name 8": true,
-                  "name 9": true,
-                  "tracker": true,
-                  "tracker 1": true,
-                  "tracker 2": true,
-                  "tracker 3": true
-                },
-                "includeByName": {},
-                "indexByName": {
-                  "Time 1": 16,
-                  "Time 10": 58,
-                  "Time 11": 63,
-                  "Time 12": 68,
-                  "Time 13": 73,
-                  "Time 14": 78,
-                  "Time 2": 19,
-                  "Time 3": 24,
-                  "Time 4": 29,
-                  "Time 5": 34,
-                  "Time 6": 39,
-                  "Time 7": 43,
-                  "Time 8": 49,
-                  "Time 9": 54,
-                  "Value #A": 15,
-                  "Value #B": 8,
-                  "Value #C": 4,
-                  "Value #D": 5,
-                  "Value #E": 6,
-                  "Value #F": 2,
-                  "Value #G": 7,
-                  "Value #H": 13,
-                  "Value #I": 14,
-                  "Value #J": 10,
-                  "Value #K": 11,
-                  "Value #L": 3,
-                  "Value #M": 9,
-                  "Value #N": 12,
-                  "__name__ 1": 23,
-                  "__name__ 2": 25,
-                  "__name__ 3": 44,
-                  "__name__ 4": 50,
-                  "__name__ 5": 59,
-                  "__name__ 6": 64,
-                  "__name__ 7": 69,
-                  "__name__ 8": 74,
-                  "__name__ 9": 79,
-                  "id": 0,
-                  "instance 1": 17,
-                  "instance 10": 60,
-                  "instance 11": 65,
-                  "instance 12": 70,
-                  "instance 13": 75,
-                  "instance 14": 80,
-                  "instance 2": 20,
-                  "instance 3": 26,
-                  "instance 4": 30,
-                  "instance 5": 35,
-                  "instance 6": 40,
-                  "instance 7": 45,
-                  "instance 8": 51,
-                  "instance 9": 55,
-                  "job 1": 19,
-                  "job 10": 61,
-                  "job 11": 66,
-                  "job 12": 71,
-                  "job 13": 76,
-                  "job 14": 81,
-                  "job 2": 21,
-                  "job 3": 27,
-                  "job 4": 31,
-                  "job 5": 36,
-                  "job 6": 41,
-                  "job 7": 46,
-                  "job 8": 52,
-                  "job 9": 56,
-                  "name 1": 1,
-                  "name 10": 62,
-                  "name 11": 67,
-                  "name 12": 72,
-                  "name 13": 77,
-                  "name 14": 82,
-                  "name 2": 22,
-                  "name 3": 28,
-                  "name 4": 32,
-                  "name 5": 37,
-                  "name 6": 42,
-                  "name 7": 47,
-                  "name 8": 53,
-                  "name 9": 57,
-                  "tracker 1": 33,
-                  "tracker 2": 38,
-                  "tracker 3": 48
-                },
-                "renameByName": {
-                  "Time 2": "",
-                  "Value #A": "Avg Upload 30 days",
-                  "Value #B": "Ratio",
-                  "Value #C": "Files",
-                  "Value #D": "Seeders (avg)",
-                  "Value #E": "Leechers (avg)",
-                  "Value #F": "Added",
-                  "Value #G": "Downloads",
-                  "Value #H": "Current upload",
-                  "Value #I": "Avg upload 1 day",
-                  "Value #J": "Peers",
-                  "Value #K": "Peers DL (downloading from us)",
-                  "Value #L": "Size",
-                  "Value #M": "Uploaded",
-                  "Value #N": "Peers UL (sending to us)",
-                  "name": "Torrent",
-                  "name 1": "Torrrent name",
-                  "name 10": "",
-                  "tracker": "",
-                  "tracker 3": ""
-                }
-              }
-            },
-            {
-              "id": "convertFieldType",
-              "options": {
-                "conversions": [
-                  {
-                    "dateFormat": "$(UNIX)",
-                    "destinationType": "time",
-                    "targetField": "Added"
-                  }
-                ],
-                "fields": {}
-              }
-            }
-          ],
-          "type": "table"
+          "editorMode": "code",
+          "expr": "transmission_torrent_done{name=~\"$Torrent\"} < 1",
+          "instant": true,
+          "legendFormat": "{{name}}",
+          "refId": "A"
         }
       ],
-      "title": "Extended Statistics",
-      "type": "row"
+      "title": "Incomplete Torrents",
+      "type": "bargauge"
     },
     {
-      "collapsed": true,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 45
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
       },
-      "id": 30,
-      "panels": [
-        {
-          "datasource": {
-            "type": "prometheus"
-          },
-          "description": "Detailed health view per torrent: error status, bytes remaining/valid/corrupt, queue position, last activity, completion date, and time spent downloading and seeding.",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "fixedColor": "text",
-                "mode": "fixed"
-              },
-              "custom": {
-                "align": "auto",
-                "cellOptions": {
-                  "type": "color-text"
-                },
-                "inspect": false
-              },
-              "mappings": [
-                {
-                  "options": {
-                    "0": {
-                      "text": "OK",
-                      "color": "green",
-                      "index": 0
-                    },
-                    "1": {
-                      "text": "Tracker Warning",
-                      "color": "yellow",
-                      "index": 1
-                    },
-                    "2": {
-                      "text": "Tracker Error",
-                      "color": "orange",
-                      "index": 2
-                    },
-                    "3": {
-                      "text": "Local Error",
-                      "color": "red",
-                      "index": 3
-                    }
-                  },
-                  "type": "value"
-                }
-              ],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  },
-                  {
-                    "color": "yellow",
-                    "value": 1
-                  },
-                  {
-                    "color": "orange",
-                    "value": 2
-                  },
-                  {
-                    "color": "red",
-                    "value": 3
-                  }
-                ]
-              }
-            },
-            "overrides": [
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
               {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Error"
-                },
-                "properties": [
-                  {
-                    "id": "custom.cellOptions",
-                    "value": {
-                      "mode": "gradient",
-                      "type": "color-background"
-                    }
-                  },
-                  {
-                    "id": "custom.width",
-                    "value": 120
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Name"
-                },
-                "properties": [
-                  {
-                    "id": "custom.width",
-                    "value": 400
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Remaining"
-                },
-                "properties": [
-                  {
-                    "id": "unit",
-                    "value": "bytes"
-                  },
-                  {
-                    "id": "custom.width",
-                    "value": 100
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Corrupt"
-                },
-                "properties": [
-                  {
-                    "id": "unit",
-                    "value": "bytes"
-                  },
-                  {
-                    "id": "custom.width",
-                    "value": 100
-                  },
-                  {
-                    "id": "color",
-                    "value": {
-                      "fixedColor": "red",
-                      "mode": "fixed"
-                    }
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Valid"
-                },
-                "properties": [
-                  {
-                    "id": "unit",
-                    "value": "bytes"
-                  },
-                  {
-                    "id": "custom.width",
-                    "value": 100
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Last Active"
-                },
-                "properties": [
-                  {
-                    "id": "unit",
-                    "value": "dateTimeFromNow"
-                  },
-                  {
-                    "id": "custom.width",
-                    "value": 110
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Done At"
-                },
-                "properties": [
-                  {
-                    "id": "unit",
-                    "value": "dateTimeFromNow"
-                  },
-                  {
-                    "id": "custom.width",
-                    "value": 110
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Queue"
-                },
-                "properties": [
-                  {
-                    "id": "custom.width",
-                    "value": 60
-                  }
-                ]
+                "color": "green",
+                "value": null
               }
             ]
           },
-          "gridPos": {
-            "h": 16,
-            "w": 24,
-            "x": 0,
-            "y": 46
-          },
-          "id": 35,
-          "options": {
-            "cellHeight": "sm",
-            "footer": {
-              "countRows": false,
-              "fields": "",
-              "reducer": [
-                "sum"
-              ],
-              "show": false
-            },
-            "showHeader": true,
-            "sortBy": [
-              {
-                "desc": false,
-                "displayName": "Queue"
-              }
-            ]
-          },
-          "pluginVersion": "12.0.2",
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus"
-              },
-              "editorMode": "code",
-              "exemplar": false,
-              "expr": "max by (id, name) (transmission_torrent_error{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
-              "format": "table",
-              "instant": true,
-              "legendFormat": "__auto",
-              "range": false,
-              "refId": "A"
-            },
-            {
-              "datasource": {
-                "type": "prometheus"
-              },
-              "editorMode": "code",
-              "exemplar": false,
-              "expr": "max by (id, name) (transmission_torrent_left_until_done_bytes{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
-              "format": "table",
-              "instant": true,
-              "legendFormat": "__auto",
-              "range": false,
-              "refId": "B"
-            },
-            {
-              "datasource": {
-                "type": "prometheus"
-              },
-              "editorMode": "code",
-              "exemplar": false,
-              "expr": "max by (id, name) (transmission_torrent_corrupt_ever_bytes{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
-              "format": "table",
-              "instant": true,
-              "legendFormat": "__auto",
-              "range": false,
-              "refId": "C"
-            },
-            {
-              "datasource": {
-                "type": "prometheus"
-              },
-              "editorMode": "code",
-              "exemplar": false,
-              "expr": "max by (id, name) (transmission_torrent_have_valid_bytes{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
-              "format": "table",
-              "instant": true,
-              "legendFormat": "__auto",
-              "range": false,
-              "refId": "D"
-            },
-            {
-              "datasource": {
-                "type": "prometheus"
-              },
-              "editorMode": "code",
-              "exemplar": false,
-              "expr": "max by (id, name) (transmission_torrent_queue_position{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
-              "format": "table",
-              "instant": true,
-              "legendFormat": "__auto",
-              "range": false,
-              "refId": "E"
-            },
-            {
-              "datasource": {
-                "type": "prometheus"
-              },
-              "editorMode": "code",
-              "exemplar": false,
-              "expr": "max by (id, name) (transmission_torrent_activity_date{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"} * 1000)",
-              "format": "table",
-              "instant": true,
-              "legendFormat": "__auto",
-              "range": false,
-              "refId": "F"
-            },
-            {
-              "datasource": {
-                "type": "prometheus"
-              },
-              "editorMode": "code",
-              "exemplar": false,
-              "expr": "max by (id, name) (transmission_torrent_done_date{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"} * 1000)",
-              "format": "table",
-              "instant": true,
-              "legendFormat": "__auto",
-              "range": false,
-              "refId": "G"
-            },
-            {
-              "datasource": {
-                "type": "prometheus"
-              },
-              "editorMode": "code",
-              "exemplar": false,
-              "expr": "max by (id, name) (transmission_torrent_seconds_downloading{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
-              "format": "table",
-              "instant": true,
-              "legendFormat": "__auto",
-              "range": false,
-              "refId": "H"
-            },
-            {
-              "datasource": {
-                "type": "prometheus"
-              },
-              "editorMode": "code",
-              "exemplar": false,
-              "expr": "max by (id, name) (transmission_torrent_seconds_seeding{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
-              "format": "table",
-              "instant": true,
-              "legendFormat": "__auto",
-              "range": false,
-              "refId": "I"
-            }
-          ],
-          "title": "Torrent health details",
-          "transformations": [
-            {
-              "id": "joinByField",
-              "options": {
-                "byField": "id",
-                "mode": "outer"
-              }
-            },
-            {
-              "id": "organize",
-              "options": {
-                "excludeByName": {
-                  "Time 1": true,
-                  "Time 2": true,
-                  "Time 3": true,
-                  "Time 4": true,
-                  "Time 5": true,
-                  "Time 6": true,
-                  "Time 7": true,
-                  "Time 8": true,
-                  "Time 9": true,
-                  "name 2": true,
-                  "name 3": true,
-                  "name 4": true,
-                  "name 5": true,
-                  "name 6": true,
-                  "name 7": true,
-                  "name 8": true,
-                  "name 9": true
-                },
-                "includeByName": {},
-                "indexByName": {
-                  "id": 0,
-                  "name 1": 1,
-                  "Value #E": 2,
-                  "Value #A": 3,
-                  "Value #B": 4,
-                  "Value #D": 5,
-                  "Value #C": 6,
-                  "Value #F": 7,
-                  "Value #G": 8,
-                  "Value #H": 9,
-                  "Value #I": 10
-                },
-                "renameByName": {
-                  "name 1": "Name",
-                  "Value #A": "Error",
-                  "Value #B": "Remaining",
-                  "Value #C": "Corrupt",
-                  "Value #D": "Valid",
-                  "Value #E": "Queue",
-                  "Value #F": "Last Active",
-                  "Value #G": "Done At",
-                  "Value #H": "Time DL (s)",
-                  "Value #I": "Time Seed (s)"
-                }
-              }
-            },
-            {
-              "id": "convertFieldType",
-              "options": {
-                "conversions": [
-                  {
-                    "dateFormat": "$(UNIX)",
-                    "destinationType": "time",
-                    "targetField": "Last Active"
-                  },
-                  {
-                    "dateFormat": "$(UNIX)",
-                    "destinationType": "time",
-                    "targetField": "Done At"
-                  }
-                ],
-                "fields": {}
-              }
-            }
-          ],
-          "type": "table"
+          "unit": "decbytes"
         },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 0,
+        "y": 9
+      },
+      "id": 38,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {},
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.3",
+      "targets": [
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
           },
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisBorderShow": false,
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "barWidthFactor": 0.6,
-                "drawStyle": "line",
-                "fillOpacity": 10,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "insertNulls": false,
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "auto",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              },
-              "unit": "s"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 9,
-            "w": 12,
-            "x": 0,
-            "y": 62
-          },
-          "id": 36,
-          "options": {
-            "legend": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "displayMode": "table",
-              "placement": "right",
-              "showLegend": true,
-              "sortBy": "Last *",
-              "sortDesc": true
-            },
-            "tooltip": {
-              "hideZeros": true,
-              "mode": "single",
-              "sort": "none"
-            }
-          },
-          "pluginVersion": "12.0.2",
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus"
-              },
-              "editorMode": "code",
-              "expr": "max by (name) (transmission_torrent_seconds_seeding{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
-              "legendFormat": "{{name}}",
-              "range": true,
-              "refId": "A"
-            }
-          ],
-          "title": "Seeding time",
-          "type": "timeseries",
-          "description": "Total seconds each torrent has spent seeding over time."
-        },
-        {
-          "datasource": {
-            "type": "prometheus"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisBorderShow": false,
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "barWidthFactor": 0.6,
-                "drawStyle": "line",
-                "fillOpacity": 10,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "insertNulls": false,
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "auto",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              },
-              "unit": "s"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 9,
-            "w": 12,
-            "x": 12,
-            "y": 62
-          },
-          "id": 37,
-          "options": {
-            "legend": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "displayMode": "table",
-              "placement": "right",
-              "showLegend": true,
-              "sortBy": "Last *",
-              "sortDesc": true
-            },
-            "tooltip": {
-              "hideZeros": true,
-              "mode": "single",
-              "sort": "none"
-            }
-          },
-          "pluginVersion": "12.0.2",
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus"
-              },
-              "editorMode": "code",
-              "expr": "max by (name) (transmission_torrent_seconds_downloading{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"})",
-              "legendFormat": "{{name}}",
-              "range": true,
-              "refId": "A"
-            }
-          ],
-          "title": "Downloading time",
-          "type": "timeseries",
-          "description": "Total seconds each torrent has spent downloading over time."
-        },
-        {
-          "datasource": {
-            "type": "prometheus"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "continuous-GrYlRd"
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  }
-                ]
-              },
-              "unit": "percentunit",
-              "min": 0,
-              "max": 1,
-              "noValue": "All torrents complete!"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 9,
-            "w": 24,
-            "x": 0,
-            "y": 71
-          },
-          "id": 38,
-          "options": {
-            "displayMode": "lcd",
-            "maxVizHeight": 300,
-            "minVizHeight": 16,
-            "minVizWidth": 8,
-            "namePlacement": "auto",
-            "orientation": "horizontal",
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "",
-              "values": false
-            },
-            "showUnfilled": true,
-            "sizing": "auto",
-            "valueMode": "color"
-          },
-          "pluginVersion": "12.0.2",
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus"
-              },
-              "editorMode": "code",
-              "expr": "max by (name) (transmission_torrent_done{instance=~\"$instance\",job=~\"$job\",name=~\"$Torrent\"}) < 1",
-              "legendFormat": "{{name}}",
-              "instant": true,
-              "range": false,
-              "refId": "A"
-            }
-          ],
-          "title": "Incomplete torrents - download progress",
-          "type": "bargauge",
-          "description": "Download progress of incomplete torrents displayed as LCD bar gauges. Only torrents with less than 100% completion are shown."
+          "editorMode": "code",
+          "expr": "increase(transmission_session_stats_downloaded_bytes{type=\"cumulative\"}[1d])",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
         }
       ],
-      "title": "Torrent Health & Progress",
-      "type": "row"
+      "title": "Downloaded (1d)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "rgb(255, 172, 10)",
+                "value": null
+              }
+            ]
+          },
+          "unit": "decbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 4,
+        "y": 9
+      },
+      "id": 39,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {},
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "increase(transmission_session_stats_uploaded_bytes{type=\"cumulative\"}[1d])",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Uploaded (1d)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "decbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 8,
+        "y": 9
+      },
+      "id": 40,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {},
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "increase(transmission_session_stats_downloaded_bytes{type=\"cumulative\"}[7d])",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Downloaded (7d)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "rgb(255, 172, 10)",
+                "value": null
+              }
+            ]
+          },
+          "unit": "decbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 12,
+        "y": 9
+      },
+      "id": 41,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {},
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "increase(transmission_session_stats_uploaded_bytes{type=\"cumulative\"}[7d])",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Uploaded (7d)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 2,
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "max": 2,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 0.5
+              },
+              {
+                "color": "yellow",
+                "value": 0.8
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 16,
+        "y": 9
+      },
+      "id": 42,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto",
+        "text": {}
+      },
+      "pluginVersion": "10.4.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "transmission_session_stats_uploaded_bytes{type=\"current\"} / transmission_session_stats_downloaded_bytes{type=\"current\"}",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Session Ratio",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisGridShow": true,
+            "axisLabel": "",
+            "axisPlacement": "left",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 11,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1.4,
+            "pointSize": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2,
+          "links": [],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "Bps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 28
+      },
+      "id": 43,
+      "interval": "5",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false,
+          "width": 200
+        },
+        "tooltip": {
+          "hoverProximity": 1,
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "10.4.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "builder",
+          "exemplar": false,
+          "expr": "topk(5, transmission_torrent_download_bytes{name=~\"$Torrent\"})",
+          "format": "time_series",
+          "instant": false,
+          "legendFormat": "{{name}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Download Speed by Torrent",
+      "type": "timeseries"
     }
   ],
-  "refresh": "1m",
-  "schemaVersion": 41,
-  "tags": [
-    "prometheus",
-    "transmission",
-    "bittorrent",
-    "torrent"
-  ],
+  "schemaVersion": 39,
+  "tags": [],
   "templating": {
     "list": [
       {
-        "current": {},
-        "datasource": {
-          "type": "prometheus"
+        "current": {
+          "selected": false,
+          "text": "default",
+          "value": "default"
         },
-        "definition": "label_values(transmission_version,instance)",
-        "includeAll": true,
-        "label": "Transmission Instance",
-        "name": "instance",
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "DS_PROMETHEUS",
         "options": [],
-        "query": {
-          "qryType": 1,
-          "query": "label_values(transmission_version,instance)",
-          "refId": "PrometheusVariableQueryEditor-VariableQuery"
-        },
+        "query": "prometheus",
+        "queryValue": "",
         "refresh": 1,
         "regex": "",
-        "sort": 1,
-        "type": "query"
+        "skipUrlSync": false,
+        "type": "datasource"
       },
       {
-        "current": {},
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
         "datasource": {
-          "type": "prometheus"
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(transmission_version,job)",
-        "includeAll": true,
-        "label": "Job",
-        "name": "job",
-        "options": [],
-        "query": {
-          "qryType": 1,
-          "query": "label_values(transmission_version,job)",
-          "refId": "PrometheusVariableQueryEditor-VariableQuery"
-        },
-        "refresh": 1,
-        "regex": "",
-        "sort": 1,
-        "type": "query"
-      },
-      {
-        "current": {},
-        "datasource": {
-          "type": "prometheus"
-        },
-        "definition": "label_values(transmission_torrent_ratio,name)",
+        "definition": "label_values(transmission_torrent_status, name)",
+        "hide": 0,
         "includeAll": true,
         "multi": true,
         "name": "Torrent",
         "options": [],
         "query": {
           "qryType": 1,
-          "query": "label_values(transmission_torrent_ratio,name)",
-          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+          "query": "label_values(transmission_torrent_status, name)",
+          "refId": "StandardVariableQuery"
         },
-        "refresh": 1,
+        "refresh": 2,
         "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
         "type": "query"
       }
     ]
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-1h",
     "to": "now"
   },
-  "timepicker": {},
+  "timepicker": {
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ]
+  },
   "timezone": "",
   "title": "Transmission",
-  "uid": "transmission",
-  "version": 1,
-  "weekStart": ""
+  "uid": "OEyH9tQZk",
+  "version": 52,
+  "weekStart": "",
+  "__inputs": [
+    {
+      "name": "DS_PROMETHEUS",
+      "label": "Prometheus",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "prometheus",
+      "pluginName": "Prometheus"
+    }
+  ]
 }
