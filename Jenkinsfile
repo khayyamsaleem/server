@@ -23,6 +23,35 @@ pipeline {
     }
 
     stages {
+        stage('Pull') {
+            parallel {
+                stage('Pull juul') {
+                    steps {
+                        sshagent(credentials: ['server-deploy-key']) {
+                            sh """
+                                ssh ${SSH_OPTS} ${JUUL_USER}@${JUUL_HOST} '
+                                    git -C ${JUUL_DEPLOY_DIR} fetch origin &&
+                                    git -C ${JUUL_DEPLOY_DIR} reset --hard origin/master
+                                '
+                            """
+                        }
+                    }
+                }
+                stage('Pull cherryblossom') {
+                    steps {
+                        sshagent(credentials: ['server-deploy-key']) {
+                            sh """
+                                ssh ${SSH_OPTS} ${CHERRYBLOSSOM_USER}@${CHERRYBLOSSOM_HOST} '
+                                    GIT_SSH_COMMAND="ssh -i ~/.ssh/server-deploy-key" git -C ${CHERRYBLOSSOM_DEPLOY_DIR} fetch origin &&
+                                    GIT_SSH_COMMAND="ssh -i ~/.ssh/server-deploy-key" git -C ${CHERRYBLOSSOM_DEPLOY_DIR} reset --hard origin/master
+                                '
+                            """
+                        }
+                    }
+                }
+            }
+        }
+
         stage('Deploy') {
             parallel {
                 stage('Deploy juul') {
@@ -31,12 +60,13 @@ pipeline {
                             sh """
                                 ssh ${SSH_OPTS} ${JUUL_USER}@${JUUL_HOST} '
                                     cd ${JUUL_DEPLOY_DIR}/juul &&
-                                    git -C ${JUUL_DEPLOY_DIR} fetch origin &&
-                                    git -C ${JUUL_DEPLOY_DIR} reset --hard origin/master &&
+                                    TS_BEFORE=\$(docker inspect --format="{{.Id}}" juul-tailscale-1 2>/dev/null || true) &&
                                     docker compose up -d --remove-orphans &&
-                                    cp ${JUUL_DEPLOY_DIR}/juul/motd.sh /etc/update-motd.d/01-juul &&
-                                    chmod 755 /etc/update-motd.d/01-juul &&
-                                    rm -f /etc/update-motd.d/juul-art.txt
+                                    TS_AFTER=\$(docker inspect --format="{{.Id}}" juul-tailscale-1 2>/dev/null || true) &&
+                                    if [ "\$TS_BEFORE" != "\$TS_AFTER" ]; then
+                                        echo "Tailscale container changed — force-recreating proxy..."
+                                        docker compose up -d --force-recreate proxy
+                                    fi
                                 '
                             """
                         }
@@ -48,10 +78,34 @@ pipeline {
                             sh """
                                 ssh ${SSH_OPTS} ${CHERRYBLOSSOM_USER}@${CHERRYBLOSSOM_HOST} '
                                     cd ${CHERRYBLOSSOM_DEPLOY_DIR}/cherryblossom &&
-                                    GIT_SSH_COMMAND="ssh -i ~/.ssh/server-deploy-key" git -C ${CHERRYBLOSSOM_DEPLOY_DIR} fetch origin &&
-                                    GIT_SSH_COMMAND="ssh -i ~/.ssh/server-deploy-key" git -C ${CHERRYBLOSSOM_DEPLOY_DIR} reset --hard origin/master &&
-                                    docker compose up -d --force-recreate --remove-orphans
+                                    docker compose up -d --remove-orphans
                                 '
+                            """
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Post-deploy') {
+            parallel {
+                stage('MOTD juul') {
+                    steps {
+                        sshagent(credentials: ['server-deploy-key']) {
+                            sh """
+                                ssh ${SSH_OPTS} ${JUUL_USER}@${JUUL_HOST} '
+                                    cp ${JUUL_DEPLOY_DIR}/juul/motd.sh /etc/update-motd.d/01-juul &&
+                                    chmod 755 /etc/update-motd.d/01-juul &&
+                                    rm -f /etc/update-motd.d/juul-art.txt
+                                '
+                            """
+                        }
+                    }
+                }
+                stage('MOTD cherryblossom') {
+                    steps {
+                        sshagent(credentials: ['server-deploy-key']) {
+                            sh """
                                 ssh ${SSH_OPTS} ${CHERRYBLOSSOM_ROOT_USER}@${CHERRYBLOSSOM_HOST} '
                                     cp ${CHERRYBLOSSOM_DEPLOY_DIR}/cherryblossom/motd.sh /etc/profile.d/motd.sh &&
                                     chmod 755 /etc/profile.d/motd.sh
@@ -62,6 +116,7 @@ pipeline {
                 }
             }
         }
+
         stage('Update Jenkins') {
             steps {
                 sshagent(credentials: ['server-deploy-key']) {
