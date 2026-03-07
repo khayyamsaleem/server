@@ -91,6 +91,7 @@ services:
     restart: unless-stopped
     labels:
       com.centurylinklabs.watchtower.enable: 'true'
+      com.centurylinklabs.watchtower.depends-on: gluetun
     deploy:
       resources:
         limits:
@@ -114,6 +115,7 @@ services:
     restart: unless-stopped
     labels:
       com.centurylinklabs.watchtower.enable: 'true'
+      com.centurylinklabs.watchtower.depends-on: gluetun
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:19091/metrics > /dev/null || exit 1"]
       interval: 30s
