@@ -57,6 +57,7 @@ services:
       traefik.http.routers.traefik.service: api@internal
       traefik.http.routers.traefik.middlewares: auth
       traefik.http.routers.traefik.entrypoints: https
+      traefik.http.services.traefik.loadbalancer.server.port: '8080'
       traefik.http.middlewares.auth.basicauth.users: $HTTP_AUTH
       com.centurylinklabs.watchtower.enable: 'true'
     restart: unless-stopped
