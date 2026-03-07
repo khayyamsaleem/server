@@ -12,19 +12,19 @@
   </defs>
   <!-- JUUL text — blocky/thick like MOTD -->
   <text x="2" y="33" font-family="monospace" font-weight="900" font-size="38" fill="#0087ff" letter-spacing="5" stroke="#0087ff" stroke-width="1.5" paint-order="stroke">JUUL</text>
-  <!-- Juul device as underline -->
-  <g transform="translate(6, 46)">
+  <!-- Juul device as underline — fitted to text width -->
+  <g transform="translate(2, 46)">
     <!-- Battery/body -->
-    <rect x="0" y="-2.5" width="100" height="5" rx="2.5" fill="#c0c0c0"/>
+    <rect x="0" y="-3.5" width="68" height="7" rx="3.5" fill="#111111"/>
     <!-- Pod section -->
-    <rect x="100" y="-2.5" width="28" height="5" rx="2" fill="#d8d8d8"/>
+    <rect x="68" y="-3.5" width="20" height="7" rx="2.5" fill="#1a1a1a"/>
     <!-- Seam between body and pod -->
-    <line x1="100" y1="-2.5" x2="100" y2="2.5" stroke="#aaa" stroke-width="0.5"/>
+    <line x1="68" y1="-3.5" x2="68" y2="3.5" stroke="#333" stroke-width="0.5"/>
     <!-- Mouthpiece tip -->
-    <rect x="128" y="-2" width="12" height="4" rx="2" fill="#e0e0e0"/>
+    <rect x="88" y="-3" width="10" height="6" rx="3" fill="#222222"/>
     <!-- Blue LED glow halo -->
-    <ellipse cx="142" cy="0" rx="8" ry="6" fill="url(#tipglow)"/>
+    <ellipse cx="100" cy="0" rx="8" ry="6" fill="url(#tipglow)"/>
     <!-- Blue LED light -->
-    <circle cx="141" cy="0" r="2.5" fill="url(#tip)"/>
+    <circle cx="99" cy="0" r="3" fill="url(#tip)"/>
   </g>
 </svg>
