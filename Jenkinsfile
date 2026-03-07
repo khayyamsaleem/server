@@ -50,7 +50,7 @@ pipeline {
                                     cd ${CHERRYBLOSSOM_DEPLOY_DIR}/cherryblossom &&
                                     GIT_SSH_COMMAND="ssh -i ~/.ssh/server-deploy-key" git -C ${CHERRYBLOSSOM_DEPLOY_DIR} fetch origin &&
                                     GIT_SSH_COMMAND="ssh -i ~/.ssh/server-deploy-key" git -C ${CHERRYBLOSSOM_DEPLOY_DIR} reset --hard origin/master &&
-                                    docker compose up -d --remove-orphans
+                                    docker compose up -d --force-recreate --remove-orphans
                                 '
                                 ssh ${SSH_OPTS} ${CHERRYBLOSSOM_ROOT_USER}@${CHERRYBLOSSOM_HOST} '
                                     cp ${CHERRYBLOSSOM_DEPLOY_DIR}/cherryblossom/motd.sh /etc/profile.d/motd.sh &&
