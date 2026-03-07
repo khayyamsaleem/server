@@ -11,13 +11,11 @@ receivers:
                 host: cherryblossom
 
 exporters:
-  otlphttp:
-    endpoint: http://${env:VICTORIA_HOST}:8428/opentelemetry
-    tls:
-      insecure: true
+  prometheusremotewrite:
+    endpoint: http://${env:VICTORIA_HOST}:8428/api/v1/write
 
 service:
   pipelines:
     metrics:
       receivers: [prometheus]
-      exporters: [otlphttp]
+      exporters: [prometheusremotewrite]

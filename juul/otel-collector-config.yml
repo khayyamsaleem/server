@@ -13,13 +13,11 @@ receivers:
                 - jenkins:8080
 
 exporters:
-  otlphttp:
-    endpoint: http://victoriametrics:8428/opentelemetry
-    tls:
-      insecure: true
+  prometheusremotewrite:
+    endpoint: http://victoriametrics:8428/api/v1/write
 
 service:
   pipelines:
     metrics:
       receivers: [prometheus]
-      exporters: [otlphttp]
+      exporters: [prometheusremotewrite]
