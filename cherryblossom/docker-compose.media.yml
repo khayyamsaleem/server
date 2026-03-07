@@ -4,10 +4,16 @@ services:
     container_name: jellyfin
     hostname: juul
     user: 1000:1000
+    entrypoint: /branding/jellyfin-branding.sh
     volumes:
-    - /home/khayyam/dev/jellyfin/config:/config
-    - /home/khayyam/dev/jellyfin/cache:/cache
-    - /mnt/jellydrive-01/jellyfin_media:/media
+    - ${JELLYFIN_CONFIG_DIR}:/config
+    - ${JELLYFIN_CACHE_DIR}:/cache
+    - ${JELLYFIN_MEDIA_DIR}:/media
+    - ./jellyfin-branding.sh:/branding/jellyfin-branding.sh:ro
+    - ./juul-logo.svg:/branding/juul-logo.svg:ro
+    - ./juul-favicon.svg:/branding/juul-favicon.svg:ro
+    - ./juul-logo.svg:/jellyfin/jellyfin-web/juul-logo.svg:ro
+    - ./juul-favicon.svg:/jellyfin/jellyfin-web/juul-favicon.svg:ro
     environment:
     - PUID=1000
     - PGID=1000
