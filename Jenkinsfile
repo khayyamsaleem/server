@@ -60,12 +60,12 @@ pipeline {
                             sh """
                                 ssh ${SSH_OPTS} ${JUUL_USER}@${JUUL_HOST} '
                                     cd ${JUUL_DEPLOY_DIR}/juul &&
-                                    TS_BEFORE=\$(docker inspect --format="{{.Id}}" juul-tailscale-1 2>/dev/null || true) &&
-                                    docker compose up -d --remove-orphans &&
-                                    TS_AFTER=\$(docker inspect --format="{{.Id}}" juul-tailscale-1 2>/dev/null || true) &&
-                                    if [ "\$TS_BEFORE" != "\$TS_AFTER" ]; then
-                                        echo "Tailscale container changed — force-recreating proxy..."
+                                    if docker compose up -d --dry-run 2>&1 | grep -q "tailscale.*Recreate"; then
+                                        echo "Tailscale will be recreated — force-recreating proxy too..."
+                                        docker compose up -d --remove-orphans &&
                                         docker compose up -d --force-recreate proxy
+                                    else
+                                        docker compose up -d --remove-orphans
                                     fi
                                 '
                             """
@@ -78,13 +78,11 @@ pipeline {
                             sh """
                                 ssh ${SSH_OPTS} ${CHERRYBLOSSOM_USER}@${CHERRYBLOSSOM_HOST} '
                                     cd ${CHERRYBLOSSOM_DEPLOY_DIR}/cherryblossom &&
-                                    GLU_BEFORE=\$(docker inspect --format="{{.Id}}" gluetun 2>/dev/null || true) &&
-                                    docker compose up -d --remove-orphans &&
-                                    GLU_AFTER=\$(docker inspect --format="{{.Id}}" gluetun 2>/dev/null || true) &&
-                                    if [ "\$GLU_BEFORE" != "\$GLU_AFTER" ]; then
-                                        echo "Gluetun container changed — force-recreating transmission..."
-                                        docker compose up -d --force-recreate transmission
-                                    fi
+                                    if docker compose up -d --dry-run 2>&1 | grep -q "gluetun.*Recreate"; then
+                                        echo "Gluetun will be recreated — removing transmission to avoid stale namespace..."
+                                        docker rm -f transmission 2>/dev/null || true
+                                    fi &&
+                                    docker compose up -d --remove-orphans
                                 '
                             """
                         }
