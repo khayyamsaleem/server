@@ -54,6 +54,6 @@ scrape_configs:
   scrape_interval: 30s
   static_configs:
   - targets:
-    - cherryblossom:9427
+    - cherryblossom-host:9427
     labels:
       host: cherryblossom
