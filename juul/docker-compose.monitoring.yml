@@ -15,6 +15,11 @@ services:
     - --httpListenAddr=:8428
     - --loggerFormat=json
     - --opentelemetry.usePrometheusNaming
+    - --memory.allowedPercent=60
+    - --search.maxMemoryPerQuery=32MB
+    - --search.maxConcurrentRequests=2
+    environment:
+    - GOMEMLIMIT=280MiB
     labels:
       com.centurylinklabs.watchtower.enable: 'true'
     restart: unless-stopped
@@ -46,6 +51,8 @@ services:
     - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
     - GF_SERVER_ROOT_URL=https://grafana.khayyam.me
     - GF_LOG_CONSOLE_FORMAT=json
+    - GF_UNIFIED_ALERTING_ENABLED=false
+    - GOMEMLIMIT=200MiB
     labels:
       traefik.enable: 'true'
       traefik.http.routers.grafana.rule: Host(`grafana.khayyam.me`)
@@ -140,6 +147,15 @@ services:
     - /dev/disk/:/dev/disk:ro
     devices:
     - /dev/kmsg
+    command:
+    - --housekeeping_interval=30s
+    - --docker_only=true
+    - --disable_metrics=advtcp,cpu_topology,cpuset,hugetlb,memory_numa,percpu,perf_event,process,referenced_memory,resctrl,sched,tcp,udp
+    - --store_container_labels=false
+    - --event_storage_event_limit=default=0
+    - --event_storage_age_limit=default=0
+    environment:
+    - GOMEMLIMIT=140MiB
     labels:
       com.centurylinklabs.watchtower.enable: 'true'
     restart: unless-stopped

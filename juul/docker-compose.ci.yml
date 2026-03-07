@@ -20,6 +20,8 @@ services:
     environment:
     - JAVA_OPTS=-Djava.util.logging.config.file=/var/jenkins_home/json-logging.properties
       -Xbootclasspath/a:/var/jenkins_home/jul-jsonformatter.jar
+      -Xmx384m -XX:MaxMetaspaceSize=128m -XX:+UseG1GC -XX:+UseStringDeduplication
+      -XX:MaxHeapFreeRatio=20 -XX:MinHeapFreeRatio=10
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:8080/login > /dev/null"]
       interval: 30s
@@ -49,6 +51,7 @@ services:
     environment:
     - JENKINS_USER=${JENKINS_USER}
     - JENKINS_PASSWORD=${JENKINS_PASSWORD}
+    - GOMEMLIMIT=90MiB
     restart: unless-stopped
     labels:
       com.centurylinklabs.watchtower.enable: 'true'

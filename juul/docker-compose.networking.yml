@@ -11,6 +11,7 @@ services:
     - TS_AUTHKEY=${TS_AUTHKEY}
     - TS_STATE_DIR=/var/lib/tailscale
     - TS_USERSPACE=true
+    - TS_EXTRA_ARGS=--advertise-tags=tag:infra-overlay
     - TS_SERVE_CONFIG=/config/serve.json
     volumes:
     - ${DATA_DIR}/tailscale-state/_data:/var/lib/tailscale
