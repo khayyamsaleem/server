@@ -1,7 +1,7 @@
 http:
   routers:
     transmission:
-      rule: "Host(`transmission.khayyam.me`)"
+      rule: "Host(`transmission.khayyam.me`) || Host(`t.k5m.sh`)"
       entryPoints:
         - https
       service: transmission

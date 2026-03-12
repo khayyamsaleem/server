@@ -54,7 +54,7 @@ services:
     - ./dynamic:/etc/traefik/dynamic
     labels:
       traefik.enable: 'true'
-      traefik.http.routers.traefik.rule: Host(`proxy.khayyam.me`)
+      traefik.http.routers.traefik.rule: Host(`proxy.khayyam.me`) || Host(`p.k5m.sh`)
       traefik.http.routers.traefik.service: api@internal
       traefik.http.routers.traefik.middlewares: auth
       traefik.http.routers.traefik.entrypoints: https

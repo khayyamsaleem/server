@@ -21,6 +21,9 @@ entryPoints:
         - main: khayyam.me
           sans:
           - '*.khayyam.me'
+        - main: k5m.sh
+          sans:
+          - '*.k5m.sh'
 providers:
   file:
     directory: /etc/traefik/dynamic

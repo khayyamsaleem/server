@@ -55,7 +55,7 @@ services:
     - GOMEMLIMIT=200MiB
     labels:
       traefik.enable: 'true'
-      traefik.http.routers.grafana.rule: Host(`grafana.khayyam.me`)
+      traefik.http.routers.grafana.rule: Host(`grafana.khayyam.me`) || Host(`g.k5m.sh`)
       traefik.http.routers.grafana.entrypoints: https
       traefik.http.services.grafana.loadbalancer.server.port: '3000'
       traefik.docker.network: juul_webgateway
