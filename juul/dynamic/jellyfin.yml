@@ -1,7 +1,7 @@
 http:
   routers:
     jellyfin:
-      rule: "Host(`jelly.khayyam.me`)"
+      rule: "Host(`jelly.khayyam.me`) || Host(`jf.k5m.sh`)"
       entryPoints:
         - https
       service: jellyfin
