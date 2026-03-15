@@ -9,4 +9,4 @@ http:
     transmission:
       loadBalancer:
         servers:
-          - url: "http://cherryblossom:9091"
+          - url: "http://cherryblossom-docker:9091"
