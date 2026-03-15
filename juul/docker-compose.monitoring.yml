@@ -1,10 +1,10 @@
 services:
   victoriametrics:
     image: victoriametrics/victoria-metrics:latest
-    networks:
-    - webgateway
-    extra_hosts:
-    - "cherryblossom-docker:${CHERRYBLOSSOM_IP}"
+    network_mode: service:tailscale
+    depends_on:
+      tailscale:
+        condition: service_healthy
     volumes:
     - ${DATA_DIR}/victoriametrics:/victoria-metrics-data
     - ./prometheus.yml:/etc/prometheus/prometheus.yml
