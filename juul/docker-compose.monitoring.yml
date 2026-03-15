@@ -4,7 +4,7 @@ services:
     networks:
     - webgateway
     extra_hosts:
-    - "cherryblossom:${CHERRYBLOSSOM_IP}"
+    - "cherryblossom-docker:${CHERRYBLOSSOM_IP}"
     volumes:
     - ${DATA_DIR}/victoriametrics:/victoria-metrics-data
     - ./prometheus.yml:/etc/prometheus/prometheus.yml

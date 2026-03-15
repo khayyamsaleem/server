@@ -9,4 +9,4 @@ http:
     jellyfin:
       loadBalancer:
         servers:
-          - url: "http://cherryblossom:8096"
+          - url: "http://cherryblossom-docker:8096"

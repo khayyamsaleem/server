@@ -10,7 +10,7 @@ scrape_configs:
 - job_name: node-cherryblossom
   static_configs:
   - targets:
-    - cherryblossom:9100  # cherryblossom (Tailscale)
+    - cherryblossom-docker:9100
     labels:
       host: cherryblossom
 - job_name: cadvisor-juul
@@ -22,7 +22,7 @@ scrape_configs:
 - job_name: cadvisor-cherryblossom
   static_configs:
   - targets:
-    - cherryblossom:9101
+    - cherryblossom-docker:9101
     labels:
       host: cherryblossom
 - job_name: traefik
@@ -32,18 +32,18 @@ scrape_configs:
 - job_name: jellyfin
   static_configs:
   - targets:
-    - cherryblossom:9594
+    - cherryblossom-docker:9594
 - job_name: ollama-envoy
   metrics_path: /stats/prometheus
   static_configs:
   - targets:
-    - cherryblossom:9901
+    - cherryblossom-docker:9901
     labels:
       host: cherryblossom
 - job_name: transmission
   static_configs:
   - targets:
-    - cherryblossom:19091
+    - cherryblossom-docker:19091
     labels:
       host: cherryblossom
 - job_name: tailscale
