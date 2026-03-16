@@ -3,6 +3,6 @@ datasources:
   - name: VictoriaMetrics
     type: prometheus
     access: proxy
-    url: http://tailscale:8428
+    url: http://victoriametrics:8428
     isDefault: true
     editable: true
