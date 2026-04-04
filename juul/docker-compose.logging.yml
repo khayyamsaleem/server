@@ -36,6 +36,7 @@ services:
     - ./promtail-config.yml:/etc/promtail/config.yml
     - /var/run/docker.sock:/var/run/docker.sock
     - /var/lib/docker/containers:/var/lib/docker/containers:ro
+    - /var/log:/var/log/host:ro
     command:
     - -config.file=/etc/promtail/config.yml
     environment:
