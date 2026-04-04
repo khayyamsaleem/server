@@ -83,12 +83,37 @@ services:
       retries: 3
       start_period: 30s
 
+  searxng:
+    image: searxng/searxng:latest
+    volumes:
+    - searxng-data:/etc/searxng
+    environment:
+      SEARXNG_BASE_URL: http://searxng:8080/
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8080/healthz > /dev/null"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 256M
+        reservations:
+          cpus: '0.05'
+          memory: 64M
+
   open-webui:
     image: ghcr.io/open-webui/open-webui:main
     environment:
       OLLAMA_BASE_URL: http://ollama:11434
       WEBUI_AUTH: 'true'
       ENABLE_SIGNUP: 'false'
+      ENABLE_RAG_WEB_SEARCH: 'true'
+      RAG_WEB_SEARCH_ENGINE: searxng
+      SEARXNG_QUERY_URL: http://searxng:8080/search?q=<query>&format=json
     volumes:
     - open-webui-data:/app/backend/data
     ports:
@@ -96,6 +121,8 @@ services:
     restart: unless-stopped
     depends_on:
       ollama:
+        condition: service_healthy
+      searxng:
         condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:8080/health > /dev/null"]
@@ -144,3 +171,4 @@ volumes:
     external: true
     name: open-claw_ollama-data
   open-webui-data:
+  searxng-data:
