@@ -40,9 +40,19 @@ scrape_configs:
                 template: '{{ .Value | ToLower }}'
             - labels:
                 level:
+      # JSON-structured services: transmission-exporter
+      - match:
+          selector: '{compose_service="transmission-exporter"}'
+          stages:
+            - json:
+                expressions:
+                  level: level
+                  msg: msg
+            - labels:
+                level:
       # Go slog services (time=... level=... format)
       - match:
-          selector: '{compose_service=~"node-exporter|jellyfin-exporter|network-exporter|transmission-exporter"}'
+          selector: '{compose_service=~"node-exporter|jellyfin-exporter|network-exporter"}'
           stages:
             - regex:
                 expression: '^(time=\S+ )?level=(?P<level>\S+)\s'

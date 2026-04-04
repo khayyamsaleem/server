@@ -83,6 +83,36 @@ services:
       retries: 3
       start_period: 30s
 
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    environment:
+      OLLAMA_BASE_URL: http://ollama:11434
+      WEBUI_AUTH: 'false'
+    volumes:
+    - open-webui-data:/app/backend/data
+    ports:
+    - 127.0.0.1:3100:8080
+    restart: unless-stopped
+    depends_on:
+      ollama:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8080/health > /dev/null"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '2.00'
+          memory: 1G
+        reservations:
+          cpus: '0.10'
+          memory: 128M
+    labels:
+      com.centurylinklabs.watchtower.enable: 'true'
+
   envoy:
     image: envoyproxy/envoy:v1.32-latest
     volumes:
@@ -112,3 +142,4 @@ volumes:
   ollama-data:
     external: true
     name: open-claw_ollama-data
+  open-webui-data:
