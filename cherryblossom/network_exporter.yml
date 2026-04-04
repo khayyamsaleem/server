@@ -102,6 +102,42 @@ targets:
     labels:
       device_type: media
       vendor: lg
+  - name: proxmox-vm-grafana
+    host: 10.0.0.86
+    type: ICMP
+    labels:
+      device_type: server
+      vendor: proxmox
+  - name: ugreen-nas
+    host: 10.0.0.130
+    type: ICMP
+    labels:
+      device_type: nas
+      vendor: ugreen
+  - name: google-chromecast
+    host: 10.0.0.136
+    type: ICMP
+    labels:
+      device_type: media
+      vendor: google
+  - name: proxmox-vm-1
+    host: 10.0.0.153
+    type: ICMP
+    labels:
+      device_type: server
+      vendor: proxmox
+  - name: amazon-echo-3
+    host: 10.0.0.170
+    type: ICMP
+    labels:
+      device_type: media
+      vendor: amazon
+  - name: proxmox-vm-nfs
+    host: 10.0.0.198
+    type: ICMP
+    labels:
+      device_type: server
+      vendor: proxmox
   - name: d-link-device
     host: 10.0.0.13
     type: ICMP
@@ -180,3 +216,38 @@ targets:
       device_type: printer
       vendor: hp
       service: ipp
+  - name: proxmox-vm-grafana-http
+    host: 10.0.0.86:3000
+    type: TCP
+    labels:
+      device_type: server
+      vendor: proxmox
+      service: grafana
+  - name: proxmox-vm-grafana-ssh
+    host: 10.0.0.86:22
+    type: TCP
+    labels:
+      device_type: server
+      vendor: proxmox
+      service: ssh
+  - name: ugreen-nas-https
+    host: 10.0.0.130:443
+    type: TCP
+    labels:
+      device_type: nas
+      vendor: ugreen
+      service: https
+  - name: proxmox-vm-1-ssh
+    host: 10.0.0.153:22
+    type: TCP
+    labels:
+      device_type: server
+      vendor: proxmox
+      service: ssh
+  - name: proxmox-vm-nfs-rpc
+    host: 10.0.0.198:111
+    type: TCP
+    labels:
+      device_type: server
+      vendor: proxmox
+      service: rpcbind
