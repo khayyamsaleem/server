@@ -9,4 +9,4 @@ http:
     open-webui:
       loadBalancer:
         servers:
-          - url: "http://cherryblossom:3100"
+          - url: "http://cherryblossom-docker:3100"
