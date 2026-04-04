@@ -91,7 +91,7 @@ services:
       SEARXNG_BASE_URL: http://searxng:8080/
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "curl -sf http://localhost:8080/healthz > /dev/null"]
+      test: ["CMD-SHELL", "wget -qO /dev/null http://localhost:8080/"]
       interval: 30s
       timeout: 5s
       retries: 3
