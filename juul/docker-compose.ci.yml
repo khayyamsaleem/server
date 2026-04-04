@@ -18,8 +18,10 @@ services:
       com.centurylinklabs.watchtower.enable: 'true'
     restart: unless-stopped
     environment:
+    - TZ=America/New_York
     - JAVA_OPTS=-Djava.util.logging.config.file=/var/jenkins_home/json-logging.properties
       -Xbootclasspath/a:/var/jenkins_home/jul-jsonformatter.jar
+      -Duser.timezone=America/New_York
       -Xmx384m -XX:MaxMetaspaceSize=128m -XX:+UseG1GC -XX:+UseStringDeduplication
       -XX:MaxHeapFreeRatio=20 -XX:MinHeapFreeRatio=10
     healthcheck:
