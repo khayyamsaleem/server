@@ -88,6 +88,7 @@ services:
     environment:
       OLLAMA_BASE_URL: http://ollama:11434
       WEBUI_AUTH: 'true'
+      ENABLE_SIGNUP: 'true'
     volumes:
     - open-webui-data:/app/backend/data
     ports:
