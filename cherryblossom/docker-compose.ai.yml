@@ -106,12 +106,48 @@ services:
           cpus: '0.05'
           memory: 64M
 
+  stable-diffusion:
+    image: ghcr.io/ai-dock/stable-diffusion-webui-forge:latest-cuda
+    volumes:
+    - sd-models:/opt/stable-diffusion-webui-forge/models
+    - sd-outputs:/opt/stable-diffusion-webui-forge/outputs
+    environment:
+      CLI_ARGS: --api --listen --medvram-sdxl --xformers
+    deploy:
+      resources:
+        limits:
+          cpus: '8.00'
+          memory: 16G
+        reservations:
+          cpus: '0.50'
+          memory: 2G
+          devices:
+          - driver: nvidia
+            count: all
+            capabilities:
+            - gpu
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:7860/sdapi/v1/options > /dev/null"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+    ports:
+    - 127.0.0.1:7860:7860
+
   open-webui:
     image: ghcr.io/open-webui/open-webui:latest
     environment:
       OLLAMA_BASE_URL: http://ollama:11434
+      WEBUI_URL: https://gpu.k5m.sh
       WEBUI_AUTH: 'true'
+      WEBUI_SESSION_COOKIE_SECURE: 'true'
+      WEBUI_SESSION_COOKIE_SAME_SITE: none
       ENABLE_SIGNUP: 'false'
+      ENABLE_IMAGE_GENERATION: 'true'
+      IMAGE_GENERATION_ENGINE: automatic1111
+      AUTOMATIC1111_BASE_URL: http://stable-diffusion:7860
       ENABLE_RAG_WEB_SEARCH: 'true'
       RAG_WEB_SEARCH_ENGINE: searxng
       SEARXNG_QUERY_URL: http://searxng:8080/search?q=<query>&format=json
@@ -124,6 +160,8 @@ services:
       ollama:
         condition: service_healthy
       searxng:
+        condition: service_healthy
+      stable-diffusion:
         condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:8080/health > /dev/null"]
@@ -172,3 +210,5 @@ volumes:
     external: true
     name: open-claw_ollama-data
   open-webui-data:
+  sd-models:
+  sd-outputs:
