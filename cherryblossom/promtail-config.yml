@@ -26,9 +26,19 @@ scrape_configs:
         replacement: cherryblossom
         target_label: host
     pipeline_stages:
+      # Envoy: ollama_inference log lines from Lua filter (prompt/response logging)
+      - match:
+          selector: '{compose_service="ollama-gateway"} |= "ollama_inference"'
+          stages:
+            - regex:
+                expression: 'ollama_inference model=(?P<model>\S+) endpoint=(?P<endpoint>\S+) prompt_tokens=(?P<prompt_tokens>\d+) completion_tokens=(?P<completion_tokens>\d+) total_duration_s=(?P<duration>\S+) tokens_per_second=(?P<tps>\S+) prompt="(?P<prompt>(?:[^"\\]|\\.)*)" response="(?P<response>(?:[^"\\]|\\.)*)"'
+            - labels:
+                model:
+                endpoint:
+                level: info
       # JSON-emitting services: Watchtower, Envoy, Gluetun
       - match:
-          selector: '{compose_service=~"watchtower|envoy|gluetun"}'
+          selector: '{compose_service=~"watchtower|ollama-gateway|gluetun"} != "ollama_inference"'
           stages:
             - json:
                 expressions:

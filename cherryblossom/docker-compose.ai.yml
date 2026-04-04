@@ -138,7 +138,7 @@ services:
   open-webui:
     image: ghcr.io/open-webui/open-webui:latest
     environment:
-      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_BASE_URL: http://ollama-gateway:11434
       WEBUI_URL: https://gpu.k5m.sh
       WEBUI_AUTH: 'true'
       WEBUI_SESSION_COOKIE_SECURE: 'true'
@@ -156,7 +156,7 @@ services:
     - 127.0.0.1:3100:8080
     restart: unless-stopped
     depends_on:
-      ollama:
+      ollama-gateway:
         condition: service_healthy
       searxng:
         condition: service_healthy
@@ -179,7 +179,7 @@ services:
     labels:
       com.centurylinklabs.watchtower.enable: 'true'
 
-  envoy:
+  ollama-gateway:
     image: envoyproxy/envoy:v1.32-latest
     volumes:
     - ./envoy.yaml:/etc/envoy/envoy.yaml:ro
