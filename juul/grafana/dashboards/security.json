@@ -1,0 +1,573 @@
+{
+  "title": "Security",
+  "uid": "security",
+  "tags": ["security", "traefik", "ssh"],
+  "timezone": "browser",
+  "refresh": "30s",
+  "time": {"from": "now-6h", "to": "now"},
+  "templating": {
+    "list": [
+      {
+        "name": "host",
+        "type": "query",
+        "datasource": {"type": "loki", "uid": "P8E80F9AEF21F6940"},
+        "query": {"label": "host", "type": 1},
+        "includeAll": true,
+        "multi": true,
+        "current": {"text": "All", "value": "$__all"}
+      }
+    ]
+  },
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {"h": 1, "w": 24, "x": 0, "y": 0},
+      "id": 100,
+      "panels": [],
+      "title": "Overview",
+      "type": "row"
+    },
+    {
+      "title": "Total HTTP Requests",
+      "type": "stat",
+      "gridPos": {"h": 4, "w": 4, "x": 0, "y": 1},
+      "datasource": {"type": "prometheus"},
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "thresholds"},
+          "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}]}
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(increase(traefik_service_requests_total[6h]))",
+          "legendFormat": "",
+          "instant": true
+        }
+      ],
+      "options": {"colorMode": "value", "graphMode": "none", "reduceOptions": {"calcs": ["lastNotNull"]}}
+    },
+    {
+      "title": "4xx Errors",
+      "type": "stat",
+      "gridPos": {"h": 4, "w": 4, "x": 4, "y": 1},
+      "datasource": {"type": "prometheus"},
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "thresholds"},
+          "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "yellow", "value": 10}, {"color": "red", "value": 100}]}
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(increase(traefik_service_requests_total{code=~\"4..\"}[6h]))",
+          "instant": true
+        }
+      ],
+      "options": {"colorMode": "value", "graphMode": "none", "reduceOptions": {"calcs": ["lastNotNull"]}}
+    },
+    {
+      "title": "5xx Errors",
+      "type": "stat",
+      "gridPos": {"h": 4, "w": 4, "x": 8, "y": 1},
+      "datasource": {"type": "prometheus"},
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "thresholds"},
+          "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "yellow", "value": 1}, {"color": "red", "value": 10}]}
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(increase(traefik_service_requests_total{code=~\"5..\"}[6h]))",
+          "instant": true
+        }
+      ],
+      "options": {"colorMode": "value", "graphMode": "none", "reduceOptions": {"calcs": ["lastNotNull"]}}
+    },
+    {
+      "title": "SSH Failed Logins",
+      "type": "stat",
+      "gridPos": {"h": 4, "w": 4, "x": 12, "y": 1},
+      "datasource": {"type": "loki", "uid": "P8E80F9AEF21F6940"},
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "thresholds"},
+          "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "yellow", "value": 5}, {"color": "red", "value": 50}]}
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(count_over_time({job=\"auth\"} |~ \"Failed password|Invalid user\" [$__range]))",
+          "instant": true
+        }
+      ],
+      "options": {"colorMode": "value", "graphMode": "none", "reduceOptions": {"calcs": ["lastNotNull"]}}
+    },
+    {
+      "title": "Unhealthy Containers",
+      "type": "stat",
+      "gridPos": {"h": 4, "w": 4, "x": 16, "y": 1},
+      "datasource": {"type": "prometheus"},
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "thresholds"},
+          "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "red", "value": 1}]}
+        }
+      },
+      "targets": [
+        {
+          "expr": "count(container_health_state{health_status=\"unhealthy\"} == 1) or vector(0)",
+          "instant": true
+        }
+      ],
+      "options": {"colorMode": "value", "graphMode": "none", "reduceOptions": {"calcs": ["lastNotNull"]}}
+    },
+    {
+      "title": "Network Probes Down",
+      "type": "stat",
+      "gridPos": {"h": 4, "w": 4, "x": 20, "y": 1},
+      "datasource": {"type": "prometheus"},
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "thresholds"},
+          "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "red", "value": 1}]}
+        }
+      },
+      "targets": [
+        {
+          "expr": "count(probe_success == 0) or vector(0)",
+          "instant": true
+        }
+      ],
+      "options": {"colorMode": "value", "graphMode": "none", "reduceOptions": {"calcs": ["lastNotNull"]}}
+    },
+
+    {
+      "collapsed": false,
+      "gridPos": {"h": 1, "w": 24, "x": 0, "y": 5},
+      "id": 200,
+      "panels": [],
+      "title": "HTTP Traffic Security (Traefik)",
+      "type": "row"
+    },
+    {
+      "title": "HTTP Error Rate",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 6},
+      "datasource": {"type": "prometheus"},
+      "fieldConfig": {
+        "defaults": {
+          "custom": {"fillOpacity": 15, "stacking": {"mode": "normal"}},
+          "unit": "reqps"
+        },
+        "overrides": [
+          {"matcher": {"id": "byRegexp", "options": "4.."}, "properties": [{"id": "color", "value": {"mode": "fixed", "fixedColor": "orange"}}]},
+          {"matcher": {"id": "byRegexp", "options": "5.."}, "properties": [{"id": "color", "value": {"mode": "fixed", "fixedColor": "red"}}]}
+        ]
+      },
+      "targets": [
+        {
+          "expr": "sum by (code) (rate(traefik_service_requests_total{code=~\"4..|5..\"}[5m]))",
+          "legendFormat": "{{code}}"
+        }
+      ]
+    },
+    {
+      "title": "Requests by Status Code",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 6},
+      "datasource": {"type": "prometheus"},
+      "fieldConfig": {
+        "defaults": {
+          "custom": {"fillOpacity": 15, "stacking": {"mode": "normal"}, "drawStyle": "bars"},
+          "unit": "reqps"
+        },
+        "overrides": [
+          {"matcher": {"id": "byRegexp", "options": "2.."}, "properties": [{"id": "color", "value": {"mode": "fixed", "fixedColor": "green"}}]},
+          {"matcher": {"id": "byRegexp", "options": "3.."}, "properties": [{"id": "color", "value": {"mode": "fixed", "fixedColor": "blue"}}]},
+          {"matcher": {"id": "byRegexp", "options": "4.."}, "properties": [{"id": "color", "value": {"mode": "fixed", "fixedColor": "orange"}}]},
+          {"matcher": {"id": "byRegexp", "options": "5.."}, "properties": [{"id": "color", "value": {"mode": "fixed", "fixedColor": "red"}}]}
+        ]
+      },
+      "targets": [
+        {
+          "expr": "sum by (code) (rate(traefik_service_requests_total[5m]))",
+          "legendFormat": "{{code}}"
+        }
+      ]
+    },
+    {
+      "title": "Top Error Paths",
+      "type": "table",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 14},
+      "datasource": {"type": "loki", "uid": "P8E80F9AEF21F6940"},
+      "targets": [
+        {
+          "expr": "topk(20, sum by (RequestPath, DownstreamStatus) (count_over_time({compose_service=\"proxy\"} | json | DownstreamStatus >= 400 | __error__=\"\" [$__range])))",
+          "legendFormat": "",
+          "instant": true,
+          "datasource": {"type": "loki", "uid": "P8E80F9AEF21F6940"}
+        }
+      ],
+      "transformations": [
+        {"id": "organize", "options": {"excludeByName": {"Time": true}}}
+      ]
+    },
+    {
+      "title": "Suspicious Requests (Path Traversal, Injection)",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 14},
+      "datasource": {"type": "loki", "uid": "P8E80F9AEF21F6940"},
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "fixed", "fixedColor": "red"},
+          "custom": {"fillOpacity": 30, "drawStyle": "bars"}
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(count_over_time({compose_service=\"proxy\"} |~ `(?i)(\\.\\./|\\.\\.\\\\|/etc/passwd|/proc/|<script|%3Cscript|union\\+select|UNION\\+SELECT|%27|%22|eval\\(|exec\\(|/wp-admin|/wp-login|/phpmyadmin|/actuator|/env|/debug|/console|\\.git/|/\\.env)` [5m]))",
+          "legendFormat": "suspicious requests",
+          "datasource": {"type": "loki", "uid": "P8E80F9AEF21F6940"}
+        }
+      ]
+    },
+    {
+      "title": "Error Requests by Service",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 22},
+      "datasource": {"type": "prometheus"},
+      "fieldConfig": {
+        "defaults": {
+          "custom": {"fillOpacity": 15, "stacking": {"mode": "normal"}, "drawStyle": "bars"},
+          "unit": "reqps"
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (service) (rate(traefik_service_requests_total{code=~\"4..|5..\"}[5m]))",
+          "legendFormat": "{{service}}"
+        }
+      ]
+    },
+    {
+      "title": "Suspicious Request Logs",
+      "type": "logs",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 22},
+      "datasource": {"type": "loki", "uid": "P8E80F9AEF21F6940"},
+      "options": {
+        "showTime": true,
+        "showLabels": false,
+        "wrapLogMessage": true,
+        "enableLogDetails": true,
+        "sortOrder": "Descending"
+      },
+      "targets": [
+        {
+          "expr": "{compose_service=\"proxy\"} |~ `(?i)(\\.\\./|/etc/passwd|<script|union.select|/wp-admin|/wp-login|/phpmyadmin|/actuator|/\\.env|\\.git/)`",
+          "datasource": {"type": "loki", "uid": "P8E80F9AEF21F6940"}
+        }
+      ]
+    },
+
+    {
+      "collapsed": false,
+      "gridPos": {"h": 1, "w": 24, "x": 0, "y": 30},
+      "id": 300,
+      "panels": [],
+      "title": "SSH & Authentication",
+      "type": "row"
+    },
+    {
+      "title": "SSH Failed Login Attempts",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 31},
+      "datasource": {"type": "loki", "uid": "P8E80F9AEF21F6940"},
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "fixed", "fixedColor": "red"},
+          "custom": {"fillOpacity": 30, "drawStyle": "bars"}
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(count_over_time({job=\"auth\"} |~ \"Failed password|Invalid user\" [5m]))",
+          "legendFormat": "failed attempts",
+          "datasource": {"type": "loki", "uid": "P8E80F9AEF21F6940"}
+        }
+      ]
+    },
+    {
+      "title": "SSH Accepted Logins",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 31},
+      "datasource": {"type": "loki", "uid": "P8E80F9AEF21F6940"},
+      "fieldConfig": {
+        "defaults": {
+          "custom": {"fillOpacity": 30, "drawStyle": "bars"}
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (auth_method) (count_over_time({job=\"auth\"} |~ \"Accepted\" | regexp `Accepted (?P<auth_method>\\S+)` [5m]))",
+          "legendFormat": "{{auth_method}}",
+          "datasource": {"type": "loki", "uid": "P8E80F9AEF21F6940"}
+        }
+      ]
+    },
+    {
+      "title": "Top Brute Force Source IPs",
+      "type": "table",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 39},
+      "datasource": {"type": "loki", "uid": "P8E80F9AEF21F6940"},
+      "targets": [
+        {
+          "expr": "topk(20, sum by (src_ip) (count_over_time({job=\"auth\"} |~ \"Failed password|Invalid user\" | regexp `from (?P<src_ip>\\d+\\.\\d+\\.\\d+\\.\\d+)` [$__range])))",
+          "instant": true,
+          "datasource": {"type": "loki", "uid": "P8E80F9AEF21F6940"}
+        }
+      ],
+      "transformations": [
+        {"id": "organize", "options": {"excludeByName": {"Time": true}}}
+      ]
+    },
+    {
+      "title": "Top Targeted Usernames",
+      "type": "table",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 39},
+      "datasource": {"type": "loki", "uid": "P8E80F9AEF21F6940"},
+      "targets": [
+        {
+          "expr": "topk(20, sum by (username) (count_over_time({job=\"auth\"} |~ \"Failed password|Invalid user\" | regexp `(?:Failed password for(?: invalid user)?|Invalid user) (?P<username>\\S+)` [$__range])))",
+          "instant": true,
+          "datasource": {"type": "loki", "uid": "P8E80F9AEF21F6940"}
+        }
+      ],
+      "transformations": [
+        {"id": "organize", "options": {"excludeByName": {"Time": true}}}
+      ]
+    },
+    {
+      "title": "SSH Auth Logs",
+      "type": "logs",
+      "gridPos": {"h": 8, "w": 24, "x": 0, "y": 47},
+      "datasource": {"type": "loki", "uid": "P8E80F9AEF21F6940"},
+      "options": {
+        "showTime": true,
+        "showLabels": true,
+        "wrapLogMessage": true,
+        "enableLogDetails": true,
+        "sortOrder": "Descending"
+      },
+      "targets": [
+        {
+          "expr": "{job=\"auth\"} |~ \"Failed|Invalid|Accepted|error|refused\"",
+          "datasource": {"type": "loki", "uid": "P8E80F9AEF21F6940"}
+        }
+      ]
+    },
+
+    {
+      "collapsed": false,
+      "gridPos": {"h": 1, "w": 24, "x": 0, "y": 55},
+      "id": 400,
+      "panels": [],
+      "title": "Infrastructure Health & Anomalies",
+      "type": "row"
+    },
+    {
+      "title": "Container Health",
+      "type": "table",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 56},
+      "datasource": {"type": "prometheus"},
+      "targets": [
+        {
+          "expr": "container_health_state{health_status=\"unhealthy\"} == 1 or container_health_state{health_status=\"healthy\"} == 0",
+          "legendFormat": "",
+          "instant": true,
+          "format": "table"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {"Time": true, "__name__": true, "id": true, "image": true, "instance": true, "job": true},
+            "renameByName": {"container_label_com_docker_compose_service": "Service", "container_label_com_docker_compose_project": "Project", "host": "Host", "name": "Container", "health_status": "Status", "Value": "State"}
+          }
+        },
+        {"id": "sortBy", "options": {"fields": [{"displayName": "State", "desc": true}]}}
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          {
+            "matcher": {"id": "byName", "options": "State"},
+            "properties": [
+              {"id": "mappings", "value": [
+                {"type": "value", "options": {"0": {"text": "Healthy", "color": "green"}}},
+                {"type": "value", "options": {"1": {"text": "Unhealthy", "color": "red"}}}
+              ]},
+              {"id": "custom.cellOptions", "value": {"type": "color-text"}}
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "title": "Network Probe Status",
+      "type": "table",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 56},
+      "datasource": {"type": "prometheus"},
+      "targets": [
+        {
+          "expr": "probe_success",
+          "legendFormat": "",
+          "instant": true,
+          "format": "table"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {"Time": true, "__name__": true, "instance": true, "job": true},
+            "renameByName": {"target": "Target", "device_type": "Type", "vendor": "Vendor", "Value": "Status"}
+          }
+        },
+        {"id": "sortBy", "options": {"fields": [{"displayName": "Status"}]}}
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          {
+            "matcher": {"id": "byName", "options": "Status"},
+            "properties": [
+              {"id": "mappings", "value": [
+                {"type": "value", "options": {"1": {"text": "Up", "color": "green"}}},
+                {"type": "value", "options": {"0": {"text": "Down", "color": "red"}}}
+              ]},
+              {"id": "custom.cellOptions", "value": {"type": "color-text"}}
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "title": "Container CPU Spikes (Top 10)",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 64},
+      "datasource": {"type": "prometheus"},
+      "fieldConfig": {
+        "defaults": {"unit": "percentunit", "custom": {"fillOpacity": 10}}
+      },
+      "targets": [
+        {
+          "expr": "topk(10, rate(container_cpu_usage_seconds_total{container_label_com_docker_compose_service!=\"\"}[5m]))",
+          "legendFormat": "{{container_label_com_docker_compose_service}} ({{host}})"
+        }
+      ]
+    },
+    {
+      "title": "Container Memory Usage (Top 10)",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 64},
+      "datasource": {"type": "prometheus"},
+      "fieldConfig": {
+        "defaults": {"unit": "bytes", "custom": {"fillOpacity": 10}}
+      },
+      "targets": [
+        {
+          "expr": "topk(10, container_memory_usage_bytes{container_label_com_docker_compose_service!=\"\"})",
+          "legendFormat": "{{container_label_com_docker_compose_service}} ({{host}})"
+        }
+      ]
+    },
+    {
+      "title": "Container Restarts",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 72},
+      "datasource": {"type": "prometheus"},
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "fixed", "fixedColor": "orange"},
+          "custom": {"fillOpacity": 30, "drawStyle": "bars"}
+        }
+      },
+      "targets": [
+        {
+          "expr": "increase(container_start_time_seconds{container_label_com_docker_compose_service!=\"\"}[1h]) > 0",
+          "legendFormat": "{{container_label_com_docker_compose_service}} ({{host}})"
+        }
+      ]
+    },
+    {
+      "title": "Tailscale Devices",
+      "type": "table",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 72},
+      "datasource": {"type": "prometheus"},
+      "targets": [
+        {
+          "expr": "tailscale_device_info",
+          "legendFormat": "",
+          "instant": true,
+          "format": "table"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {"Time": true, "__name__": true, "instance": true, "job": true, "Value": true},
+            "renameByName": {"device_name": "Device", "os": "OS", "is_online": "Online", "tailnet": "Tailnet"}
+          }
+        }
+      ]
+    },
+
+    {
+      "collapsed": false,
+      "gridPos": {"h": 1, "w": 24, "x": 0, "y": 80},
+      "id": 500,
+      "panels": [],
+      "title": "Service Error Logs",
+      "type": "row"
+    },
+    {
+      "title": "Error Log Volume by Service",
+      "type": "timeseries",
+      "gridPos": {"h": 6, "w": 24, "x": 0, "y": 81},
+      "datasource": {"type": "loki", "uid": "P8E80F9AEF21F6940"},
+      "fieldConfig": {
+        "defaults": {"custom": {"fillOpacity": 30, "stacking": {"mode": "normal"}, "drawStyle": "bars"}}
+      },
+      "targets": [
+        {
+          "expr": "sum by (compose_service) (count_over_time({host=~\"$host\", level=~\"error|fatal|panic\"} [5m]))",
+          "legendFormat": "{{compose_service}}",
+          "datasource": {"type": "loki", "uid": "P8E80F9AEF21F6940"}
+        }
+      ]
+    },
+    {
+      "title": "Error Logs",
+      "type": "logs",
+      "gridPos": {"h": 12, "w": 24, "x": 0, "y": 87},
+      "datasource": {"type": "loki", "uid": "P8E80F9AEF21F6940"},
+      "options": {
+        "showTime": true,
+        "showLabels": true,
+        "wrapLogMessage": true,
+        "enableLogDetails": true,
+        "sortOrder": "Descending"
+      },
+      "targets": [
+        {
+          "expr": "{host=~\"$host\", level=~\"error|fatal|panic\"}",
+          "datasource": {"type": "loki", "uid": "P8E80F9AEF21F6940"}
+        }
+      ]
+    }
+  ]
+}

@@ -70,3 +70,19 @@ scrape_configs:
                 template: '{{ if eq .glog_level "I" }}info{{ else if eq .glog_level "W" }}warn{{ else if eq .glog_level "E" }}error{{ else if eq .glog_level "F" }}fatal{{ end }}'
             - labels:
                 level:
+
+  - job_name: auth
+    static_configs:
+      - targets: [localhost]
+        labels:
+          job: auth
+          host: juul
+          __path__: /var/log/host/auth.log
+    pipeline_stages:
+      - regex:
+          expression: '^(?P<timestamp>\S+) (?P<hostname>\S+) (?P<service>\w+)(\[(?P<pid>\d+)\])?: (?P<message>.+)$'
+      - labels:
+          service:
+      - timestamp:
+          source: timestamp
+          format: '2006-01-02T15:04:05.000000-07:00'
