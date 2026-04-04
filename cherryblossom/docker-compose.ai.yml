@@ -127,13 +127,13 @@ services:
             - gpu
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "curl -sf http://localhost:7860/sdapi/v1/options > /dev/null"]
+      test: ["CMD-SHELL", "curl -sf http://localhost:17860/sdapi/v1/options > /dev/null"]
       interval: 30s
       timeout: 10s
       retries: 5
       start_period: 120s
     ports:
-    - 127.0.0.1:7860:7860
+    - 127.0.0.1:7860:17860
 
   open-webui:
     image: ghcr.io/open-webui/open-webui:latest
@@ -146,7 +146,7 @@ services:
       ENABLE_SIGNUP: 'false'
       ENABLE_IMAGE_GENERATION: 'true'
       IMAGE_GENERATION_ENGINE: automatic1111
-      AUTOMATIC1111_BASE_URL: http://stable-diffusion:7860
+      AUTOMATIC1111_BASE_URL: http://stable-diffusion:17860
       ENABLE_RAG_WEB_SEARCH: 'true'
       RAG_WEB_SEARCH_ENGINE: searxng
       SEARXNG_QUERY_URL: http://searxng:8080/search?q=<query>&format=json
