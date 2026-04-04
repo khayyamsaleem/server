@@ -33,7 +33,7 @@ scrape_configs:
   static_configs:
   - targets:
     - cherryblossom-docker:9594
-- job_name: ollama-envoy
+- job_name: ollama-gateway
   metrics_path: /stats/prometheus
   static_configs:
   - targets:

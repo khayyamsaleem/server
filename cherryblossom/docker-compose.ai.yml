@@ -186,6 +186,7 @@ services:
     - ./filter.lua:/etc/envoy/filter.lua:ro
     ports:
     - 127.0.0.1:11435:11434
+    - 9901:9901
     restart: unless-stopped
     labels:
       com.centurylinklabs.watchtower.enable: 'true'
