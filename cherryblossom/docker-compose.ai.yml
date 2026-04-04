@@ -86,7 +86,7 @@ services:
   searxng:
     image: searxng/searxng:latest
     volumes:
-    - searxng-data:/etc/searxng
+    - ./searxng-settings.yml:/etc/searxng/settings.yml:ro
     environment:
       SEARXNG_BASE_URL: http://searxng:8080/
     restart: unless-stopped
@@ -171,4 +171,3 @@ volumes:
     external: true
     name: open-claw_ollama-data
   open-webui-data:
-  searxng-data:
