@@ -1,8 +1,8 @@
 {
-  "title": "Ollama & PicoClaw",
+  "title": "PicoClaw Gateway",
   "uid": "ollama-picoclaw",
   "tags": [
-    "ollama",
+    "homelab",
     "picoclaw",
     "ai"
   ],
@@ -623,5 +623,6 @@
         }
       ]
     }
-  ]
+  ],
+  "description": "PicoClaw Gateway monitoring. For Ollama-specific metrics see the dedicated Ollama dashboard."
 }
