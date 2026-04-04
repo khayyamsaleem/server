@@ -117,7 +117,7 @@
       },
       "targets": [
         {
-          "expr": "count(container_health_state{health_status=\"unhealthy\"} == 1) or vector(0)",
+          "expr": "count(container_health_state{name!=\"\"} == 0) or vector(0)",
           "instant": true
         }
       ],
@@ -136,7 +136,7 @@
       },
       "targets": [
         {
-          "expr": "count(probe_success == 0) or vector(0)",
+          "expr": "count(ping_status{name!=\"\"} == 0) or vector(0)",
           "instant": true
         }
       ],
@@ -204,7 +204,7 @@
       "datasource": {"type": "loki", "uid": "P8E80F9AEF21F6940"},
       "targets": [
         {
-          "expr": "topk(20, sum by (RequestPath, DownstreamStatus) (count_over_time({compose_service=\"proxy\"} | json | DownstreamStatus >= 400 | __error__=\"\" [$__range])))",
+          "expr": "topk(20, sum by (RequestPath, DownstreamStatus) (count_over_time({compose_service=\"proxy\"} | json | __error__=\"\" | DownstreamStatus >= 400 [$__range])))",
           "legendFormat": "",
           "instant": true,
           "datasource": {"type": "loki", "uid": "P8E80F9AEF21F6940"}
@@ -383,7 +383,7 @@
       "datasource": {"type": "prometheus"},
       "targets": [
         {
-          "expr": "container_health_state{health_status=\"unhealthy\"} == 1 or container_health_state{health_status=\"healthy\"} == 0",
+          "expr": "container_health_state{name!=\"\"}",
           "legendFormat": "",
           "instant": true,
           "format": "table"
@@ -393,21 +393,28 @@
         {
           "id": "organize",
           "options": {
-            "excludeByName": {"Time": true, "__name__": true, "id": true, "image": true, "instance": true, "job": true},
-            "renameByName": {"container_label_com_docker_compose_service": "Service", "container_label_com_docker_compose_project": "Project", "host": "Host", "name": "Container", "health_status": "Status", "Value": "State"}
+            "excludeByName": {"Time": true, "__name__": true, "id": true, "image": true, "instance": true, "job": true,
+              "container_label_com_docker_compose_config_hash": true, "container_label_com_docker_compose_container_number": true,
+              "container_label_com_docker_compose_image": true, "container_label_com_docker_compose_oneoff": true,
+              "container_label_com_docker_compose_project_config_files": true, "container_label_com_docker_compose_project_working_dir": true,
+              "container_label_com_docker_compose_replace": true, "container_label_com_docker_compose_version": true,
+              "container_label_com_centurylinklabs_watchtower_enable": true
+            },
+            "renameByName": {"container_label_com_docker_compose_service": "Service", "container_label_com_docker_compose_project": "Project", "host": "Host", "name": "Container", "Value": "Health"}
           }
         },
-        {"id": "sortBy", "options": {"fields": [{"displayName": "State", "desc": true}]}}
+        {"id": "sortBy", "options": {"fields": [{"displayName": "Health"}]}}
       ],
       "fieldConfig": {
         "defaults": {},
         "overrides": [
           {
-            "matcher": {"id": "byName", "options": "State"},
+            "matcher": {"id": "byName", "options": "Health"},
             "properties": [
               {"id": "mappings", "value": [
-                {"type": "value", "options": {"0": {"text": "Healthy", "color": "green"}}},
-                {"type": "value", "options": {"1": {"text": "Unhealthy", "color": "red"}}}
+                {"type": "value", "options": {"1": {"text": "Healthy", "color": "green"}}},
+                {"type": "value", "options": {"0": {"text": "Unhealthy", "color": "red"}}},
+                {"type": "value", "options": {"-1": {"text": "No Healthcheck", "color": "text"}}}
               ]},
               {"id": "custom.cellOptions", "value": {"type": "color-text"}}
             ]
@@ -422,7 +429,7 @@
       "datasource": {"type": "prometheus"},
       "targets": [
         {
-          "expr": "probe_success",
+          "expr": "ping_status{name!=\"\"}",
           "legendFormat": "",
           "instant": true,
           "format": "table"
@@ -432,8 +439,11 @@
         {
           "id": "organize",
           "options": {
-            "excludeByName": {"Time": true, "__name__": true, "instance": true, "job": true},
-            "renameByName": {"target": "Target", "device_type": "Type", "vendor": "Vendor", "Value": "Status"}
+            "excludeByName": {"Time": true, "__name__": true, "instance": true, "job": true, "host": true,
+              "scope_name": true, "scope_version": true, "server_port": true, "service_instance_id": true,
+              "service_name": true, "target_ip": true, "url_scheme": true
+            },
+            "renameByName": {"name": "Device", "target": "Target", "device_type": "Type", "vendor": "Vendor", "Value": "Status"}
           }
         },
         {"id": "sortBy", "options": {"fields": [{"displayName": "Status"}]}}
@@ -497,7 +507,7 @@
       },
       "targets": [
         {
-          "expr": "increase(container_start_time_seconds{container_label_com_docker_compose_service!=\"\"}[1h]) > 0",
+          "expr": "changes(container_start_time_seconds{container_label_com_docker_compose_service!=\"\"}[1h]) > 0",
           "legendFormat": "{{container_label_com_docker_compose_service}} ({{host}})"
         }
       ]
@@ -509,21 +519,41 @@
       "datasource": {"type": "prometheus"},
       "targets": [
         {
-          "expr": "tailscale_device_info",
+          "expr": "tailscale_devices_info * on(id) group_left() tailscale_devices_online",
           "legendFormat": "",
           "instant": true,
-          "format": "table"
+          "format": "table",
+          "refId": "A"
         }
       ],
       "transformations": [
         {
           "id": "organize",
           "options": {
-            "excludeByName": {"Time": true, "__name__": true, "instance": true, "job": true, "Value": true},
-            "renameByName": {"device_name": "Device", "os": "OS", "is_online": "Online", "tailnet": "Tailnet"}
+            "excludeByName": {"Time": true, "__name__": true, "instance": true, "job": true,
+              "id": true, "machine_key": true, "node_key": true, "name": true,
+              "client_version": true, "user": true
+            },
+            "renameByName": {"hostname": "Device", "os": "OS", "tailscale_ip": "IP", "tailnet": "Tailnet", "Value": "Online"}
           }
-        }
-      ]
+        },
+        {"id": "sortBy", "options": {"fields": [{"displayName": "Device"}]}}
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          {
+            "matcher": {"id": "byName", "options": "Online"},
+            "properties": [
+              {"id": "mappings", "value": [
+                {"type": "value", "options": {"1": {"text": "Online", "color": "green"}}},
+                {"type": "value", "options": {"0": {"text": "Offline", "color": "red"}}}
+              ]},
+              {"id": "custom.cellOptions", "value": {"type": "color-text"}}
+            ]
+          }
+        ]
+      }
     },
 
     {
