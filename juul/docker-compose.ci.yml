@@ -12,7 +12,7 @@ services:
     - ./jul-jsonformatter.jar:/var/jenkins_home/jul-jsonformatter.jar:ro
     labels:
       traefik.enable: 'true'
-      traefik.http.routers.jenkins.rule: Host(`build.khayyam.me`)
+      traefik.http.routers.jenkins.rule: Host(`ci.k5m.sh`)
       traefik.http.routers.jenkins.entrypoints: https
       traefik.docker.network: juul_webgateway
       com.centurylinklabs.watchtower.enable: 'true'
