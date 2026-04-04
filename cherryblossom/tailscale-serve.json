@@ -6,6 +6,7 @@
     "9101": { "TCPForward": "cadvisor:8080" },
     "9594": { "TCPForward": "jellyfin-exporter:9594" },
     "9901": { "TCPForward": "envoy:9901" },
-    "19091": { "TCPForward": "transmission-exporter:19091" }
+    "19091": { "TCPForward": "transmission-exporter:19091" },
+    "3100": { "TCPForward": "open-webui:8080" }
   }
 }

@@ -1,0 +1,12 @@
+http:
+  routers:
+    open-webui:
+      rule: "Host(`gpu.khayyam.me`) || Host(`gpu.k5m.sh`)"
+      entryPoints:
+        - https
+      service: open-webui
+  services:
+    open-webui:
+      loadBalancer:
+        servers:
+          - url: "http://cherryblossom:3100"
