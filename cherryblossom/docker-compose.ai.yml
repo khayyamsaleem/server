@@ -109,10 +109,9 @@ services:
   stable-diffusion:
     image: ghcr.io/ai-dock/stable-diffusion-webui-forge:latest-cuda
     volumes:
-    - sd-models:/opt/stable-diffusion-webui-forge/models
-    - sd-outputs:/opt/stable-diffusion-webui-forge/outputs
+    - sd-data:/opt/storage
     environment:
-      CLI_ARGS: --api --listen --medvram-sdxl --xformers
+      FORGE_ARGS: --api --listen --medvram-sdxl --xformers
     deploy:
       resources:
         limits:
@@ -210,5 +209,4 @@ volumes:
     external: true
     name: open-claw_ollama-data
   open-webui-data:
-  sd-models:
-  sd-outputs:
+  sd-data:
