@@ -4,6 +4,8 @@ http:
       rule: "Host(`gpu.khayyam.me`) || Host(`gpu.k5m.sh`)"
       entryPoints:
         - https
+      middlewares:
+        - auth@docker
       service: open-webui
   services:
     open-webui:
