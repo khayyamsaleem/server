@@ -17,11 +17,12 @@ DigitalOcean VPS (Ubuntu). Public-facing edge and centralized monitoring hub.
 **Exposed services:**
 | Domain | Backend |
 |---|---|
-| `proxy.khayyam.me` | Traefik dashboard |
-| `build.khayyam.me` | Jenkins |
-| `grafana.khayyam.me` | Grafana |
-| `jelly.khayyam.me` | Jellyfin (on cherryblossom) |
-| `transmission.khayyam.me` | Transmission (on cherryblossom) |
+| `p.k5m.sh` | Traefik dashboard |
+| `ci.k5m.sh` | Jenkins |
+| `g.k5m.sh` | Grafana |
+| `jf.k5m.sh` | Jellyfin (on cherryblossom) |
+| `t.k5m.sh` | Transmission (on cherryblossom) |
+| `gpu.k5m.sh` | Open WebUI (on cherryblossom) |
 
 ### cherryblossom
 
@@ -30,7 +31,7 @@ On-prem server (Arch Linux) with NVIDIA GPU and attached storage.
 **Stacks:**
 - **media** — Jellyfin, jellyfin-exporter
 - **torrenting** — Gluetun (NordVPN WireGuard), Transmission (Flood UI)
-- **ai** — Ollama (GPU), PicoClaw gateway, Envoy (Ollama metrics proxy)
+- **ai** — Ollama (GPU), PicoClaw gateway, Open WebUI, Envoy (Ollama metrics proxy)
 - **monitoring** — node-exporter, cAdvisor, Promtail (ships logs to Loki on juul)
 - **infra** — Watchtower
 
@@ -94,6 +95,7 @@ docker compose up -d
               |  Ollama (GPU)                |
               |    +-- Envoy proxy           |
               |    +-- PicoClaw              |
+              |    +-- Open WebUI            |
               |                              |
               |  node-exporter, cAdvisor     |
               +------------------------------+

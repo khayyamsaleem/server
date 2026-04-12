@@ -1,21 +1,16 @@
 services:
-  ollama:
+  ollama-mgmt:
     image: ollama/ollama:latest
     volumes:
     - ollama-data:/root/.ollama
     deploy:
       resources:
         limits:
-          cpus: '8.00'
-          memory: 24G
+          cpus: '1.00'
+          memory: 512M
         reservations:
-          cpus: '0.50'
-          memory: 1G
-          devices:
-          - driver: nvidia
-            count: all
-            capabilities:
-            - gpu
+          cpus: '0.05'
+          memory: 64M
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "ollama", "list"]
@@ -27,6 +22,66 @@ services:
       com.centurylinklabs.watchtower.enable: 'true'
     ports:
     - 127.0.0.1:11434:11434
+
+  ollama-3090:
+    image: ollama/ollama:latest
+    volumes:
+    - ollama-data:/ollama-models:ro
+    deploy:
+      resources:
+        limits:
+          cpus: '8.00'
+          memory: 30G
+        reservations:
+          cpus: '0.50'
+          memory: 1G
+          devices:
+          - driver: nvidia
+            device_ids: ['1']
+            capabilities:
+            - gpu
+    environment:
+      OLLAMA_MODELS: /ollama-models/models
+      OLLAMA_MAX_LOADED_MODELS: 1
+      OLLAMA_NUM_GPU: 999
+      OLLAMA_FLASH_ATTENTION: 1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+  ollama-1080ti:
+    image: ollama/ollama:latest
+    volumes:
+    - ollama-data:/ollama-models:ro
+    deploy:
+      resources:
+        limits:
+          cpus: '4.00'
+          memory: 12G
+        reservations:
+          cpus: '0.25'
+          memory: 512M
+          devices:
+          - driver: nvidia
+            device_ids: ['0']
+            capabilities:
+            - gpu
+    environment:
+      OLLAMA_MODELS: /ollama-models/models
+      OLLAMA_MAX_LOADED_MODELS: 1
+      OLLAMA_NUM_GPU: 999
+      OLLAMA_FLASH_ATTENTION: 1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
 
   picoclaw-gateway:
     build:
@@ -43,11 +98,6 @@ services:
         reservations:
           cpus: '0.05'
           memory: 32M
-          devices:
-          - driver: nvidia
-            count: all
-            capabilities:
-            - gpu
     environment:
       TZ: America/New_York
       TERM: xterm-256color
@@ -74,7 +124,7 @@ services:
     init: true
     restart: unless-stopped
     depends_on:
-      ollama:
+      ollama-3090:
         condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:18800/health > /dev/null"]
@@ -106,12 +156,48 @@ services:
           cpus: '0.05'
           memory: 64M
 
-  stable-diffusion:
+  forge-init:
+    image: alpine/git:latest
+    volumes:
+    - sd-data:/data
+    - ./sd-provision.sh:/provision.sh:ro
+    entrypoint: ["/bin/sh", "/provision.sh"]
+    deploy:
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 256M
+
+  forge:
     image: ghcr.io/ai-dock/stable-diffusion-webui-forge:latest-cuda
+    depends_on:
+      forge-init:
+        condition: service_completed_successfully
     volumes:
     - sd-data:/opt/storage
+    - type: volume
+      source: sd-data
+      target: /opt/stable-diffusion-webui-forge/extensions/adetailer
+      volume:
+        subpath: extensions/adetailer
+      read_only: true
+    - type: volume
+      source: sd-data
+      target: /opt/stable-diffusion-webui-forge/models/Lora
+      volume:
+        subpath: stable_diffusion/models/lora
+    - type: volume
+      source: sd-data
+      target: /opt/stable-diffusion-webui-forge/models/text_encoder
+      volume:
+        subpath: stable_diffusion/models/text_encoder
+    - type: volume
+      source: sd-data
+      target: /opt/stable-diffusion-webui-forge/models/VAE/flux
+      volume:
+        subpath: stable_diffusion/models/flux_vae
     environment:
-      FORGE_ARGS: --api --listen --medvram-sdxl --xformers
+      FORGE_ARGS: --api --listen --xformers --always-offload-from-vram
     deploy:
       resources:
         limits:
@@ -122,7 +208,7 @@ services:
           memory: 2G
           devices:
           - driver: nvidia
-            count: all
+            device_ids: ['1']
             capabilities:
             - gpu
     restart: unless-stopped
@@ -132,21 +218,28 @@ services:
       timeout: 10s
       retries: 5
       start_period: 120s
-    ports:
-    - 127.0.0.1:7860:17860
-
   open-webui:
     image: ghcr.io/open-webui/open-webui:latest
     environment:
+      # --- Core ---
+      RESET_CONFIG_ON_START: 'true'
       OLLAMA_BASE_URL: http://ollama-gateway:11434
       WEBUI_URL: https://gpu.k5m.sh
       WEBUI_AUTH: 'true'
       WEBUI_SESSION_COOKIE_SECURE: 'true'
       WEBUI_SESSION_COOKIE_SAME_SITE: none
       ENABLE_SIGNUP: 'false'
+      ENABLE_API_KEYS: 'true'
+      TASK_MODEL: igorls/gemma-4-E4B-it-heretic-GGUF:latest
+      # --- Image generation (Forge on 3090) ---
       ENABLE_IMAGE_GENERATION: 'true'
       IMAGE_GENERATION_ENGINE: automatic1111
-      AUTOMATIC1111_BASE_URL: http://stable-diffusion:17860
+      IMAGE_GENERATION_MODEL: flux1-dev-bnb-nf4-v2
+      AUTOMATIC1111_BASE_URL: http://ollama-gateway:17860
+      AUTOMATIC1111_PARAMS: '{"sampler_name": "DPM++ 2M", "cfg_scale": 1.0}'
+      IMAGE_SIZE: 1024x1024
+      IMAGE_STEPS: 20
+      # --- Search ---
       ENABLE_RAG_WEB_SEARCH: 'true'
       RAG_WEB_SEARCH_ENGINE: searxng
       SEARXNG_QUERY_URL: http://searxng:8080/search?q=<query>&format=json
@@ -160,7 +253,7 @@ services:
         condition: service_healthy
       searxng:
         condition: service_healthy
-      stable-diffusion:
+      forge:
         condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:8080/health > /dev/null"]
@@ -177,13 +270,15 @@ services:
           cpus: '0.10'
           memory: 128M
     labels:
-      com.centurylinklabs.watchtower.enable: 'true'
+      com.centurylinklabs.watchtower.enable: 'false'
 
   ollama-gateway:
     image: envoyproxy/envoy:v1.32-latest
+    command: ["envoy", "-c", "/etc/envoy/envoy.yaml", "--concurrency", "1"]
     volumes:
     - ./envoy.yaml:/etc/envoy/envoy.yaml:ro
     - ./filter.lua:/etc/envoy/filter.lua:ro
+    - ./forge_filter.lua:/etc/envoy/forge_filter.lua:ro
     ports:
     - 127.0.0.1:11435:11434
     - 9901:9901
