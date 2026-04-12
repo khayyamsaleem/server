@@ -35,6 +35,12 @@ services:
         reservations:
           cpus: '0.10'
           memory: 256M
+          devices:
+          - driver: nvidia
+            device_ids: ['0']
+            capabilities:
+            - gpu
+            - video
 
   jellyfin-exporter:
     image: rebelcore/jellyfin-exporter:latest
