@@ -110,7 +110,7 @@ services:
     labels:
       com.centurylinklabs.watchtower.enable: 'true'
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:9400/metrics > /dev/null || exit 1"]
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/localhost/9400; echo -e \"GET /metrics HTTP/1.0\\r\\n\\r\\n\" >&3; head -c1 <&3 > /dev/null'"]
       interval: 30s
       timeout: 5s
       retries: 3
