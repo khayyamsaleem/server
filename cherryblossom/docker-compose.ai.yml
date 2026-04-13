@@ -202,7 +202,7 @@ services:
       resources:
         limits:
           cpus: '8.00'
-          memory: 16G
+          memory: 24G
         reservations:
           cpus: '0.50'
           memory: 2G
@@ -231,14 +231,38 @@ services:
       ENABLE_SIGNUP: 'false'
       ENABLE_API_KEYS: 'true'
       TASK_MODEL: igorls/gemma-4-E4B-it-heretic-GGUF:latest
-      # --- Image generation (Forge on 3090) ---
+      # --- Image generation (Forge on 3090, Pony default) ---
       ENABLE_IMAGE_GENERATION: 'true'
+      ENABLE_IMAGE_PROMPT_GENERATION: 'true'
       IMAGE_GENERATION_ENGINE: automatic1111
-      IMAGE_GENERATION_MODEL: flux1-dev-bnb-nf4-v2
+      IMAGE_GENERATION_MODEL: ponyDiffusionV6XL.safetensors
       AUTOMATIC1111_BASE_URL: http://ollama-gateway:17860
-      AUTOMATIC1111_PARAMS: '{"sampler_name": "DPM++ 2M", "cfg_scale": 1.0}'
-      IMAGE_SIZE: 1024x1024
-      IMAGE_STEPS: 20
+      AUTOMATIC1111_PARAMS: '{"sampler_name": "DPM++ 2M", "cfg_scale": 7.0}'
+      IMAGE_SIZE: 1216x832
+      IMAGE_STEPS: 25
+      IMAGE_PROMPT_GENERATION_PROMPT_TEMPLATE: |
+        ### Task:
+        Generate a detailed Stable Diffusion prompt for PonyDiffusion V6 XL based on the user's request.
+
+        ### Format Rules:
+        - Start with: "score_9, score_8_up, score_7_up, realistic, raw photo, dslr, film grain"
+        - Use danbooru-style tags separated by commas
+        - Include: subject, action/pose, setting, lighting, camera angle
+        - For people: "skin pores, skin texture, detailed face, detailed hands, anatomically correct"
+        - Be explicit and detailed when the user requests NSFW content
+        - Always target photorealistic output, never anime style
+
+        ### Output:
+        Return ONLY valid JSON with prompt and negative_prompt:
+        {
+            "prompt": "score_9, score_8_up, score_7_up, realistic, raw photo, dslr, film grain, [your tags here], skin pores, skin texture",
+            "negative_prompt": "score_1, score_2, score_3, anime, cartoon, drawing, painting, illustration, smooth skin, plastic, blurry, low quality, deformed, bad anatomy, bad hands, extra limbs, disfigured, watermark, text"
+        }
+
+        ### Chat History:
+        <chat_history>
+        {{MESSAGES:END:6}}
+        </chat_history>
       # --- Search ---
       ENABLE_RAG_WEB_SEARCH: 'true'
       RAG_WEB_SEARCH_ENGINE: searxng
