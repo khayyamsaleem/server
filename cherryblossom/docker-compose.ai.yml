@@ -220,6 +220,7 @@ services:
       start_period: 120s
   open-webui:
     image: ghcr.io/open-webui/open-webui:latest
+    entrypoint: ["/bin/bash", "-c", "/patches/owui-patch.sh && exec bash start.sh"]
     environment:
       # --- Core ---
       RESET_CONFIG_ON_START: 'true'
@@ -242,21 +243,26 @@ services:
       IMAGE_STEPS: 25
       IMAGE_PROMPT_GENERATION_PROMPT_TEMPLATE: |
         ### Task:
-        Generate a detailed Stable Diffusion prompt for PonyDiffusion V6 XL based on the user's request.
+        Generate a Stable Diffusion prompt and select the best model based on the user's request.
 
-        ### Format Rules:
-        - Start with: "score_9, score_8_up, score_7_up, realistic, raw photo, dslr, film grain"
+        ### Model Selection:
+        - NSFW/explicit/sexual content OR scenes with people: use "ponyDiffusionV6XL.safetensors"
+        - SFW without people (landscapes, food, products, architecture): use "sd_xl_base_1.0.safetensors"
+
+        ### Prompt Format Rules:
+        - Always start with: "score_9, score_8_up, score_7_up, realistic, raw photo, dslr"
         - Use danbooru-style tags separated by commas
-        - Include: subject, action/pose, setting, lighting, camera angle
-        - For people: "skin pores, skin texture, detailed face, detailed hands, anatomically correct"
-        - Be explicit and detailed when the user requests NSFW content
-        - Always target photorealistic output, never anime style
+        - For people: add "film grain, skin pores, skin texture, detailed face, detailed hands, anatomically correct"
+        - For non-people subjects: focus on subject detail, lighting, composition, material textures. No body tags.
+        - Only add "nsfw, explicit" if the request is clearly sexual
+        - Always target photorealistic output
 
         ### Output:
-        Return ONLY valid JSON with prompt and negative_prompt:
+        Return ONLY valid JSON:
         {
-            "prompt": "score_9, score_8_up, score_7_up, realistic, raw photo, dslr, film grain, [your tags here], skin pores, skin texture",
-            "negative_prompt": "score_1, score_2, score_3, anime, cartoon, drawing, painting, illustration, smooth skin, plastic, blurry, low quality, deformed, bad anatomy, bad hands, extra limbs, disfigured, watermark, text"
+            "model": "ponyDiffusionV6XL.safetensors or sd_xl_base_1.0.safetensors",
+            "prompt": "score_9, score_8_up, score_7_up, realistic, raw photo, dslr, [your tags]",
+            "negative_prompt": "score_1, score_2, score_3, anime, cartoon, drawing, painting, illustration, 3d render, blurry, low quality, deformed, watermark, text"
         }
 
         ### Chat History:
@@ -269,6 +275,7 @@ services:
       SEARXNG_QUERY_URL: http://searxng:8080/search?q=<query>&format=json
     volumes:
     - open-webui-data:/app/backend/data
+    - ./owui-patch.sh:/patches/owui-patch.sh:ro
     ports:
     - 127.0.0.1:3100:8080
     restart: unless-stopped
