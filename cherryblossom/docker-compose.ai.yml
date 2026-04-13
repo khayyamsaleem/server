@@ -270,8 +270,8 @@ services:
         {{MESSAGES:END:6}}
         </chat_history>
       # --- Search ---
-      ENABLE_RAG_WEB_SEARCH: 'true'
-      RAG_WEB_SEARCH_ENGINE: searxng
+      ENABLE_WEB_SEARCH: 'true'
+      WEB_SEARCH_ENGINE: searxng
       SEARXNG_QUERY_URL: http://searxng:8080/search?q=<query>&format=json
     volumes:
     - open-webui-data:/app/backend/data
