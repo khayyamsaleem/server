@@ -319,7 +319,7 @@ services:
       com.centurylinklabs.watchtower.enable: 'false'
 
   jupyter:
-    image: quay.io/jupyter/scipy-notebook:latest
+    image: quay.io/jupyter/pytorch-notebook:cuda12-latest
     command:
     - start-notebook.py
     - --IdentityProvider.token=${JUPYTER_TOKEN:-changeme}
@@ -332,7 +332,7 @@ services:
       NVIDIA_DRIVER_CAPABILITIES: compute,utility
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "curl -sf http://localhost:8888/api/status > /dev/null"]
+      test: ["CMD-SHELL", "curl -sf -H \"Authorization: token ${JUPYTER_TOKEN:-changeme}\" http://localhost:8888/api > /dev/null"]
       interval: 30s
       timeout: 10s
       retries: 3
