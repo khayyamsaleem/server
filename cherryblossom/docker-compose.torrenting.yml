@@ -75,8 +75,6 @@ services:
     - PUID=1000
     - PGID=1000
     - TZ=America/New_York
-    - USER=${TRANSMISSION_USER}
-    - PASS=${TRANSMISSION_PASS}
     - PEERPORT=51413
     - TRANSMISSION_WEB_HOME=/flood-ui/flood-for-transmission
     volumes:
@@ -101,8 +99,6 @@ services:
     image: ghcr.io/khayyamsaleem/transmission-exporter:latest
     environment:
     - TRANSMISSION_ADDR=http://gluetun:9091
-    - TRANSMISSION_USERNAME=${TRANSMISSION_USER}
-    - TRANSMISSION_PASSWORD=${TRANSMISSION_PASS}
     depends_on:
       gluetun:
         condition: service_healthy
