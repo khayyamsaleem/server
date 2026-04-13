@@ -1,0 +1,12 @@
+http:
+  routers:
+    forge:
+      rule: "Host(`forge.k5m.sh`)"
+      entryPoints:
+        - https
+      service: forge
+  services:
+    forge:
+      loadBalancer:
+        servers:
+          - url: "http://cherryblossom-docker:17860"
