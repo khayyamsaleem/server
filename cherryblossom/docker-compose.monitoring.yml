@@ -102,6 +102,34 @@ services:
           cpus: '0.01'
           memory: 32M
 
+  dcgm-exporter:
+    image: nvcr.io/nvidia/k8s/dcgm-exporter:latest
+    cap_add:
+    - SYS_ADMIN
+    restart: unless-stopped
+    labels:
+      com.centurylinklabs.watchtower.enable: 'true'
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:9400/metrics > /dev/null || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 256M
+        reservations:
+          cpus: '0.05'
+          memory: 64M
+          devices:
+          - driver: nvidia
+            count: all
+            capabilities:
+            - gpu
+            - utility
+
   promtail:
     image: grafana/promtail:latest
     extra_hosts:

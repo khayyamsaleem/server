@@ -8,6 +8,7 @@
     "9901": { "TCPForward": "envoy:9901" },
     "19091": { "TCPForward": "transmission-exporter:19091" },
     "3100": { "TCPForward": "open-webui:8080" },
-    "17860": { "TCPForward": "forge:17860" }
+    "17860": { "TCPForward": "forge:17860" },
+    "9400": { "TCPForward": "dcgm-exporter:9400" }
   }
 }

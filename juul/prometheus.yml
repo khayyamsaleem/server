@@ -62,3 +62,9 @@ scrape_configs:
     - loki:3100
     labels:
       host: juul
+- job_name: dcgm-cherryblossom
+  static_configs:
+  - targets:
+    - cherryblossom-docker:9400
+    labels:
+      host: cherryblossom
