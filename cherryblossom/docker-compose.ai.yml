@@ -236,34 +236,47 @@ services:
       ENABLE_IMAGE_GENERATION: 'true'
       ENABLE_IMAGE_PROMPT_GENERATION: 'true'
       IMAGE_GENERATION_ENGINE: automatic1111
-      IMAGE_GENERATION_MODEL: ponyDiffusionV6XL.safetensors
+      IMAGE_GENERATION_MODEL: sd_xl_base_1.0.safetensors
       AUTOMATIC1111_BASE_URL: http://ollama-gateway:17860
-      AUTOMATIC1111_PARAMS: '{"sampler_name": "DPM++ 2M", "cfg_scale": 7.0}'
+      AUTOMATIC1111_PARAMS: '{"sampler_name": "DPM++ 2M SDE", "scheduler": "Karras", "cfg_scale": 7.0}'
       IMAGE_SIZE: 1216x832
       IMAGE_STEPS: 25
       IMAGE_PROMPT_GENERATION_PROMPT_TEMPLATE: |
         ### Task:
-        Generate a Stable Diffusion prompt and select the best model based on the user's request.
+        Generate a Stable Diffusion prompt and select the best model.
 
-        ### Model Selection:
-        - NSFW/explicit/sexual content OR scenes with people: use "ponyDiffusionV6XL.safetensors"
-        - SFW without people (landscapes, food, products, architecture): use "sd_xl_base_1.0.safetensors"
+        ### Model Selection (STRICT — default is SDXL):
+        Use "ponyDiffusionV6XL.safetensors" ONLY if the user's request contains EXPLICIT sexual or pornographic intent. Look for words like: nude, naked, sex, sexual, intercourse, porn, nsfw, erotic, explicit, cum, orgasm, masturbat*, breast*, genital*, penis, vagina, topless, nipple, making love, intimate (in sexual context), missionary, doggy, blowjob, handjob, fingering, gangbang, threesome, strip, lingerie (only if context is sexual).
 
-        ### Prompt Format Rules:
-        - Always start with: "score_9, score_8_up, score_7_up, realistic, raw photo, dslr"
-        - Use danbooru-style tags separated by commas
-        - For people: add "film grain, skin pores, skin texture, detailed face, detailed hands, anatomically correct"
-        - For non-people subjects: focus on subject detail, lighting, composition, material textures. No body tags.
-        - Only add "nsfw, explicit" if the request is clearly sexual
-        - Always target photorealistic output
+        For EVERYTHING ELSE — characters, people, anime/cartoon requests, fantasy, landscapes, animals, objects, abstract art, portraits, fashion, food, architecture, sci-fi, action scenes — use "sd_xl_base_1.0.safetensors".
+
+        Fictional characters (Goku, Pikachu, Batman, etc.) are SFW unless explicitly requested sexually.
+        Anime/cartoon style requests are SFW.
+        Portraits, selfies, fashion photos, athletic/gym images are SFW.
+        Romantic scenes without sexual content (kissing, cuddling, holding hands) are SFW.
+
+        When in doubt, choose sd_xl_base_1.0.safetensors.
+
+        ### Prompt Format:
+        For sd_xl_base_1.0.safetensors (SDXL — natural language works):
+          - Write descriptive natural-language prompt
+          - Include style cues: "photorealistic", "cinematic", "8k", "detailed", art style (e.g., "low poly", "anime", "oil painting") as the user requested
+          - Do NOT add score_X tags (those are Pony-specific)
+
+        For ponyDiffusionV6XL.safetensors (Pony — danbooru tags only):
+          - Start with: "score_9, score_8_up, score_7_up, realistic, raw photo, dslr"
+          - Use danbooru-style comma-separated tags
+          - Add explicit content tags if user requested (nsfw, explicit, etc.)
 
         ### Output:
         Return ONLY valid JSON:
         {
-            "model": "ponyDiffusionV6XL.safetensors or sd_xl_base_1.0.safetensors",
-            "prompt": "score_9, score_8_up, score_7_up, realistic, raw photo, dslr, [your tags]",
-            "negative_prompt": "score_1, score_2, score_3, anime, cartoon, drawing, painting, illustration, 3d render, blurry, low quality, deformed, watermark, text"
+            "model": "<model filename>",
+            "prompt": "<prompt tuned for that model>",
+            "negative_prompt": "blurry, low quality, deformed, bad anatomy, watermark, text, extra limbs, disfigured"
         }
+
+        For Pony, use negative_prompt: "score_1, score_2, score_3, anime, cartoon, drawing, painting, illustration, 3d render, blurry, low quality, deformed, bad anatomy, watermark, text"
 
         ### Chat History:
         <chat_history>
