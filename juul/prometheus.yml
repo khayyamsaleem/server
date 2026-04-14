@@ -68,3 +68,6 @@ scrape_configs:
     - cherryblossom-docker:9400
     labels:
       host: cherryblossom
+  metric_relabel_configs:
+  - action: labeldrop
+    regex: Hostname
