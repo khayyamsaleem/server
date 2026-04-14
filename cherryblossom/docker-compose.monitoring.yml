@@ -106,6 +106,9 @@ services:
     image: nvcr.io/nvidia/k8s/dcgm-exporter:latest
     cap_add:
     - SYS_ADMIN
+    command: ["-f", "/etc/dcgm-exporter/custom-counters.csv"]
+    volumes:
+    - ./dcgm-counters.csv:/etc/dcgm-exporter/custom-counters.csv:ro
     restart: unless-stopped
     labels:
       com.centurylinklabs.watchtower.enable: 'true'
