@@ -394,6 +394,50 @@ services:
           cpus: '0.02'
           memory: 32M
 
+  hermes-agent:
+    build:
+      context: ./hermes
+      dockerfile: Dockerfile
+    image: hermes-agent:local
+    command: ["hermes", "gateway", "run"]
+    volumes:
+      - ./hermes/home:/opt/data
+      - ./hermes/workspace:/workspace
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+    environment:
+      TZ: America/New_York
+      HERMES_HOME: /opt/data
+      HERMES_UID: "1000"
+      HERMES_GID: "1000"
+      DISCORD_BOT_TOKEN: ${DISCORD_BOT_TOKEN:-}
+      DISCORD_ALLOWED_USERS: "552924730894712833"
+      GH_TOKEN: ${GH_TOKEN:-}
+      DIGITALOCEAN_ACCESS_TOKEN: ${DIGITALOCEAN_ACCESS_TOKEN:-}
+      GOOGLE_PLACES_API_KEY: ${GOOGLE_PLACES_API_KEY:-}
+      GOG_KEYRING_BACKEND: file
+      GOG_KEYRING_PASSWORD: openclaw
+      XDG_CONFIG_HOME: /workspace/.config
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    restart: unless-stopped
+    depends_on:
+      ollama-gateway:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "hermes status || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 512M
+        reservations:
+          cpus: '0.05'
+          memory: 64M
+
 volumes:
   ollama-data:
     external: true

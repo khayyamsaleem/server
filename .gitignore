@@ -2,6 +2,23 @@
 acme*
 *.jar
 
+# Hermes build context binaries (large, copied from picoclaw at build time)
+cherryblossom/hermes/gog
+cherryblossom/hermes/goplaces
+
+# Hermes runtime state (not git-tracked)
+cherryblossom/hermes/workspace/.config/
+cherryblossom/hermes/workspace/run_reminder_state.json
+cherryblossom/hermes/workspace/memory/
+cherryblossom/hermes/workspace/sessions/
+# hermes/home: exclude all runtime state, track only config, persona, and cron jobs
+cherryblossom/hermes/home/*
+!cherryblossom/hermes/home/config.yaml
+!cherryblossom/hermes/home/SOUL.md
+!cherryblossom/hermes/home/cron/
+cherryblossom/hermes/home/cron/*
+!cherryblossom/hermes/home/cron/jobs.json
+
 # Vim
 [._]*.s[a-v][a-z]
 [._]*.sw[a-p]
