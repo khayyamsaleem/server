@@ -75,6 +75,7 @@ services:
       OLLAMA_MAX_LOADED_MODELS: 1
       OLLAMA_NUM_GPU: 999
       OLLAMA_FLASH_ATTENTION: 1
+      OLLAMA_KEEP_ALIVE: 0
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "ollama", "list"]
@@ -82,56 +83,6 @@ services:
       timeout: 10s
       retries: 3
       start_period: 15s
-
-  picoclaw-gateway:
-    build:
-      context: /home/khayyam/dev/pico-claw
-      dockerfile: Dockerfile
-      args:
-        DOCKER_GID: ${DOCKER_GID:-965}
-    image: picoclaw-gateway:local
-    deploy:
-      resources:
-        limits:
-          cpus: '2.00'
-          memory: 512M
-        reservations:
-          cpus: '0.05'
-          memory: 32M
-    environment:
-      TZ: America/New_York
-      TERM: xterm-256color
-      OLLAMA_API_KEY: ollama-local
-      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
-      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
-      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
-      DISCORD_BOT_TOKEN: ${DISCORD_BOT_TOKEN:-}
-      GH_TOKEN: ${GH_TOKEN:-}
-      GROQ_API_KEY: ${GROQ_API_KEY:-}
-      DIGITALOCEAN_ACCESS_TOKEN: ${DIGITALOCEAN_ACCESS_TOKEN:-}
-      GOOGLE_PLACES_API_KEY: ${GOOGLE_PLACES_API_KEY:-}
-      GOG_KEYRING_BACKEND: file
-      GOG_KEYRING_PASSWORD: openclaw
-      XDG_CONFIG_HOME: /workspace/.config
-    volumes:
-    - ${PICOCLAW_CONFIG_DIR:-~/.picoclaw}:/root/.picoclaw
-    - ${PICOCLAW_WORKSPACE_DIR:-~/.picoclaw/workspace}:/workspace
-    - /var/run/docker.sock:/var/run/docker.sock:rw
-    ports:
-    - 127.0.0.1:18800:18800
-    extra_hosts:
-    - host.docker.internal:host-gateway
-    init: true
-    restart: unless-stopped
-    depends_on:
-      ollama-3090:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD-SHELL", "curl -sf http://localhost:18800/health > /dev/null"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 30s
 
   searxng:
     image: searxng/searxng:latest
@@ -202,13 +153,13 @@ services:
       resources:
         limits:
           cpus: '8.00'
-          memory: 24G
+          memory: 12G
         reservations:
           cpus: '0.50'
           memory: 2G
           devices:
           - driver: nvidia
-            device_ids: ['1']
+            device_ids: ['0']
             capabilities:
             - gpu
     restart: unless-stopped
@@ -362,7 +313,7 @@ services:
           memory: 512M
           devices:
           - driver: nvidia
-            device_ids: ['0', '1']
+            device_ids: ['0']
             capabilities:
             - gpu
 
@@ -393,6 +344,54 @@ services:
         reservations:
           cpus: '0.02'
           memory: 32M
+
+  hermes-agent:
+    build:
+      context: ./hermes
+      dockerfile: Dockerfile
+    image: hermes-agent:local
+    command: ["hermes-init"]
+    volumes:
+      - ./hermes/home:/opt/data
+      - ./hermes/workspace:/workspace
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+    environment:
+      TZ: America/New_York
+      HERMES_HOME: /opt/data
+      HERMES_UID: "1000"
+      HERMES_GID: "1000"
+      DISCORD_BOT_TOKEN: ${DISCORD_BOT_TOKEN:-}
+      DISCORD_ALLOWED_USERS: "552924730894712833"
+      GH_TOKEN: ${GH_TOKEN:-}
+      FIREWORKS_API_KEY: ${FIREWORKS_API_KEY:-}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      DIGITALOCEAN_ACCESS_TOKEN: ${DIGITALOCEAN_ACCESS_TOKEN:-}
+      GOOGLE_PLACES_API_KEY: ${GOOGLE_PLACES_API_KEY:-}
+      GOG_KEYRING_BACKEND: file
+      GOG_KEYRING_PASSWORD: openclaw
+      XDG_CONFIG_HOME: /workspace/.config
+    group_add:
+      - "965"
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    restart: unless-stopped
+    depends_on:
+      ollama-gateway:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/hermes/.venv/bin/hermes status || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 512M
+        reservations:
+          cpus: '0.05'
+          memory: 64M
 
 volumes:
   ollama-data:
