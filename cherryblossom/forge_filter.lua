@@ -43,15 +43,20 @@ function envoy_on_request(handle)
     return
   end
 
-  if not cached_model then
-    handle:logInfo("forge_filter: no cached model yet, passing through")
-    return
-  end
-
   local body = handle:body()
   if not body then return end
   local raw = body:getBytes(0, body:length())
   if not raw or #raw == 0 then return end
+
+  local prompt = raw:match('"prompt"%s*:%s*"(.-[^\\])"') or raw:match('"prompt"%s*:%s*"([^"]*)"') or "(unknown)"
+  local neg = raw:match('"negative_prompt"%s*:%s*"(.-[^\\])"') or raw:match('"negative_prompt"%s*:%s*"([^"]*)"') or ""
+  local model_log = cached_model or "(unknown)"
+  handle:logInfo(string.format('forge_filter: txt2img model=%s prompt="%s" negative="%s"',
+    model_log, prompt:sub(1, 300), neg:sub(1, 150)))
+
+  if not cached_model then
+    return
+  end
 
   local has_alwayson = raw:find('"alwayson_scripts"')
   local modified = nil

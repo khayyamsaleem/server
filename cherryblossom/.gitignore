@@ -1,0 +1,4 @@
+# hermes runtime state — never commit
+hermes/home/*
+!hermes/home/config.yaml
+hermes/workspace/
