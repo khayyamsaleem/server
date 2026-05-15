@@ -1,0 +1,104 @@
+model:
+  provider: custom:fireworks
+  model: accounts/fireworks/models/kimi-k2p6
+custom_providers:
+- name: fireworks
+  base_url: https://api.fireworks.ai/inference/v1
+  api_key: ${FIREWORKS_API_KEY}
+  models:
+    accounts/fireworks/models/kimi-k2p6:
+      context_length: 131072
+      max_output_tokens: 32768
+    accounts/fireworks/models/kimi-k2p5:
+      context_length: 131072
+      max_output_tokens: 32768
+    accounts/fireworks/models/deepseek-v4-pro:
+      context_length: 131072
+      max_output_tokens: 32768
+    accounts/fireworks/models/gpt-oss-120b:
+      context_length: 131072
+      max_output_tokens: 65536
+- name: groq
+  base_url: https://api.groq.com/openai/v1
+  api_key: ${GROQ_API_KEY}
+  models:
+    openai/gpt-oss-120b:
+      context_length: 131072
+      max_output_tokens: 65536
+- name: ollama-local
+  base_url: http://ollama-gateway:11434/v1
+  api_key: ollama-local
+  models:
+    laguna-xs.2:q4_K_M:
+      context_length: 65536
+    devstral-small-2:24b:
+      context_length: 65536
+    qwen3-coder:30b-a3b-q4_K_M:
+      context_length: 65536
+    igorls/gemma-4-E4B-it-heretic-GGUF:latest:
+      context_length: 65536
+    gemma4:26b:
+      context_length: 65536
+agent:
+  max_turns: 90
+  tool_use_enforcement: auto
+  context_files:
+  - /workspace/USER.md
+  - /workspace/MEMORY.md
+  - /workspace/skills/INDEX.md
+  - /workspace/skills/infra/check-gpu.md
+  - /workspace/skills/infra/switch-model.md
+  - /workspace/skills/running/log-run.md
+  - /workspace/skills/github/create-pr.md
+  - /workspace/skills/github/sync-repo.md
+  - /workspace/skills/discord/morning-brief-format.md
+  - /workspace/skills/google/gog.md
+terminal:
+  backend: local
+  cwd: /workspace
+  timeout: 30
+  persistent_shell: true
+memory:
+  memory_enabled: true
+  user_profile_enabled: true
+compression:
+  enabled: true
+  threshold: 0.5
+  target_ratio: 0.2
+  protect_last_n: 20
+context:
+  engine: compressor
+auxiliary:
+  vision:
+    provider: custom
+    model: gemma4:26b
+  web_extract:
+    provider: custom:groq
+    model: llama-3.1-8b-instant
+  compression:
+    provider: custom:groq
+    model: llama-3.1-8b-instant
+tool_output:
+  max_bytes: 50000
+  max_lines: 2000
+  max_line_length: 2000
+approvals:
+  mode: false
+security:
+  redact_secrets: true
+  tirith_enabled: false
+discord:
+  require_mention: false
+  reactions: true
+  auto_thread: false
+  group_sessions_per_user: true
+cron:
+  wrap_response: false
+  script_timeout_seconds: 300
+display:
+  tool_progress: off
+  streaming: false
+  show_reasoning: false
+providers:
+  custom:
+    timeout: 600

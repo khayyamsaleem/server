@@ -44,8 +44,8 @@ function envoy_on_request(handle)
   handle:streamInfo():dynamicMetadata():set("envoy.filters.http.lua", "path", path)
   handle:streamInfo():dynamicMetadata():set("envoy.filters.http.lua", "method", method)
 
-  -- Default: route to main ollama (3090)
-  local cluster = "ollama_3090"
+  -- Default: route to 1080Ti (3090 offline; revert when 3090 back)
+  local cluster = "ollama_1080ti"
 
   -- Buffer and store the request body for chat/generate endpoints
   if method == "POST" and (path == "/api/generate" or path == "/api/chat") then
