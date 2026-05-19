@@ -66,3 +66,115 @@ services:
           cpus: '0.01'
           memory: 16M
 
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    environment:
+    - PUID=1000
+    - PGID=1000
+    - TZ=America/New_York
+    - RADARR_API_KEY=${RADARR_API_KEY}
+    volumes:
+    - radarr-config:/config
+    - /mnt/jellydrive-01/jellyfin_media:/media
+    - ./arr-configure.sh:/configure/arr-configure.sh:ro
+    - ./radarr-init.sh:/custom-cont-init.d/01-configure.sh:ro
+    restart: unless-stopped
+    labels:
+      com.centurylinklabs.watchtower.enable: 'true'
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:7878 > /dev/null"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 512M
+        reservations:
+          cpus: '0.05'
+          memory: 128M
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    environment:
+    - PUID=1000
+    - PGID=1000
+    - TZ=America/New_York
+    - SONARR_API_KEY=${SONARR_API_KEY}
+    volumes:
+    - sonarr-config:/config
+    - /mnt/jellydrive-01/jellyfin_media:/media
+    - ./arr-configure.sh:/configure/arr-configure.sh:ro
+    - ./sonarr-init.sh:/custom-cont-init.d/01-configure.sh:ro
+    restart: unless-stopped
+    labels:
+      com.centurylinklabs.watchtower.enable: 'true'
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8989 > /dev/null"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 512M
+        reservations:
+          cpus: '0.05'
+          memory: 128M
+
+  seerr-init:
+    image: alpine:latest
+    command: /configure/seerr-configure.sh
+    environment:
+    - JELLYFIN_EXPORTER_TOKEN=${JELLYFIN_EXPORTER_TOKEN}
+    - JELLYFIN_SERVER_ID=${JELLYFIN_SERVER_ID}
+    - RADARR_API_KEY=${RADARR_API_KEY}
+    - SONARR_API_KEY=${SONARR_API_KEY}
+    volumes:
+    - jellyseerr-config:/app/config
+    - ./seerr-configure.sh:/configure/seerr-configure.sh:ro
+    - ./seerr-settings.json:/app/template/seerr-settings.json:ro
+    restart: "no"
+
+  jellyseerr:
+    image: ghcr.io/seerr-team/seerr:latest
+    environment:
+    - TZ=America/New_York
+    volumes:
+    - jellyseerr-config:/app/config
+    depends_on:
+      seerr-init:
+        condition: service_completed_successfully
+      jellyfin:
+        condition: service_healthy
+      radarr:
+        condition: service_healthy
+      sonarr:
+        condition: service_healthy
+    restart: unless-stopped
+    labels:
+      com.centurylinklabs.watchtower.enable: 'true'
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:5055/api/v1/status > /dev/null || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 256M
+        reservations:
+          cpus: '0.05'
+          memory: 64M
+
+volumes:
+  radarr-config:
+  sonarr-config:
+  jellyseerr-config:
+
