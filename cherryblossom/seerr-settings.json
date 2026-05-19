@@ -61,7 +61,7 @@
       "is4k": false,
       "minimumAvailability": "released",
       "isDefault": true,
-      "externalUrl": "https://radarr.k5m.sh",
+      "externalUrl": "",
       "syncEnabled": false,
       "preventSearch": false,
       "tags": []
@@ -83,7 +83,7 @@
       "activeAnimeDirectory": "/media/shows",
       "is4k": false,
       "isDefault": true,
-      "externalUrl": "https://sonarr.k5m.sh",
+      "externalUrl": "",
       "syncEnabled": false,
       "preventSearch": false,
       "tags": [],
