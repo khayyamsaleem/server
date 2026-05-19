@@ -173,6 +173,30 @@ services:
           cpus: '0.05'
           memory: 64M
 
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    environment:
+    - LOG_LEVEL=info
+    - TZ=America/New_York
+    shm_size: '2gb'
+    restart: unless-stopped
+    labels:
+      com.centurylinklabs.watchtower.enable: 'true'
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8191 > /dev/null"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 512M
+        reservations:
+          cpus: '0.10'
+          memory: 128M
+
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
     environment:
