@@ -25,6 +25,7 @@ services:
 
   ollama-3090:
     image: ollama/ollama:latest
+    profiles: ["gpu-3090"]
     volumes:
     - ollama-data:/ollama-models:ro
     deploy:
