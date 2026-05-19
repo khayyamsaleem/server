@@ -1,0 +1,12 @@
+http:
+  routers:
+    sonarr:
+      rule: "Host(`sonarr.k5m.sh`)"
+      entryPoints:
+        - https
+      service: sonarr
+  services:
+    sonarr:
+      loadBalancer:
+        servers:
+          - url: "http://cherryblossom-docker:8989"

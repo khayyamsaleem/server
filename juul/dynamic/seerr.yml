@@ -1,0 +1,12 @@
+http:
+  routers:
+    seerr:
+      rule: "Host(`seerr.k5m.sh`)"
+      entryPoints:
+        - https
+      service: seerr
+  services:
+    seerr:
+      loadBalancer:
+        servers:
+          - url: "http://cherryblossom-docker:5055"
