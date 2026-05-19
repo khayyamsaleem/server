@@ -88,8 +88,30 @@ configure_remote_path_mapping() {
   echo "[$SERVICE] Remote path mapping configured."
 }
 
+configure_naming() {
+  current=$(wget -qO- "$BASE/api/v3/config/naming" --header "X-Api-Key: $API_KEY" 2>/dev/null)
+  if echo "$current" | grep -q '"renameMovies":true\|"renameEpisodes":true'; then
+    echo "[$SERVICE] Rename already enabled, skipping."
+    return 0
+  fi
+  updated=$(echo "$current" | python3 -c "
+import sys,json
+d=json.load(sys.stdin)
+if 'renameMovies' in d: d['renameMovies']=True
+if 'renameEpisodes' in d: d['renameEpisodes']=True
+print(json.dumps(d))
+")
+  echo "$updated" | wget -qO- --method=PUT \
+    --header "X-Api-Key: $API_KEY" \
+    --header "Content-Type: application/json" \
+    --body-data @- \
+    "$BASE/api/v3/config/naming" >/dev/null
+  echo "[$SERVICE] Rename enabled."
+}
+
 wait_ready
 configure_download_client
 configure_root_folder
 configure_remote_path_mapping
+configure_naming
 echo "[$SERVICE] Configuration complete."
