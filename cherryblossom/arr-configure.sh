@@ -73,7 +73,23 @@ configure_root_folder() {
   echo "[$SERVICE] Root folder $ROOT_DIR configured."
 }
 
+configure_remote_path_mapping() {
+  existing=$(wget -qO- "$BASE/api/v3/remotepathmapping" --header "X-Api-Key: $API_KEY" 2>/dev/null)
+  if echo "$existing" | grep -q '"remotePath"'; then
+    echo "[$SERVICE] Remote path mapping already configured, skipping."
+    return 0
+  fi
+
+  wget -qO- --method=POST \
+    --header "X-Api-Key: $API_KEY" \
+    --header "Content-Type: application/json" \
+    --body-data '{"host":"gluetun","remotePath":"/downloads/","localPath":"/media/"}' \
+    "$BASE/api/v3/remotepathmapping" >/dev/null
+  echo "[$SERVICE] Remote path mapping configured."
+}
+
 wait_ready
 configure_download_client
 configure_root_folder
+configure_remote_path_mapping
 echo "[$SERVICE] Configuration complete."
