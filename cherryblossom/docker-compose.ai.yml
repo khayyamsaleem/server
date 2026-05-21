@@ -355,6 +355,7 @@ services:
     - ./opencode/config.json:/root/.config/opencode/config.json:ro
     - /home/khayyam:/workspace
     - /var/run/docker.sock:/var/run/docker.sock:ro
+    - opencode-data:/root/.local/share/opencode
     environment:
       OPENCODE_SERVER_PASSWORD: ${OPENCODE_PASSWORD:-}
       OLLAMA_BASE_URL: http://ollama-gateway:11434
@@ -435,3 +436,4 @@ volumes:
     name: open-claw_ollama-data
   open-webui-data:
   sd-data:
+  opencode-data:
