@@ -346,6 +346,40 @@ services:
           cpus: '0.02'
           memory: 32M
 
+  opencode:
+    build:
+      context: ./opencode
+      dockerfile: Dockerfile
+    image: opencode:local
+    volumes:
+    - ./opencode/config.json:/root/.config/opencode/config.json:ro
+    - /home/khayyam:/workspace
+    environment:
+      OPENCODE_SERVER_PASSWORD: ${OPENCODE_PASSWORD:-}
+      OLLAMA_BASE_URL: http://ollama-gateway:11434
+    ports:
+    - 127.0.0.1:4096:4096
+    restart: unless-stopped
+    depends_on:
+      ollama-gateway:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO /dev/null http://localhost:4096/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 512M
+        reservations:
+          cpus: '0.05'
+          memory: 64M
+    labels:
+      com.centurylinklabs.watchtower.enable: 'false'
+
   hermes-agent:
     build:
       context: ./hermes

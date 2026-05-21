@@ -13,6 +13,7 @@
     "7878": { "TCPForward": "radarr:7878" },
     "8989": { "TCPForward": "sonarr:8989" },
     "5055": { "TCPForward": "jellyseerr:5055" },
-    "9696": { "TCPForward": "prowlarr:9696" }
+    "9696": { "TCPForward": "prowlarr:9696" },
+    "4096": { "TCPForward": "opencode:4096" }
   }
 }

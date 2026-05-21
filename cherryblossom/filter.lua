@@ -32,10 +32,17 @@ local function extract_prompt(raw, endpoint)
   return nil
 end
 
--- Models that should be routed to the task GPU (1080 Ti)
+-- Models pinned to 1080 Ti (task/vision models that fit in 11GB)
 local TASK_MODELS = {
   ["igorls/gemma-4-E4B-it-heretic-GGUF:latest"] = true,
   ["igorls/gemma-4-E4B-it-heretic-GGUF"] = true,
+  ["qwen2.5-coder:7b-instruct-q4_K_M"] = true,
+}
+
+local ROUTED_PATHS = {
+  ["/api/generate"] = true,
+  ["/api/chat"] = true,
+  ["/v1/chat/completions"] = true,
 }
 
 function envoy_on_request(handle)
@@ -44,18 +51,17 @@ function envoy_on_request(handle)
   handle:streamInfo():dynamicMetadata():set("envoy.filters.http.lua", "path", path)
   handle:streamInfo():dynamicMetadata():set("envoy.filters.http.lua", "method", method)
 
-  -- Default: route to 1080Ti (3090 offline; revert when 3090 back)
-  local cluster = "ollama_1080ti"
+  -- Default: 3090 for all large models
+  local cluster = "ollama_3090"
 
-  -- Buffer and store the request body for chat/generate endpoints
-  if method == "POST" and (path == "/api/generate" or path == "/api/chat") then
+  -- Buffer and store the request body to extract model name
+  if method == "POST" and ROUTED_PATHS[path] then
     local body = handle:body()
     if body then
       local raw = body:getBytes(0, body:length())
       if raw and #raw > 0 then
         handle:streamInfo():dynamicMetadata():set("envoy.filters.http.lua", "request_body", raw)
 
-        -- Route task models to the 1080 Ti instance
         local model = raw:match('"model"%s*:%s*"([^"]*)"')
         if model and TASK_MODELS[model] then
           cluster = "ollama_1080ti"

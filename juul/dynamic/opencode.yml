@@ -1,0 +1,12 @@
+http:
+  routers:
+    opencode:
+      rule: "Host(`code.k5m.sh`)"
+      entryPoints:
+        - https
+      service: opencode
+  services:
+    opencode:
+      loadBalancer:
+        servers:
+          - url: "http://cherryblossom-docker:4096"
