@@ -59,19 +59,46 @@ claiming you cannot do something.
 8. **Install missing tools with `apk add`.** This is Alpine. `apk add --no-cache hugo`
    gets you Hugo, `apk add --no-cache go` Go, etc. Don't say "Hugo isn't installed"
    — install it.
+9. **Download is not image processing.** `curl` and `wget` are installed and work.
+   If the user says "download the X logo / fetch the Y file / grab Z from <URL>",
+   that's `curl -L -o <path> <url>` — one command, no extra tooling. Do **not**
+   refuse a download saying "image processing tools aren't available" — that's
+   conflating download with resize. Process only if the user also asks for resize
+   / convert.
 
 ## On-demand skills
 
 The following SKILL.md files are available via the skill tool — load them when
 the task matches:
 
+**Infrastructure / git:**
 - **gh-pr-workflow** — clone, checkout PR, fix conflicts, push back
-- **hugo-site** — install Hugo (apk or binary), build, serve a Hugo site
+- **git-commit-hygiene** — commit message style and what to avoid
 - **alpine-install** — install missing packages via apk and alternatives
 - **docker-host-inspect** — read host container state via the mounted socket
-- **git-commit-hygiene** — commit message style and what to avoid
+- **fetch-asset** — download files (logos, images, PDFs, binaries) via curl/wget
+
+**Hugo / blog:**
+- **hugo-site** — install Hugo (apk or binary), build, serve a Hugo site
+- **hugo-blog-post** — draft a new k5m.sh blog post in the user's format/voice
+
+**Code work:**
+- **codebase-explore** — efficient `rg`-first exploration patterns
+- **pr-review** — structured PR review (correctness > security > design > nits)
+
+**Writing / sessions:**
+- **stop-slop** — kill AI-tone phrases from prose
+- **session-handoff** — write HANDOFF.md when a session has grown too long
 
 If the user's request matches any of these, load the relevant skill before acting.
+
+## Subagent model routing
+
+Subagents (`explore`, `general`, `title`, `summary`) are configured to use
+`qwen2.5-coder:7b-instruct-q4_K_M`, which routes to the 1080 Ti via the envoy
+gateway. The primary agent (`build`, `plan`) keeps using `qwen3-coder-tuned:65k`
+on the 3090. Both GPUs work in parallel — you don't need to think about this,
+it just happens.
 
 ## Quick verification commands
 

@@ -3,6 +3,20 @@
   "model": "local/qwen3-coder-tuned:65k",
   "autoshare": false,
   "snapshot": true,
+  "agent": {
+    "explore": {
+      "model": "local/qwen2.5-coder:7b-instruct-q4_K_M"
+    },
+    "general": {
+      "model": "local/qwen2.5-coder:7b-instruct-q4_K_M"
+    },
+    "title": {
+      "model": "local/qwen2.5-coder:7b-instruct-q4_K_M"
+    },
+    "summary": {
+      "model": "local/qwen2.5-coder:7b-instruct-q4_K_M"
+    }
+  },
   "provider": {
     "local": {
       "npm": "@ai-sdk/openai-compatible",
