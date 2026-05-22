@@ -1,6 +1,6 @@
 FROM node:lts-slim
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    ripgrep git python3 bash docker.io curl gh \
+    ripgrep git python3 bash docker.io curl gh ca-certificates \
  && rm -rf /var/lib/apt/lists/*
 RUN npm install -g opencode-ai mcp-searxng
 # Pre-seed ripgrep so opencode doesn't try to download it at runtime
