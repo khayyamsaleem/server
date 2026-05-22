@@ -5,16 +5,16 @@
   "snapshot": true,
   "agent": {
     "explore": {
-      "model": "local/qwen2.5-coder:7b-instruct-q4_K_M"
+      "model": "local/qwen3-coder-tuned:32k"
     },
     "general": {
-      "model": "local/qwen2.5-coder:7b-instruct-q4_K_M"
+      "model": "local/qwen3-coder-tuned:32k"
     },
     "title": {
-      "model": "local/qwen2.5-coder:7b-instruct-q4_K_M"
+      "model": "local/qwen3-coder-tuned:32k"
     },
     "summary": {
-      "model": "local/qwen2.5-coder:7b-instruct-q4_K_M"
+      "model": "local/qwen3-coder-tuned:32k"
     }
   },
   "mcp": {

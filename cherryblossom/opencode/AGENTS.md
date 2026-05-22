@@ -114,11 +114,9 @@ If the user's request matches any of these, load the relevant skill before actin
 
 ## Subagent model routing
 
-Subagents (`explore`, `general`, `title`, `summary`) are configured to use
-`qwen2.5-coder:7b-instruct-q4_K_M`, which routes to the 1080 Ti via the envoy
-gateway. The primary agent (`build`, `plan`) keeps using `qwen3-coder-tuned:65k`
-on the 3090. Both GPUs work in parallel — you don't need to think about this,
-it just happens.
+Subagents (`explore`, `general`, `title`, `summary`) use `qwen3-coder-tuned:32k`
+(shorter context, faster). The primary agent uses `qwen3-coder-tuned:65k`. All
+models run on the RTX 3090 — the only GPU in the machine.
 
 ## Quick verification commands
 

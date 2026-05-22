@@ -38,7 +38,7 @@ services:
           memory: 1G
           devices:
           - driver: nvidia
-            device_ids: ['1']
+            device_ids: ['0']
             capabilities:
             - gpu
     environment:
@@ -57,36 +57,6 @@ services:
       retries: 3
       start_period: 15s
 
-  ollama-1080ti:
-    image: ollama/ollama:latest
-    volumes:
-    - ollama-data:/ollama-models:ro
-    deploy:
-      resources:
-        limits:
-          cpus: '4.00'
-          memory: 12G
-        reservations:
-          cpus: '0.25'
-          memory: 512M
-          devices:
-          - driver: nvidia
-            device_ids: ['0']
-            capabilities:
-            - gpu
-    environment:
-      OLLAMA_MODELS: /ollama-models/models
-      OLLAMA_MAX_LOADED_MODELS: 1
-      OLLAMA_NUM_GPU: 999
-      OLLAMA_FLASH_ATTENTION: 1
-      OLLAMA_KEEP_ALIVE: 0
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "ollama", "list"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 15s
 
   searxng:
     image: searxng/searxng:latest
@@ -157,7 +127,7 @@ services:
       resources:
         limits:
           cpus: '8.00'
-          memory: 12G
+          memory: 20G
         reservations:
           cpus: '0.50'
           memory: 2G
@@ -186,7 +156,7 @@ services:
       WEBUI_SESSION_COOKIE_SAME_SITE: none
       ENABLE_SIGNUP: 'false'
       ENABLE_API_KEYS: 'true'
-      TASK_MODEL: igorls/gemma-4-E4B-it-heretic-GGUF:latest
+      TASK_MODEL: qwen3-coder-tuned:65k
       DEFAULT_MODELS: qwen3-coder-tuned:65k
       # --- Image generation (Forge on 3090, Pony default) ---
       ENABLE_IMAGE_GENERATION: 'true'

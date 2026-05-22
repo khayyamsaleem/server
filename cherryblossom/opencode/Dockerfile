@@ -1,5 +1,7 @@
-FROM node:lts-alpine
-RUN apk add --no-cache ripgrep git python3 bash docker-cli curl github-cli
+FROM node:lts-slim
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ripgrep git python3 bash docker.io curl gh \
+ && rm -rf /var/lib/apt/lists/*
 RUN npm install -g opencode-ai mcp-searxng
 # Pre-seed ripgrep so opencode doesn't try to download it at runtime
 RUN opencode debug 2>/dev/null || true
