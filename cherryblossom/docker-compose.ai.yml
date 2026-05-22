@@ -356,6 +356,7 @@ services:
     image: opencode:local
     volumes:
     - ./opencode/config.json:/root/.config/opencode/config.json:ro
+    - ./opencode/skills:/root/.config/opencode/skills:ro
     - /home/khayyam:/workspace
     - /var/run/docker.sock:/var/run/docker.sock:ro
     - opencode-data:/root/.local/share/opencode
