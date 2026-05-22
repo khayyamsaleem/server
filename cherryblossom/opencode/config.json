@@ -17,6 +17,16 @@
       "model": "local/qwen2.5-coder:7b-instruct-q4_K_M"
     }
   },
+  "mcp": {
+    "searxng": {
+      "type": "local",
+      "command": ["mcp-searxng"],
+      "enabled": true,
+      "environment": {
+        "SEARXNG_URL": "http://searxng:8080"
+      }
+    }
+  },
   "provider": {
     "local": {
       "npm": "@ai-sdk/openai-compatible",

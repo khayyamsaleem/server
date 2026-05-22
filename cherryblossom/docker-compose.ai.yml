@@ -187,6 +187,7 @@ services:
       ENABLE_SIGNUP: 'false'
       ENABLE_API_KEYS: 'true'
       TASK_MODEL: igorls/gemma-4-E4B-it-heretic-GGUF:latest
+      DEFAULT_MODELS: qwen3-coder-tuned:65k
       # --- Image generation (Forge on 3090, Pony default) ---
       ENABLE_IMAGE_GENERATION: 'true'
       ENABLE_IMAGE_PROMPT_GENERATION: 'true'

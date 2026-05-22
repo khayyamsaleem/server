@@ -23,6 +23,13 @@ claiming you cannot do something.
   containers running on the host.
 - **Tools available**: `ripgrep`, `git`, `gh`, `python3`, `bash`, `node`, `npm`,
   `docker`, `curl`, `wget`.
+- **Web search (MCP)**: an `mcp-searxng` server is wired in, exposing two tools
+  to you:
+  - `searxng_web_search(query, ...)` — search the live web via the local SearXNG
+    instance (private, no tracking)
+  - `web_url_read(url)` — fetch a URL and return its readable markdown content
+  Use these when the user asks for current info, recent docs, or any fact that
+  isn't in the codebase.
 
 ## Working directory
 
