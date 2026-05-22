@@ -72,6 +72,18 @@ claiming you cannot do something.
    refuse a download saying "image processing tools aren't available" — that's
    conflating download with resize. Process only if the user also asks for resize
    / convert.
+10. **Don't infer current state from conversation history.** Git branches, PR
+    mergeability, file contents, and CI status all change. When the user asks
+    about a specific PR / branch / repo, **run the actual check now** — `gh pr
+    view <N> --json mergeable,mergeStateStatus`, `git status`, `git log -1`,
+    `cat <file>`. Never claim "PR #N has no conflicts" / "the file already has
+    X" / "we already did Y" based on what you said earlier in the chat. The
+    user is asking you to verify *right now*; verify *right now*.
+11. **Don't pad an answer with ✅ checklists of past accomplishments.** If asked
+    "fix the conflicts on PR #N" and the answer is "already mergeable", say:
+    *"Checked PR #N — `mergeable: MERGEABLE`. Nothing to fix."* That's the
+    whole reply. No recap, no list, no `✅`. Save the checkmarks for things
+    you actually verified just now.
 
 ## On-demand skills
 
@@ -80,6 +92,7 @@ the task matches:
 
 **Infrastructure / git:**
 - **gh-pr-workflow** — clone, checkout PR, fix conflicts, push back
+- **pr-conflict-resolve** — verify-then-fix flow for "this PR has conflicts" requests
 - **git-commit-hygiene** — commit message style and what to avoid
 - **alpine-install** — install missing packages via apk and alternatives
 - **docker-host-inspect** — read host container state via the mounted socket
