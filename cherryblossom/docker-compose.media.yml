@@ -174,7 +174,11 @@ services:
           memory: 64M
 
   flaresolverr:
-    image: alexfozor/flaresolverr:pr-1300
+    image: ghcr.io/thephaseless/byparr:latest
+    network_mode: container:gluetun
+    depends_on:
+      gluetun:
+        condition: service_healthy
     environment:
     - LOG_LEVEL=info
     - TZ=America/New_York
@@ -187,7 +191,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 20s
+      start_period: 40s
     deploy:
       resources:
         limits:
@@ -199,6 +203,10 @@ services:
 
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
+    network_mode: container:gluetun
+    depends_on:
+      gluetun:
+        condition: service_healthy
     environment:
     - PUID=1000
     - PGID=1000

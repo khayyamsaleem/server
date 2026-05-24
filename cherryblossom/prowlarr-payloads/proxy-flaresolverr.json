@@ -8,7 +8,7 @@
       "order": 0,
       "name": "host",
       "label": "Host",
-      "value": "http://flaresolverr:8191/",
+      "value": "http://localhost:8191/",
       "type": "textbox",
       "advanced": false,
       "privacy": "normal",

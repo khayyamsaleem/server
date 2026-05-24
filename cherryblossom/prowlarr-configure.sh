@@ -80,10 +80,12 @@ seed applications "Radarr" app-radarr.json
 seed applications "Sonarr" app-sonarr.json
 
 # Indexers. forceSave=true so a flaky Cloudflare connect-test never blocks seeding;
-# EZTV + Torrent Downloads carry the flaresolverr tag (route through the proxy).
+# EZTV + Torrent Downloads + 1337x + TPB carry the flaresolverr tag (route through the proxy).
 seed indexer "YTS"               indexer-yts.json              "?forceSave=true"
 seed indexer "TorrentsCSV"       indexer-torrentscsv.json      "?forceSave=true"
 seed indexer "EZTV"              indexer-eztv.json             "?forceSave=true"
 seed indexer "Torrent Downloads" indexer-torrentdownloads.json "?forceSave=true"
+seed indexer "The Pirate Bay"    indexer-tpb.json              "?forceSave=true"
+seed indexer "1337x"             indexer-1337x.json            "?forceSave=true"
 
 echo "[prowlarr-init] Done."

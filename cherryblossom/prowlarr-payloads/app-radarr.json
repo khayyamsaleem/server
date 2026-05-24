@@ -8,7 +8,7 @@
       "name": "prowlarrUrl",
       "label": "Prowlarr Server",
       "helpText": "Prowlarr server URL as Radarr sees it, including http(s)://, port, and urlbase if needed",
-      "value": "http://prowlarr:9696",
+      "value": "http://gluetun:9696",
       "type": "textbox",
       "advanced": false,
       "privacy": "normal",

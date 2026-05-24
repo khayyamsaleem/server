@@ -211,7 +211,9 @@ services:
       # --- Search ---
       ENABLE_WEB_SEARCH: 'true'
       WEB_SEARCH_ENGINE: searxng
-      SEARXNG_QUERY_URL: http://searxng:8080/search?q=<query>&format=json
+      SEARXNG_QUERY_URL: http://searxng:8080/search?q=<query>
+      WEB_SEARCH_TRUST_ENV: 'true'
+      USER_AGENT: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
       # --- Code interpreter (Jupyter on 1080 Ti) ---
       ENABLE_CODE_EXECUTION: 'true'
       ENABLE_CODE_INTERPRETER: 'true'
@@ -299,9 +301,6 @@ services:
     - ./envoy.yaml:/etc/envoy/envoy.yaml:ro
     - ./filter.lua:/etc/envoy/filter.lua:ro
     - ./forge_filter.lua:/etc/envoy/forge_filter.lua:ro
-    ports:
-    - 127.0.0.1:11435:11434
-    - 9901:9901
     restart: unless-stopped
     labels:
       com.centurylinklabs.watchtower.enable: 'true'
