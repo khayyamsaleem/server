@@ -106,19 +106,6 @@ static_resources:
                     socket_address:
                       address: ollama-3090
                       port_value: 11434
-    - name: ollama_1080ti
-      connect_timeout: 5s
-      type: STRICT_DNS
-      lb_policy: ROUND_ROBIN
-      load_assignment:
-        cluster_name: ollama_1080ti
-        endpoints:
-          - lb_endpoints:
-              - endpoint:
-                  address:
-                    socket_address:
-                      address: ollama-1080ti
-                      port_value: 11434
     - name: forge
       connect_timeout: 5s
       type: STRICT_DNS
