@@ -79,8 +79,8 @@ pipeline {
                                 ssh ${SSH_OPTS} ${CHERRYBLOSSOM_USER}@${CHERRYBLOSSOM_HOST} '
                                     cd ${CHERRYBLOSSOM_DEPLOY_DIR}/cherryblossom &&
                                     if docker compose up -d --dry-run 2>&1 | grep -q "gluetun.*Recreate"; then
-                                        echo "Gluetun will be recreated — removing transmission to avoid stale namespace..."
-                                        docker rm -f transmission 2>/dev/null || true
+                                        echo "Gluetun will be recreated — removing containers sharing its namespace..."
+                                        docker rm -f transmission cherryblossom-prowlarr-1 cherryblossom-flaresolverr-1 2>/dev/null || true
                                     fi &&
                                     docker compose up -d --remove-orphans
                                 '
