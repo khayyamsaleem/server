@@ -32,13 +32,6 @@ local function extract_prompt(raw, endpoint)
   return nil
 end
 
--- Models pinned to 1080 Ti (task/vision models that fit in 11GB)
-local TASK_MODELS = {
-  ["igorls/gemma-4-E4B-it-heretic-GGUF:latest"] = true,
-  ["igorls/gemma-4-E4B-it-heretic-GGUF"] = true,
-  ["qwen2.5-coder:7b-instruct-q4_K_M"] = true,
-}
-
 local ROUTED_PATHS = {
   ["/api/generate"] = true,
   ["/api/chat"] = true,
@@ -51,21 +44,16 @@ function envoy_on_request(handle)
   handle:streamInfo():dynamicMetadata():set("envoy.filters.http.lua", "path", path)
   handle:streamInfo():dynamicMetadata():set("envoy.filters.http.lua", "method", method)
 
-  -- Default: 3090 for all large models
+  -- All models route to 3090 (only GPU)
   local cluster = "ollama_3090"
 
-  -- Buffer and store the request body to extract model name
+  -- Buffer and store the request body for logging
   if method == "POST" and ROUTED_PATHS[path] then
     local body = handle:body()
     if body then
       local raw = body:getBytes(0, body:length())
       if raw and #raw > 0 then
         handle:streamInfo():dynamicMetadata():set("envoy.filters.http.lua", "request_body", raw)
-
-        local model = raw:match('"model"%s*:%s*"([^"]*)"')
-        if model and TASK_MODELS[model] then
-          cluster = "ollama_1080ti"
-        end
       end
     end
   end

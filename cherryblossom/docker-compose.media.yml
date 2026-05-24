@@ -174,7 +174,7 @@ services:
           memory: 64M
 
   flaresolverr:
-    image: ghcr.io/flaresolverr/flaresolverr:latest
+    image: alexfozor/flaresolverr:pr-1300
     environment:
     - LOG_LEVEL=info
     - TZ=America/New_York
@@ -192,10 +192,10 @@ services:
       resources:
         limits:
           cpus: '1.00'
-          memory: 512M
+          memory: 1536M
         reservations:
           cpus: '0.10'
-          memory: 128M
+          memory: 256M
 
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
@@ -209,6 +209,7 @@ services:
     volumes:
     - prowlarr-config:/config
     - ./prowlarr-configure.sh:/configure/prowlarr-configure.sh:ro
+    - ./prowlarr-payloads:/configure/prowlarr-payloads:ro
     - ./prowlarr-init.sh:/custom-cont-init.d/01-configure.sh:ro
     restart: unless-stopped
     labels:
