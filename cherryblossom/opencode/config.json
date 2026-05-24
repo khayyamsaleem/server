@@ -1,6 +1,32 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "model": "local/qwen3-coder:30b-a3b-q4_K_M",
+  "model": "local/qwen3-coder-tuned:65k",
+  "autoshare": false,
+  "snapshot": true,
+  "agent": {
+    "explore": {
+      "model": "local/qwen3-coder-tuned:32k"
+    },
+    "general": {
+      "model": "local/qwen3-coder-tuned:32k"
+    },
+    "title": {
+      "model": "local/qwen3-coder-tuned:32k"
+    },
+    "summary": {
+      "model": "local/qwen3-coder-tuned:32k"
+    }
+  },
+  "mcp": {
+    "searxng": {
+      "type": "local",
+      "command": ["mcp-searxng"],
+      "enabled": true,
+      "environment": {
+        "SEARXNG_URL": "http://searxng:8080"
+      }
+    }
+  },
   "provider": {
     "local": {
       "npm": "@ai-sdk/openai-compatible",
@@ -13,9 +39,19 @@
           "contextLength": 32768,
           "attachment": false
         },
+        "qwen3-coder-tuned:65k": {
+          "name": "Qwen3 Coder 30B MoE 65K (3090)",
+          "contextLength": 65536,
+          "attachment": false
+        },
+        "qwen3-coder-tuned:32k": {
+          "name": "Qwen3 Coder 30B MoE 32K (3090)",
+          "contextLength": 32768,
+          "attachment": false
+        },
         "qwen3-coder:30b-a3b-q4_K_M": {
           "name": "Qwen3 Coder 30B MoE (3090)",
-          "contextLength": 65536,
+          "contextLength": 32768,
           "attachment": false
         },
         "igorls/gemma-4-E4B-it-heretic-GGUF:latest": {

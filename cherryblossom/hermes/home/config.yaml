@@ -1,6 +1,6 @@
 model:
-  provider: custom:fireworks
-  model: accounts/fireworks/models/kimi-k2p6
+  provider: custom:ollama-local
+  model: qwen3-coder-tuned:65k
 custom_providers:
 - name: fireworks
   base_url: https://api.fireworks.ai/inference/v1
@@ -33,6 +33,10 @@ custom_providers:
       context_length: 65536
     devstral-small-2:24b:
       context_length: 65536
+    qwen3-coder-tuned:65k:
+      context_length: 65536
+    qwen3-coder-tuned:32k:
+      context_length: 32768
     qwen3-coder:30b-a3b-q4_K_M:
       context_length: 65536
     igorls/gemma-4-E4B-it-heretic-GGUF:latest:

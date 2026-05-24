@@ -1,0 +1,194 @@
+{
+  "indexerUrls": [
+    "https://eztvx.to/",
+    "https://eztv.wf/",
+    "https://eztv.tf/",
+    "https://eztv.yt/",
+    "https://eztv1.xyz/"
+  ],
+  "legacyUrls": [
+    "https://eztv.ag/",
+    "https://eztv.it/",
+    "https://eztv.ch/",
+    "https://eztv.io/",
+    "https://eztv.re/",
+    "https://eztv.li/",
+    "https://eztv.mrunblock.bond/",
+    "https://eztv.nocensor.cloud/",
+    "https://eztv.unblockninja.com/",
+    "https://eztv.ninjaproxy1.com/",
+    "https://eztv.proxyninja.org/",
+    "https://eztv.abcproxy.org/",
+    "https://eztv.unblockit.download/"
+  ],
+  "definitionName": "eztv",
+  "description": "EZTV is a Public torrent site for TV shows",
+  "language": "en-US",
+  "encoding": "Unicode (UTF-8)",
+  "enable": true,
+  "redirect": false,
+  "supportsRss": true,
+  "supportsSearch": true,
+  "supportsRedirect": false,
+  "supportsPagination": false,
+  "appProfileId": 1,
+  "protocol": "torrent",
+  "privacy": "public",
+  "capabilities": {
+    "limitsMax": 100,
+    "limitsDefault": 100,
+    "categories": [
+      {
+        "id": 5000,
+        "name": "TV",
+        "subCategories": []
+      }
+    ],
+    "supportsRawSearch": false,
+    "searchParams": [
+      "q",
+      "q"
+    ],
+    "tvSearchParams": [
+      "q",
+      "season",
+      "ep"
+    ],
+    "movieSearchParams": [],
+    "musicSearchParams": [],
+    "bookSearchParams": []
+  },
+  "priority": 25,
+  "downloadClientId": 0,
+  "sortName": "eztv",
+  "name": "EZTV",
+  "fields": [
+    {
+      "order": 0,
+      "name": "definitionFile",
+      "value": "eztv",
+      "type": "textbox",
+      "advanced": false,
+      "hidden": "hidden",
+      "privacy": "normal",
+      "isFloat": false
+    },
+    {
+      "order": 1,
+      "name": "baseUrl",
+      "label": "Base Url",
+      "helpText": "Select which base url Prowlarr will use for requests to the site",
+      "value": "https://eztvx.to/",
+      "type": "select",
+      "advanced": false,
+      "selectOptionsProviderAction": "getUrls",
+      "privacy": "normal",
+      "isFloat": false
+    },
+    {
+      "order": 2,
+      "name": "baseSettings.queryLimit",
+      "label": "Query Limit",
+      "helpText": "The number of max queries as specified by the respective unit that Prowlarr will allow to the site",
+      "type": "number",
+      "advanced": true,
+      "privacy": "normal",
+      "isFloat": false
+    },
+    {
+      "order": 3,
+      "name": "baseSettings.grabLimit",
+      "label": "Grab Limit",
+      "helpText": "The number of max grabs as specified by the respective unit that Prowlarr will allow to the site",
+      "type": "number",
+      "advanced": true,
+      "privacy": "normal",
+      "isFloat": false
+    },
+    {
+      "order": 4,
+      "name": "baseSettings.limitsUnit",
+      "label": "Limits Unit",
+      "helpText": "The unit of time for counting limits per indexer",
+      "value": 0,
+      "type": "select",
+      "advanced": true,
+      "selectOptions": [
+        {
+          "value": 0,
+          "name": "Day",
+          "order": 0,
+          "hint": "(0)"
+        },
+        {
+          "value": 1,
+          "name": "Hour",
+          "order": 1,
+          "hint": "(1)"
+        }
+      ],
+      "privacy": "normal",
+      "isFloat": false
+    },
+    {
+      "order": 5,
+      "name": "torrentBaseSettings.appMinimumSeeders",
+      "label": "Apps Minimum Seeders",
+      "helpText": "Minimum seeders required by the Applications for the indexer to grab, empty is Sync profile's default",
+      "type": "number",
+      "advanced": true,
+      "privacy": "normal",
+      "isFloat": false
+    },
+    {
+      "order": 6,
+      "name": "torrentBaseSettings.seedRatio",
+      "label": "Seed Ratio",
+      "helpText": "The ratio a torrent should reach before stopping, empty uses the download client's default. Ratio should be at least 1.0 and follow the indexers rules",
+      "type": "number",
+      "advanced": false,
+      "privacy": "normal",
+      "isFloat": true
+    },
+    {
+      "order": 7,
+      "name": "torrentBaseSettings.seedTime",
+      "label": "Seed Time",
+      "unit": "minutes",
+      "helpText": "The time a torrent should be seeded before stopping, empty uses the download client's default",
+      "type": "number",
+      "advanced": true,
+      "privacy": "normal",
+      "isFloat": false
+    },
+    {
+      "order": 8,
+      "name": "torrentBaseSettings.packSeedTime",
+      "label": "Pack Seed Time",
+      "unit": "minutes",
+      "helpText": "The time a pack (season or discography) torrent should be seeded before stopping, empty is app's default",
+      "type": "number",
+      "advanced": true,
+      "privacy": "normal",
+      "isFloat": false
+    },
+    {
+      "order": 9,
+      "name": "torrentBaseSettings.preferMagnetUrl",
+      "label": "Prefer Magnet URL",
+      "helpText": "When enabled, this indexer will prefer the use of magnet URLs for grabs with fallback to torrent links",
+      "value": false,
+      "type": "checkbox",
+      "advanced": true,
+      "privacy": "normal",
+      "isFloat": false
+    }
+  ],
+  "implementationName": "Cardigann",
+  "implementation": "Cardigann",
+  "configContract": "CardigannSettings",
+  "infoLink": "https://wiki.servarr.com/prowlarr/supported-indexers#eztv",
+  "tags": [
+    909090
+  ]
+}
