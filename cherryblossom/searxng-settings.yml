@@ -1,6 +1,39 @@
 use_default_settings: true
 
+server:
+  limiter: false
+  secret_key: "66d19e14d9aa86d74d18e4a1cb60d0a48f401d907ca527eb76816929b9f5be5d"
+
 search:
   formats:
     - html
     - json
+
+engines:
+  - name: google
+    engine: google
+    use_http2: true
+  - name: duckduckgo
+    engine: duckduckgo
+    shortcut: ddg
+  - name: brave
+    engine: brave
+    shortcut: br
+  - name: wikipedia
+    engine: wikipedia
+    shortcut: wp
+  - name: bing
+    engine: bing
+    shortcut: bi
+
+enabled_engines:
+  - google
+  - duckduckgo
+  - brave
+  - wikipedia
+  - bing
+
+outgoing:
+  request_timeout: 5.0
+  max_retry_count: 2
+  user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
