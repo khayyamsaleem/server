@@ -50,7 +50,6 @@ agent:
   - /workspace/USER.md
   - /workspace/MEMORY.md
   - /workspace/skills/INDEX.md
-  - /workspace/skills/infra/check-gpu.md
   - /workspace/skills/infra/switch-model.md
   - /workspace/skills/running/log-run.md
   - /workspace/skills/github/create-pr.md
