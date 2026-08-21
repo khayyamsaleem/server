@@ -87,5 +87,6 @@ seed indexer "EZTV"              indexer-eztv.json             "?forceSave=true"
 seed indexer "Torrent Downloads" indexer-torrentdownloads.json "?forceSave=true"
 seed indexer "The Pirate Bay"    indexer-tpb.json              "?forceSave=true"
 seed indexer "1337x"             indexer-1337x.json            "?forceSave=true"
+seed indexer "Knaben"            indexer-knaben.json           "?forceSave=true"
 
 echo "[prowlarr-init] Done."
