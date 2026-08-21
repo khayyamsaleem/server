@@ -16,12 +16,6 @@ ARG DOCTL_VERSION=1.150.0
 RUN curl -sL "https://github.com/digitalocean/doctl/releases/download/v${DOCTL_VERSION}/doctl-${DOCTL_VERSION}-linux-amd64.tar.gz" \
     | tar -xz -C /usr/local/bin doctl
 
-# Groq compatibility patch (upstream issues #11089, #11237, #20577).
-# Strips reasoning_content from Groq API calls and removes _empty_recovery_synthetic
-# from all outgoing messages.
-COPY groq_patch.py /tmp/groq_patch.py
-RUN python3 /tmp/groq_patch.py && rm /tmp/groq_patch.py
-
 # Static binaries copied from picoclaw (pre-extracted to build context)
 COPY gog /usr/local/bin/gog
 COPY goplaces /usr/local/bin/goplaces
