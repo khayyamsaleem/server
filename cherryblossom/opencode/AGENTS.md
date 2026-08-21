@@ -114,8 +114,9 @@ If the user's request matches any of these, load the relevant skill before actin
 
 ## Subagent model routing
 
-Subagents (`explore`, `general`, `title`, `summary`) use `qwen3-coder-tuned:32k`
-(shorter context, faster). The primary agent uses `qwen3-coder-tuned:65k`. All
+All agents (primary plus `explore`, `general`, `title`, `summary`) use
+`qwen3.6-tuned:24k` — one model everywhere, because the 3090 runner keeps only
+one model resident and swapping costs ~8s per switch. All
 models run on the RTX 3090 — the only GPU in the machine.
 
 ## Quick verification commands
