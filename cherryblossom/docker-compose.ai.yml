@@ -156,8 +156,8 @@ services:
       WEBUI_SESSION_COOKIE_SAME_SITE: none
       ENABLE_SIGNUP: 'false'
       ENABLE_API_KEYS: 'true'
-      TASK_MODEL: qwen3-coder-tuned:65k
-      DEFAULT_MODELS: qwen3-coder-tuned:65k
+      TASK_MODEL: qwen3.6-tuned:24k
+      DEFAULT_MODELS: qwen3.6-tuned:24k
       # --- Image generation (Forge on 3090, Pony default) ---
       ENABLE_IMAGE_GENERATION: 'true'
       ENABLE_IMAGE_PROMPT_GENERATION: 'true'
