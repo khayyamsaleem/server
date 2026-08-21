@@ -60,12 +60,20 @@ pipeline {
                             sh """
                                 ssh ${SSH_OPTS} ${JUUL_USER}@${JUUL_HOST} '
                                     cd ${JUUL_DEPLOY_DIR}/juul &&
+                                    # Jenkins is a service in this very compose project, so a bare
+                                    # "compose up" recreates the container running this pipeline and
+                                    # kills the deploy midway — leaving every remaining service in
+                                    # Created and never started. Deploy everything except jenkins;
+                                    # the Update Jenkins stage restarts it detached at the end.
+                                    # --no-deps keeps jenkins from being pulled back in as a
+                                    # depends_on target of proxy and recreated anyway.
+                                    SERVICES=\$(docker compose config --services | grep -vx jenkins | tr "\\n" " ") &&
                                     if docker compose up -d --dry-run 2>&1 | grep -q "tailscale.*Recreate"; then
                                         echo "Tailscale will be recreated — force-recreating proxy too..."
-                                        docker compose up -d --remove-orphans &&
+                                        docker compose up -d --remove-orphans --no-deps \$SERVICES &&
                                         docker compose up -d --force-recreate proxy
                                     else
-                                        docker compose up -d --remove-orphans
+                                        docker compose up -d --remove-orphans --no-deps \$SERVICES
                                     fi
                                 '
                             """
