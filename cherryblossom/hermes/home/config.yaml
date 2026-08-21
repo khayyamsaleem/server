@@ -1,6 +1,14 @@
+# Hermes hard-requires >=64k context. A model below that raises ValueError on
+# every turn and silently kills the cron jobs -- nothing else surfaces the error.
+# Keep the primary and every cron job in cron/jobs.json on a >=64k model.
+#
+# Primary is GLM-5.2 via DigitalOcean serverless: 131k ctx, ties Kimi K3 on
+# bounded agentic work (Terminal-Bench 81.0 vs 80.9) at ~1/6 the output cost and
+# ~3x the speed. Local fallback is qwen3-coder-tuned:65k -- the only local model
+# that clears 64k, since a dense 27B cannot hold that much KV cache in 24GB.
 model:
-  provider: custom:ollama-local
-  model: qwen3-coder-tuned:65k
+  provider: custom:digitalocean
+  model: glm-5.2
 custom_providers:
 - name: fireworks
   base_url: https://api.fireworks.ai/inference/v1
@@ -18,17 +26,33 @@ custom_providers:
     accounts/fireworks/models/gpt-oss-120b:
       context_length: 131072
       max_output_tokens: 65536
-- name: groq
-  base_url: https://api.groq.com/openai/v1
-  api_key: ${GROQ_API_KEY}
+- name: digitalocean
+  base_url: https://inference.do-ai.run/v1
+  api_key: ${DIGITALOCEAN_ACCESS_TOKEN}
   models:
-    openai/gpt-oss-120b:
+    kimi-k3:
+      context_length: 1048576
+      max_output_tokens: 65536
+    deepseek-v4-pro:
+      context_length: 1048576
+      max_output_tokens: 65536
+    glm-5.2:
       context_length: 131072
       max_output_tokens: 65536
+    openai-gpt-oss-120b:
+      context_length: 131072
+      max_output_tokens: 65536
+    openai-gpt-oss-20b:
+      context_length: 131072
+      max_output_tokens: 32768
 - name: ollama-local
   base_url: http://ollama-gateway:11434/v1
   api_key: ollama-local
   models:
+    qwen3.6-tuned:24k:
+      context_length: 24576
+    qwen3.6-tuned:16k:
+      context_length: 16384
     laguna-xs.2:q4_K_M:
       context_length: 65536
     devstral-small-2:24b:
@@ -50,6 +74,8 @@ agent:
   - /workspace/USER.md
   - /workspace/MEMORY.md
   - /workspace/skills/INDEX.md
+  - /workspace/skills/infra/check-gpu.md
+  - /workspace/skills/infra/host-inspect.md
   - /workspace/skills/infra/switch-model.md
   - /workspace/skills/running/log-run.md
   - /workspace/skills/github/create-pr.md
@@ -74,13 +100,13 @@ context:
 auxiliary:
   vision:
     provider: custom
-    model: gemma4:26b
+    model: qwen3.6-tuned:24k
   web_extract:
-    provider: custom:groq
-    model: llama-3.1-8b-instant
+    provider: custom:digitalocean
+    model: openai-gpt-oss-20b
   compression:
-    provider: custom:groq
-    model: llama-3.1-8b-instant
+    provider: custom:digitalocean
+    model: openai-gpt-oss-20b
 tool_output:
   max_bytes: 50000
   max_lines: 2000

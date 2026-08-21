@@ -1,20 +1,20 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "model": "local/qwen3-coder-tuned:65k",
+  "model": "local/qwen3.6-tuned:24k",
   "autoshare": false,
   "snapshot": true,
   "agent": {
     "explore": {
-      "model": "local/qwen3-coder-tuned:32k"
+      "model": "local/qwen3.6-tuned:24k"
     },
     "general": {
-      "model": "local/qwen3-coder-tuned:32k"
+      "model": "local/qwen3.6-tuned:24k"
     },
     "title": {
-      "model": "local/qwen3-coder-tuned:32k"
+      "model": "local/qwen3.6-tuned:24k"
     },
     "summary": {
-      "model": "local/qwen3-coder-tuned:32k"
+      "model": "local/qwen3.6-tuned:24k"
     }
   },
   "mcp": {
@@ -34,6 +34,16 @@
       "api": "http://ollama-gateway:11434/v1",
       "apiKey": "local",
       "models": {
+        "qwen3.6-tuned:24k": {
+          "name": "Qwen3.6 27B Dense 24K (3090)",
+          "contextLength": 24576,
+          "attachment": true
+        },
+        "qwen3.6-tuned:16k": {
+          "name": "Qwen3.6 27B Dense 16K (3090)",
+          "contextLength": 16384,
+          "attachment": true
+        },
         "devstral-small-2:24b": {
           "name": "Devstral Small 2 24B (3090)",
           "contextLength": 32768,
