@@ -1,0 +1,815 @@
+{
+  "indexerUrls": [
+    "https://knaben.org/"
+  ],
+  "legacyUrls": [
+    "https://knaben.eu/"
+  ],
+  "definitionName": "Knaben",
+  "description": "Knaben is a Public torrent meta-search engine",
+  "language": "en-US",
+  "encoding": "Unicode (UTF-8)",
+  "enable": true,
+  "redirect": false,
+  "supportsRss": true,
+  "supportsSearch": true,
+  "supportsRedirect": false,
+  "supportsPagination": false,
+  "appProfileId": 1,
+  "protocol": "torrent",
+  "privacy": "public",
+  "capabilities": {
+    "limitsMax": 100,
+    "limitsDefault": 100,
+    "categories": [
+      {
+        "id": 3000,
+        "name": "Audio",
+        "subCategories": [
+          {
+            "id": 3010,
+            "name": "Audio/MP3",
+            "subCategories": []
+          },
+          {
+            "id": 3040,
+            "name": "Audio/Lossless",
+            "subCategories": []
+          },
+          {
+            "id": 3030,
+            "name": "Audio/Audiobook",
+            "subCategories": []
+          },
+          {
+            "id": 3020,
+            "name": "Audio/Video",
+            "subCategories": []
+          },
+          {
+            "id": 3050,
+            "name": "Audio/Other",
+            "subCategories": []
+          }
+        ]
+      },
+      {
+        "id": 1100000,
+        "name": "Audio",
+        "subCategories": []
+      },
+      {
+        "id": 1101000,
+        "name": "MP3",
+        "subCategories": []
+      },
+      {
+        "id": 1102000,
+        "name": "Lossless",
+        "subCategories": []
+      },
+      {
+        "id": 1103000,
+        "name": "Audiobook",
+        "subCategories": []
+      },
+      {
+        "id": 1104000,
+        "name": "Audio Video",
+        "subCategories": []
+      },
+      {
+        "id": 1105000,
+        "name": "Radio",
+        "subCategories": []
+      },
+      {
+        "id": 1106000,
+        "name": "Audio Other",
+        "subCategories": []
+      },
+      {
+        "id": 5000,
+        "name": "TV",
+        "subCategories": [
+          {
+            "id": 5040,
+            "name": "TV/HD",
+            "subCategories": []
+          },
+          {
+            "id": 5030,
+            "name": "TV/SD",
+            "subCategories": []
+          },
+          {
+            "id": 5045,
+            "name": "TV/UHD",
+            "subCategories": []
+          },
+          {
+            "id": 5080,
+            "name": "TV/Documentary",
+            "subCategories": []
+          },
+          {
+            "id": 5020,
+            "name": "TV/Foreign",
+            "subCategories": []
+          },
+          {
+            "id": 5060,
+            "name": "TV/Sport",
+            "subCategories": []
+          },
+          {
+            "id": 5050,
+            "name": "TV/Other",
+            "subCategories": []
+          },
+          {
+            "id": 5070,
+            "name": "TV/Anime",
+            "subCategories": []
+          }
+        ]
+      },
+      {
+        "id": 2100000,
+        "name": "TV",
+        "subCategories": []
+      },
+      {
+        "id": 2101000,
+        "name": "TV HD",
+        "subCategories": []
+      },
+      {
+        "id": 2102000,
+        "name": "TV SD",
+        "subCategories": []
+      },
+      {
+        "id": 2103000,
+        "name": "TV UHD",
+        "subCategories": []
+      },
+      {
+        "id": 2104000,
+        "name": "Documentary",
+        "subCategories": []
+      },
+      {
+        "id": 2105000,
+        "name": "TV Foreign",
+        "subCategories": []
+      },
+      {
+        "id": 2106000,
+        "name": "Sport",
+        "subCategories": []
+      },
+      {
+        "id": 2107000,
+        "name": "Cartoon",
+        "subCategories": []
+      },
+      {
+        "id": 2108000,
+        "name": "TV Other",
+        "subCategories": []
+      },
+      {
+        "id": 2000,
+        "name": "Movies",
+        "subCategories": [
+          {
+            "id": 2040,
+            "name": "Movies/HD",
+            "subCategories": []
+          },
+          {
+            "id": 2030,
+            "name": "Movies/SD",
+            "subCategories": []
+          },
+          {
+            "id": 2045,
+            "name": "Movies/UHD",
+            "subCategories": []
+          },
+          {
+            "id": 2070,
+            "name": "Movies/DVD",
+            "subCategories": []
+          },
+          {
+            "id": 2010,
+            "name": "Movies/Foreign",
+            "subCategories": []
+          },
+          {
+            "id": 2060,
+            "name": "Movies/3D",
+            "subCategories": []
+          },
+          {
+            "id": 2020,
+            "name": "Movies/Other",
+            "subCategories": []
+          }
+        ]
+      },
+      {
+        "id": 3100000,
+        "name": "Movies",
+        "subCategories": []
+      },
+      {
+        "id": 3101000,
+        "name": "Movies HD",
+        "subCategories": []
+      },
+      {
+        "id": 3102000,
+        "name": "Movies SD",
+        "subCategories": []
+      },
+      {
+        "id": 3103000,
+        "name": "Movies UHD",
+        "subCategories": []
+      },
+      {
+        "id": 3104000,
+        "name": "Movies DVD",
+        "subCategories": []
+      },
+      {
+        "id": 3105000,
+        "name": "Movies Foreign",
+        "subCategories": []
+      },
+      {
+        "id": 3106000,
+        "name": "Movies Bollywood",
+        "subCategories": []
+      },
+      {
+        "id": 3107000,
+        "name": "Movies 3D",
+        "subCategories": []
+      },
+      {
+        "id": 3108000,
+        "name": "Movies Other",
+        "subCategories": []
+      },
+      {
+        "id": 4000,
+        "name": "PC",
+        "subCategories": [
+          {
+            "id": 4050,
+            "name": "PC/Games",
+            "subCategories": []
+          },
+          {
+            "id": 4010,
+            "name": "PC/0day",
+            "subCategories": []
+          },
+          {
+            "id": 4030,
+            "name": "PC/Mac",
+            "subCategories": []
+          },
+          {
+            "id": 4020,
+            "name": "PC/ISO",
+            "subCategories": []
+          },
+          {
+            "id": 4040,
+            "name": "PC/Mobile-Other",
+            "subCategories": []
+          },
+          {
+            "id": 4070,
+            "name": "PC/Mobile-Android",
+            "subCategories": []
+          },
+          {
+            "id": 4060,
+            "name": "PC/Mobile-iOS",
+            "subCategories": []
+          }
+        ]
+      },
+      {
+        "id": 4100000,
+        "name": "PC",
+        "subCategories": []
+      },
+      {
+        "id": 4101000,
+        "name": "Games",
+        "subCategories": []
+      },
+      {
+        "id": 4102000,
+        "name": "Software",
+        "subCategories": []
+      },
+      {
+        "id": 4103000,
+        "name": "Mac",
+        "subCategories": []
+      },
+      {
+        "id": 4104000,
+        "name": "Unix",
+        "subCategories": []
+      },
+      {
+        "id": 6000,
+        "name": "XXX",
+        "subCategories": [
+          {
+            "id": 6040,
+            "name": "XXX/x264",
+            "subCategories": []
+          },
+          {
+            "id": 6060,
+            "name": "XXX/ImageSet",
+            "subCategories": []
+          },
+          {
+            "id": 6070,
+            "name": "XXX/Other",
+            "subCategories": []
+          }
+        ]
+      },
+      {
+        "id": 5100000,
+        "name": "XXX",
+        "subCategories": []
+      },
+      {
+        "id": 5101000,
+        "name": "XXX Video",
+        "subCategories": []
+      },
+      {
+        "id": 5102000,
+        "name": "XXX ImageSet",
+        "subCategories": []
+      },
+      {
+        "id": 5103000,
+        "name": "XXX Games",
+        "subCategories": []
+      },
+      {
+        "id": 5104000,
+        "name": "XXX Hentai",
+        "subCategories": []
+      },
+      {
+        "id": 5105000,
+        "name": "XXX Other",
+        "subCategories": []
+      },
+      {
+        "id": 6100000,
+        "name": "Anime",
+        "subCategories": []
+      },
+      {
+        "id": 6101000,
+        "name": "Anime Subbed",
+        "subCategories": []
+      },
+      {
+        "id": 6102000,
+        "name": "Anime Dubbed",
+        "subCategories": []
+      },
+      {
+        "id": 6103000,
+        "name": "Anime Dual audio",
+        "subCategories": []
+      },
+      {
+        "id": 6104000,
+        "name": "Anime Raw",
+        "subCategories": []
+      },
+      {
+        "id": 6105000,
+        "name": "Music Video",
+        "subCategories": []
+      },
+      {
+        "id": 7000,
+        "name": "Books",
+        "subCategories": [
+          {
+            "id": 7050,
+            "name": "Books/Other",
+            "subCategories": []
+          },
+          {
+            "id": 7020,
+            "name": "Books/EBook",
+            "subCategories": []
+          },
+          {
+            "id": 7030,
+            "name": "Books/Comics",
+            "subCategories": []
+          },
+          {
+            "id": 7010,
+            "name": "Books/Mags",
+            "subCategories": []
+          },
+          {
+            "id": 7040,
+            "name": "Books/Technical",
+            "subCategories": []
+          }
+        ]
+      },
+      {
+        "id": 6106000,
+        "name": "Literature",
+        "subCategories": []
+      },
+      {
+        "id": 6107000,
+        "name": "Music",
+        "subCategories": []
+      },
+      {
+        "id": 6108000,
+        "name": "Anime non-english translated",
+        "subCategories": []
+      },
+      {
+        "id": 1000,
+        "name": "Console",
+        "subCategories": [
+          {
+            "id": 1180,
+            "name": "Console/PS4",
+            "subCategories": []
+          },
+          {
+            "id": 1080,
+            "name": "Console/PS3",
+            "subCategories": []
+          },
+          {
+            "id": 1120,
+            "name": "Console/PS Vita",
+            "subCategories": []
+          },
+          {
+            "id": 1020,
+            "name": "Console/PSP",
+            "subCategories": []
+          },
+          {
+            "id": 1050,
+            "name": "Console/XBox 360",
+            "subCategories": []
+          },
+          {
+            "id": 1040,
+            "name": "Console/XBox",
+            "subCategories": []
+          },
+          {
+            "id": 1010,
+            "name": "Console/NDS",
+            "subCategories": []
+          },
+          {
+            "id": 1030,
+            "name": "Console/Wii",
+            "subCategories": []
+          },
+          {
+            "id": 1130,
+            "name": "Console/WiiU",
+            "subCategories": []
+          },
+          {
+            "id": 1110,
+            "name": "Console/3DS",
+            "subCategories": []
+          },
+          {
+            "id": 1090,
+            "name": "Console/Other",
+            "subCategories": []
+          }
+        ]
+      },
+      {
+        "id": 7100000,
+        "name": "Console",
+        "subCategories": []
+      },
+      {
+        "id": 7101000,
+        "name": "PS4",
+        "subCategories": []
+      },
+      {
+        "id": 7102000,
+        "name": "PS3",
+        "subCategories": []
+      },
+      {
+        "id": 7103000,
+        "name": "PS2",
+        "subCategories": []
+      },
+      {
+        "id": 7104000,
+        "name": "PS1",
+        "subCategories": []
+      },
+      {
+        "id": 7105000,
+        "name": "PS Vita",
+        "subCategories": []
+      },
+      {
+        "id": 7106000,
+        "name": "PSP",
+        "subCategories": []
+      },
+      {
+        "id": 7107000,
+        "name": "Xbox 360",
+        "subCategories": []
+      },
+      {
+        "id": 7108000,
+        "name": "Xbox",
+        "subCategories": []
+      },
+      {
+        "id": 7109000,
+        "name": "Switch",
+        "subCategories": []
+      },
+      {
+        "id": 7110000,
+        "name": "NDS",
+        "subCategories": []
+      },
+      {
+        "id": 7111000,
+        "name": "Wii",
+        "subCategories": []
+      },
+      {
+        "id": 7112000,
+        "name": "WiiU",
+        "subCategories": []
+      },
+      {
+        "id": 7113000,
+        "name": "3DS",
+        "subCategories": []
+      },
+      {
+        "id": 7114000,
+        "name": "GameCube",
+        "subCategories": []
+      },
+      {
+        "id": 7115000,
+        "name": "Other",
+        "subCategories": []
+      },
+      {
+        "id": 8100000,
+        "name": "Mobile",
+        "subCategories": []
+      },
+      {
+        "id": 8101000,
+        "name": "Android",
+        "subCategories": []
+      },
+      {
+        "id": 8102000,
+        "name": "IOS",
+        "subCategories": []
+      },
+      {
+        "id": 8103000,
+        "name": "PC Other",
+        "subCategories": []
+      },
+      {
+        "id": 9100000,
+        "name": "Books",
+        "subCategories": []
+      },
+      {
+        "id": 9101000,
+        "name": "EBooks",
+        "subCategories": []
+      },
+      {
+        "id": 9102000,
+        "name": "Comics",
+        "subCategories": []
+      },
+      {
+        "id": 9103000,
+        "name": "Magazines",
+        "subCategories": []
+      },
+      {
+        "id": 9104000,
+        "name": "Technical",
+        "subCategories": []
+      },
+      {
+        "id": 9105000,
+        "name": "Books Other",
+        "subCategories": []
+      },
+      {
+        "id": 8000,
+        "name": "Other",
+        "subCategories": [
+          {
+            "id": 8010,
+            "name": "Other/Misc",
+            "subCategories": []
+          }
+        ]
+      },
+      {
+        "id": 10100000,
+        "name": "Other",
+        "subCategories": []
+      },
+      {
+        "id": 10101000,
+        "name": "Other Misc",
+        "subCategories": []
+      }
+    ],
+    "supportsRawSearch": false,
+    "searchParams": [
+      "q"
+    ],
+    "tvSearchParams": [
+      "q",
+      "season",
+      "ep"
+    ],
+    "movieSearchParams": [
+      "q"
+    ],
+    "musicSearchParams": [
+      "q"
+    ],
+    "bookSearchParams": [
+      "q"
+    ]
+  },
+  "priority": 25,
+  "downloadClientId": 0,
+  "added": "2026-07-24T02:51:20Z",
+  "sortName": "knaben",
+  "name": "Knaben",
+  "fields": [
+    {
+      "order": 0,
+      "name": "baseUrl",
+      "label": "Base Url",
+      "helpText": "Select which base url Prowlarr will use for requests to the site",
+      "value": "https://knaben.org/",
+      "type": "select",
+      "advanced": false,
+      "selectOptionsProviderAction": "getUrls",
+      "privacy": "normal",
+      "isFloat": false
+    },
+    {
+      "order": 1,
+      "name": "baseSettings.queryLimit",
+      "label": "Query Limit",
+      "helpText": "The number of max queries as specified by the respective unit that Prowlarr will allow to the site",
+      "type": "number",
+      "advanced": true,
+      "privacy": "normal",
+      "isFloat": false
+    },
+    {
+      "order": 2,
+      "name": "baseSettings.grabLimit",
+      "label": "Grab Limit",
+      "helpText": "The number of max grabs as specified by the respective unit that Prowlarr will allow to the site",
+      "type": "number",
+      "advanced": true,
+      "privacy": "normal",
+      "isFloat": false
+    },
+    {
+      "order": 3,
+      "name": "baseSettings.limitsUnit",
+      "label": "Limits Unit",
+      "helpText": "The unit of time for counting limits per indexer",
+      "value": 0,
+      "type": "select",
+      "advanced": true,
+      "selectOptions": [
+        {
+          "value": 0,
+          "name": "Day",
+          "order": 0,
+          "hint": "(0)"
+        },
+        {
+          "value": 1,
+          "name": "Hour",
+          "order": 1,
+          "hint": "(1)"
+        }
+      ],
+      "privacy": "normal",
+      "isFloat": false
+    },
+    {
+      "order": 4,
+      "name": "torrentBaseSettings.appMinimumSeeders",
+      "label": "Apps Minimum Seeders",
+      "helpText": "Minimum seeders required by the Applications for the indexer to grab, empty is Sync profile's default",
+      "type": "number",
+      "advanced": true,
+      "privacy": "normal",
+      "isFloat": false
+    },
+    {
+      "order": 5,
+      "name": "torrentBaseSettings.seedRatio",
+      "label": "Seed Ratio",
+      "helpText": "The ratio a torrent should reach before stopping, empty uses the download client's default. Ratio should be at least 1.0 and follow the indexers rules",
+      "type": "number",
+      "advanced": false,
+      "privacy": "normal",
+      "isFloat": true
+    },
+    {
+      "order": 6,
+      "name": "torrentBaseSettings.seedTime",
+      "label": "Seed Time",
+      "unit": "minutes",
+      "helpText": "The time a torrent should be seeded before stopping, empty uses the download client's default",
+      "type": "number",
+      "advanced": true,
+      "privacy": "normal",
+      "isFloat": false
+    },
+    {
+      "order": 7,
+      "name": "torrentBaseSettings.packSeedTime",
+      "label": "Pack Seed Time",
+      "unit": "minutes",
+      "helpText": "The time a pack (season or discography) torrent should be seeded before stopping, empty is app's default",
+      "type": "number",
+      "advanced": true,
+      "privacy": "normal",
+      "isFloat": false
+    },
+    {
+      "order": 8,
+      "name": "torrentBaseSettings.preferMagnetUrl",
+      "label": "Prefer Magnet URL",
+      "helpText": "When enabled, this indexer will prefer the use of magnet URLs for grabs with fallback to torrent links",
+      "value": false,
+      "type": "checkbox",
+      "advanced": true,
+      "privacy": "normal",
+      "isFloat": false
+    }
+  ],
+  "implementationName": "Knaben",
+  "implementation": "Knaben",
+  "configContract": "NoAuthTorrentBaseSettings",
+  "infoLink": "https://wiki.servarr.com/prowlarr/supported-indexers#knaben",
+  "tags": []
+}
