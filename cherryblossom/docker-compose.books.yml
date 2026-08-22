@@ -50,6 +50,15 @@ services:
     - TRANSMISSION_CATEGORY=books
     # Must resolve identically in both containers (see the /downloads bind below).
     - TRANSMISSION_DOWNLOAD_DIR=/downloads/books
+    # Keep the internal Cloudflare-bypass browser warm between searches.
+    # Upstream default (180s) shuts it down after 3 min idle, so each session
+    # pays a cold browser start. Upstream advises against the external
+    # bypasser (slower + less reliable), so tune the internal one instead.
+    - BYPASS_BROWSER_IDLE_TIMEOUT=1800
+    # Corrected for this host: flaresolverr shares gluetun's netns, so the
+    # upstream default hostname does not resolve. Unused while
+    # USING_EXTERNAL_BYPASSER is false, but wrong-by-default is a trap.
+    - EXT_BYPASSER_URL=http://gluetun:8191
     volumes:
     - shelfmark-config:/config
     # Default download destination -> CWA's ingest dir, so finished books
@@ -74,7 +83,7 @@ services:
       resources:
         limits:
           cpus: '1.00'
-          memory: 1G
+          memory: 2G
         reservations:
           cpus: '0.05'
           memory: 128M
