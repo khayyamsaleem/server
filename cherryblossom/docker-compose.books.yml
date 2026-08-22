@@ -34,9 +34,22 @@ services:
     image: ghcr.io/calibrain/shelfmark:latest
     container_name: shelfmark
     environment:
-      PUID: 1000
-      PGID: 1000
-      TZ: America/New_York
+    - PUID=1000
+    - PGID=1000
+    - TZ=America/New_York
+    # Search via the existing Prowlarr (shares gluetun's network namespace).
+    - PROWLARR_ENABLED=true
+    - PROWLARR_URL=http://gluetun:9696
+    - PROWLARR_API_KEY=${PROWLARR_API_KEY}
+    - PROWLARR_INDEXER_TIMEOUT=90
+    # Hand torrents to the existing transmission behind the VPN.
+    - PROWLARR_TORRENT_CLIENT=transmission
+    - TRANSMISSION_URL=http://gluetun:9091
+    - TRANSMISSION_USERNAME=${TRANSMISSION_USER}
+    - TRANSMISSION_PASSWORD=${TRANSMISSION_PASS}
+    - TRANSMISSION_CATEGORY=books
+    # Must resolve identically in both containers (see the /downloads bind below).
+    - TRANSMISSION_DOWNLOAD_DIR=/downloads/books
     volumes:
     - shelfmark-config:/config
     # Default download destination -> CWA's ingest dir, so finished books
