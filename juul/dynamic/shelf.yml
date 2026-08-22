@@ -1,0 +1,12 @@
+http:
+  routers:
+    shelf:
+      rule: "Host(`shelf.k5m.sh`)"
+      entryPoints:
+        - https
+      service: shelf
+  services:
+    shelf:
+      loadBalancer:
+        servers:
+          - url: "http://cherryblossom-docker:8084"

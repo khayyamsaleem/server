@@ -1,0 +1,71 @@
+services:
+  calibre-web-automated:
+    image: crocodilestick/calibre-web-automated:latest
+    container_name: calibre-web-automated
+    environment:
+    - PUID=1000
+    - PGID=1000
+    - TZ=America/New_York
+    volumes:
+    - calibre-web-automated-config:/config
+    # Ingest dir: anything landing here is imported into the library, then removed.
+    # Shelfmark writes its finished downloads here.
+    - /mnt/jellydrive-01/books/ingest:/cwa-book-ingest
+    - /mnt/jellydrive-01/books/library:/calibre-library
+    restart: unless-stopped
+    labels:
+      com.centurylinklabs.watchtower.enable: 'true'
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8083/login > /dev/null"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 90s
+    deploy:
+      resources:
+        limits:
+          cpus: '2.00'
+          memory: 2G
+        reservations:
+          cpus: '0.10'
+          memory: 256M
+
+  shelfmark:
+    image: ghcr.io/calibrain/shelfmark:latest
+    container_name: shelfmark
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: America/New_York
+    volumes:
+    - shelfmark-config:/config
+    # Default download destination -> CWA's ingest dir, so finished books
+    # are imported into the Calibre library automatically.
+    - /mnt/jellydrive-01/books/ingest:/books
+    # Must match transmission's /downloads bind exactly so Shelfmark can
+    # resolve completed torrent paths reported by the download client.
+    - /mnt/jellydrive-01/jellyfin_media:/downloads
+    depends_on:
+      calibre-web-automated:
+        condition: service_healthy
+    restart: unless-stopped
+    labels:
+      com.centurylinklabs.watchtower.enable: 'true'
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8084/ > /dev/null"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 1G
+        reservations:
+          cpus: '0.05'
+          memory: 128M
+
+volumes:
+  calibre-web-automated-config:
+  shelfmark-config:
