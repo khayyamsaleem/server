@@ -15,6 +15,6 @@
     "9696": { "TCPForward": "gluetun:9696" },
     "4096": { "TCPForward": "opencode:4096" },
     "8083": { "TCPForward": "calibre-web-automated:8083" },
-    "8084": { "TCPForward": "shelfmark:8084" }
+    "8084": { "TCPForward": "gluetun:8084" }
   }
 }

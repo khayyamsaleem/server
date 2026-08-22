@@ -33,18 +33,21 @@ services:
   shelfmark:
     image: ghcr.io/calibrain/shelfmark:latest
     container_name: shelfmark
+    # Egress through the VPN, like transmission and prowlarr. Without this
+    # shelfmark's own fetches (Anna's Archive et al) leave over the host IP.
+    network_mode: container:gluetun
     environment:
     - PUID=1000
     - PGID=1000
     - TZ=America/New_York
-    # Search via the existing Prowlarr (shares gluetun's network namespace).
+    # Search via the existing Prowlarr (same netns, hence localhost).
     - PROWLARR_ENABLED=true
-    - PROWLARR_URL=http://gluetun:9696
+    - PROWLARR_URL=http://localhost:9696
     - PROWLARR_API_KEY=${PROWLARR_API_KEY}
     - PROWLARR_INDEXER_TIMEOUT=90
     # Hand torrents to the existing transmission behind the VPN.
     - PROWLARR_TORRENT_CLIENT=transmission
-    - TRANSMISSION_URL=http://gluetun:9091
+    - TRANSMISSION_URL=http://localhost:9091
     - TRANSMISSION_USERNAME=${TRANSMISSION_USER}
     - TRANSMISSION_PASSWORD=${TRANSMISSION_PASS}
     - TRANSMISSION_CATEGORY=books
@@ -55,10 +58,9 @@ services:
     # pays a cold browser start. Upstream advises against the external
     # bypasser (slower + less reliable), so tune the internal one instead.
     - BYPASS_BROWSER_IDLE_TIMEOUT=1800
-    # Corrected for this host: flaresolverr shares gluetun's netns, so the
-    # upstream default hostname does not resolve. Unused while
-    # USING_EXTERNAL_BYPASSER is false, but wrong-by-default is a trap.
-    - EXT_BYPASSER_URL=http://gluetun:8191
+    # flaresolverr is in this same netns. Unused while USING_EXTERNAL_BYPASSER
+    # is false, but wrong-by-default is a trap.
+    - EXT_BYPASSER_URL=http://localhost:8191
     # Anna's Archive mirrors, tried in order with failover (AA_BASE_URL=auto).
     # All three verified solvable through byparr on 2026-08-22.
     - AA_BASE_URL=auto
@@ -72,6 +74,8 @@ services:
     # resolve completed torrent paths reported by the download client.
     - /mnt/jellydrive-01/jellyfin_media:/downloads
     depends_on:
+      gluetun:
+        condition: service_healthy
       calibre-web-automated:
         condition: service_healthy
     restart: unless-stopped
