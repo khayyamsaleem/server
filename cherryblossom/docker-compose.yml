@@ -1,5 +1,6 @@
 include:
   - docker-compose.media.yml
+  - docker-compose.books.yml
   - docker-compose.torrenting.yml
   - docker-compose.ai.yml
   - docker-compose.monitoring.yml
