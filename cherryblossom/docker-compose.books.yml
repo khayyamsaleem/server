@@ -59,6 +59,10 @@ services:
     # upstream default hostname does not resolve. Unused while
     # USING_EXTERNAL_BYPASSER is false, but wrong-by-default is a trap.
     - EXT_BYPASSER_URL=http://gluetun:8191
+    # Anna's Archive mirrors, tried in order with failover (AA_BASE_URL=auto).
+    # All three verified solvable through byparr on 2026-08-22.
+    - AA_BASE_URL=auto
+    - AA_MIRROR_URLS=https://annas-archive.gd,https://annas-archive.gl,https://annas-archive.pk
     volumes:
     - shelfmark-config:/config
     # Default download destination -> CWA's ingest dir, so finished books
