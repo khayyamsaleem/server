@@ -13,6 +13,8 @@
     "8989": { "TCPForward": "sonarr:8989" },
     "5055": { "TCPForward": "jellyseerr:5055" },
     "9696": { "TCPForward": "gluetun:9696" },
-    "4096": { "TCPForward": "opencode:4096" }
+    "4096": { "TCPForward": "opencode:4096" },
+    "8083": { "TCPForward": "calibre-web-automated:8083" },
+    "8084": { "TCPForward": "shelfmark:8084" }
   }
 }

@@ -1,0 +1,12 @@
+http:
+  routers:
+    books:
+      rule: "Host(`books.k5m.sh`)"
+      entryPoints:
+        - https
+      service: books
+  services:
+    books:
+      loadBalancer:
+        servers:
+          - url: "http://cherryblossom-docker:8083"
