@@ -52,7 +52,7 @@ services:
     labels:
       com.centurylinklabs.watchtower.enable: 'true'
     healthcheck:
-      test: ["CMD-SHELL", "curl -sf http://localhost:8084/ > /dev/null"]
+      test: ["CMD-SHELL", "curl -sf http://localhost:8084/api/health > /dev/null"]
       interval: 30s
       timeout: 5s
       retries: 3
