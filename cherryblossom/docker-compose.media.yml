@@ -1,14 +1,29 @@
 services:
   jellyfin:
-    image: jellyfin/jellyfin:latest
+    # Pinned: 12.0 was a breaking major (DB rewrite, plugin ABI break, legacy
+    # /emby/ + /mediabrowser/ routes gone). Bump deliberately, with a config
+    # backup, not via watchtower.
+    image: jellyfin/jellyfin:12.0
     container_name: jellyfin
     hostname: juul
     user: 1000:1000
     entrypoint: /branding/jellyfin-branding.sh
     volumes:
     - ${JELLYFIN_CONFIG_DIR}:/config
-    - ${JELLYFIN_CACHE_DIR}:/cache
+    # Transcode cache in RAM, not on the media HDD -- a bind there made the
+    # transcode writes contend with media reads on the same spindle. 4 GiB of
+    # 31 GiB, no swap. Changing bind<->tmpfs needs `docker compose rm -f` then
+    # `up`; --force-recreate alone will not swap the mount type.
+    - type: tmpfs
+      target: /cache
+      tmpfs:
+        size: 4294967296
     - ${JELLYFIN_MEDIA_DIR}:/media
+    # Calibre library, read-only. 12.0 folded the Bookshelf plugin into core:
+    # OPF/ComicInfo metadata, generated EPUB/CBZ posters, and a reader UI ship
+    # with the server, so the same library CWA manages can be a Jellyfin
+    # library. Read-only -- CWA owns writes.
+    - /mnt/jellydrive-01/books/library:/books:ro
     - ./jellyfin-branding.sh:/branding/jellyfin-branding.sh:ro
     - ./juul-logo.svg:/branding/juul-logo.svg:ro
     - ./juul-favicon.svg:/branding/juul-favicon.svg:ro
@@ -20,7 +35,7 @@ services:
     - TZ=America/New_York
     restart: unless-stopped
     labels:
-      com.centurylinklabs.watchtower.enable: 'true'
+      com.centurylinklabs.watchtower.enable: 'false'
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:8096/health > /dev/null"]
       interval: 30s
