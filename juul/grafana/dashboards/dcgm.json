@@ -1080,7 +1080,7 @@
           },
           "mappings": [],
           "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}]},
-          "unit": "KBs",
+          "unit": "Bps",
           "min": 0
         },
         "overrides": []
@@ -1094,7 +1094,7 @@
       "targets": [
         {
           "datasource": {"type": "prometheus"},
-          "expr": "rate(DCGM_FI_DEV_PCIE_TX_THROUGHPUT{host=~\"$host\",modelName=~\"$gpu_model\"}[5m])",
+          "expr": "rate(DCGM_FI_PROF_PCIE_TX_BYTES{host=~\"$host\",modelName=~\"$gpu_model\"}[5m])",
           "legendFormat": "{{modelName}}",
           "refId": "A"
         }
@@ -1128,7 +1128,7 @@
           },
           "mappings": [],
           "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}]},
-          "unit": "KBs",
+          "unit": "Bps",
           "min": 0
         },
         "overrides": []
@@ -1142,7 +1142,7 @@
       "targets": [
         {
           "datasource": {"type": "prometheus"},
-          "expr": "rate(DCGM_FI_DEV_PCIE_RX_THROUGHPUT{host=~\"$host\",modelName=~\"$gpu_model\"}[5m])",
+          "expr": "rate(DCGM_FI_PROF_PCIE_RX_BYTES{host=~\"$host\",modelName=~\"$gpu_model\"}[5m])",
           "legendFormat": "{{modelName}}",
           "refId": "A"
         }
