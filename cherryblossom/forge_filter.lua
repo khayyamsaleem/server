@@ -1,5 +1,5 @@
 -- Forge proxy filter: dynamically inject ADetailer for SDXL/Pony models.
--- Flux does not support ADetailer (causes NaN), so it is stripped for Flux.
+-- Checkpoints not listed in ADETAILER_MODELS get it stripped (it NaNs on Flux-type models).
 -- Also yields the GPU from Ollama around generations via gpu-yield.
 
 -- Models that support ADetailer (SDXL-based inpainting)
