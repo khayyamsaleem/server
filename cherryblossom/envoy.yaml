@@ -92,6 +92,44 @@ static_resources:
                     typed_config:
                       "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
 
+    - name: comfy_proxy
+      address:
+        socket_address:
+          address: 0.0.0.0
+          port_value: 18188
+      filter_chains:
+        - filters:
+            - name: envoy.filters.network.http_connection_manager
+              typed_config:
+                "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+                stat_prefix: comfy
+                codec_type: AUTO
+                # ComfyUI's UI streams progress over a websocket; renders run for minutes.
+                upgrade_configs:
+                  - upgrade_type: websocket
+                stream_idle_timeout: 0s
+                request_timeout: 0s
+                route_config:
+                  name: comfy_route
+                  virtual_hosts:
+                    - name: comfy_backend
+                      domains: ["*"]
+                      routes:
+                        - match:
+                            prefix: "/"
+                          route:
+                            cluster: comfyui
+                            timeout: 0s
+                http_filters:
+                  - name: envoy.filters.http.lua
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua
+                      default_source_code:
+                        filename: /etc/envoy/comfy_filter.lua
+                  - name: envoy.filters.http.router
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
+
   clusters:
     - name: ollama_3090
       connect_timeout: 5s
@@ -118,6 +156,18 @@ static_resources:
                     socket_address:
                       address: gpu-yield
                       port_value: 11500
+    - name: comfyui
+      connect_timeout: 5s
+      type: STRICT_DNS
+      load_assignment:
+        cluster_name: comfyui
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: comfyui
+                      port_value: 8188
     - name: forge
       connect_timeout: 5s
       type: STRICT_DNS

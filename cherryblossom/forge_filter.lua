@@ -48,8 +48,9 @@ local function gpu_yield(handle, action, timeout_ms)
     [":authority"] = "gpu-yield",
     ["content-type"] = "application/json",
   }, "{}", timeout_ms)
-  handle:logInfo(string.format("forge_filter: gpu-yield %s status=%s %s",
-    action, headers and headers[":status"] or "none", body or ""))
+  local status = headers and headers[":status"] or "none"
+  handle:logInfo(string.format("forge_filter: gpu-yield %s status=%s %s", action, status, body or ""))
+  return status, body
 end
 
 -- Inject or strip ADetailer and apply sampler overrides for the active checkpoint.
@@ -137,7 +138,12 @@ function envoy_on_request(handle)
 
   -- Yield last: once httpCall suspends the script the request body streams
   -- upstream, and body() can no longer be read or rewritten.
-  gpu_yield(handle, "evict", 90000)
+  local status, body = gpu_yield(handle, "evict", 90000)
+  if status == "423" then
+    -- A ComfyUI video job holds the GPU; refuse rather than contend for VRAM/RAM.
+    handle:respond({[":status"] = "503", ["content-type"] = "application/json"}, body)
+    return
+  end
   handle:streamInfo():dynamicMetadata():set("envoy.filters.http.lua", "gpu_yielded", "true")
 end
 

@@ -61,6 +61,54 @@ services:
       start_period: 15s
 
 
+  # Video generation (LTX-2.3 GGUF). Opt-in profile: needs the 3090 to itself,
+  # so it is not started by a plain `compose up`.
+  comfyui-init:
+    image: alpine/git:latest
+    profiles: ["video"]
+    volumes:
+    - comfyui-data:/data
+    - ./comfy-provision.sh:/provision.sh:ro
+    entrypoint: ["/bin/sh", "/provision.sh"]
+    deploy:
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 256M
+
+  comfyui:
+    image: yanwk/comfyui-boot:cu130-slim-20260921
+    profiles: ["video"]
+    depends_on:
+      comfyui-init:
+        condition: service_completed_successfully
+    # If the host ever runs out of RAM anyway, the kernel kills ComfyUI first
+    # (a render is disposable; Forge, Jellyfin and the desktop are not).
+    oom_score_adj: 900
+    volumes:
+    - comfyui-data:/root
+    environment:
+      # --cache-none: drop models once no later node needs them. The 17G cap keeps
+      # an overrun inside this container instead of a host-wide OOM (31G host;
+      # the LTX Gemma text encoder alone dequantizes to ~12G).
+      CLI_ARGS: --cache-none
+    # No published port: the UI and API are reached through ollama-gateway
+    # (127.0.0.1:8188), whose comfy_filter takes a gpu-yield lease per prompt.
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '8.00'
+          memory: 17G
+        reservations:
+          cpus: '0.50'
+          memory: 1G
+          devices:
+          - driver: nvidia
+            device_ids: ['0']
+            capabilities:
+            - gpu
+
   # Unloads the Ollama model around Forge generations (see forge_filter.lua).
   gpu-yield:
     image: python:3.12-slim
@@ -151,7 +199,13 @@ services:
       volume:
         subpath: stable_diffusion/models/flux_vae
     environment:
-      FORGE_ARGS: --api --listen --xformers --always-offload-from-vram
+      # --api-server-stop enables /sdapi/v1/server-restart, which gpu-yield uses to
+      # free Forge's ~10G of offloaded checkpoints before a ComfyUI video job
+      # (/sdapi/v1/unload-checkpoint does not release RAM in Forge).
+      FORGE_ARGS: --api --listen --xformers --always-offload-from-vram --api-server-stop
+      # ai-dock defaults to public trycloudflare.com tunnels for every service
+      # (Forge, Jupyter, Syncthing, portal). Nothing here uses them.
+      CF_QUICK_TUNNELS: 'false'
     deploy:
       resources:
         limits:
@@ -291,6 +345,9 @@ services:
     - ./envoy.yaml:/etc/envoy/envoy.yaml:ro
     - ./filter.lua:/etc/envoy/filter.lua:ro
     - ./forge_filter.lua:/etc/envoy/forge_filter.lua:ro
+    - ./comfy_filter.lua:/etc/envoy/comfy_filter.lua:ro
+    ports:
+    - 127.0.0.1:8188:18188
     restart: unless-stopped
     labels:
       com.centurylinklabs.watchtower.enable: 'true'
@@ -400,6 +457,7 @@ services:
           memory: 64M
 
 volumes:
+  comfyui-data:
   ollama-data:
     external: true
     name: open-claw_ollama-data
