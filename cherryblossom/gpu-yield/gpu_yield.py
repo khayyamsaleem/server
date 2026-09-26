@@ -10,7 +10,7 @@ Forge images (called synchronously by envoy forge_filter around txt2img/img2img)
                  No-op while a ComfyUI lease is active.
 
 ComfyUI video (called by envoy comfy_filter on every prompt submission):
-  POST /lease    unload Ollama, restart Forge's worker to release its ~10G of
+  POST /lease    unload Ollama, restart Forge Neo to release its ~12G of
                  offloaded checkpoints (unload-checkpoint does not free RAM),
                  then require enough host RAM for ComfyUI to reach its measured
                  peak from what it already holds. 507 if RAM stays short,
@@ -133,7 +133,7 @@ def required_free_mib():
 
 
 def _free_forge_ram():
-    """Kill Forge's worker; supervisord restarts it empty in ~15s (checkpoints load lazily)."""
+    """Kill Forge Neo; restart: unless-stopped brings it back empty in ~20s (checkpoints load lazily)."""
     try:
         urllib.request.urlopen(urllib.request.Request(FORGE + "/sdapi/v1/server-kill", b"", method="POST"), timeout=10)
     except Exception:

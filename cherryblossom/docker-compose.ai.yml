@@ -173,46 +173,30 @@ services:
           cpus: '1.00'
           memory: 256M
 
+  # Forge Neo (maintained Forge fork): A1111-compatible API on :17860, reached
+  # by Open WebUI through ollama-gateway (forge_filter.lua). Checkpoints and
+  # LoRAs come read-only from sd-data; Neo's own state lives in forge-neo-data.
   forge:
-    image: ghcr.io/ai-dock/stable-diffusion-webui-forge:latest-cuda
+    build:
+      context: ./forge-neo
+    image: forge-neo:local
     depends_on:
       forge-init:
         condition: service_completed_successfully
     volumes:
-    - sd-data:/opt/storage
     - type: volume
       source: sd-data
-      target: /opt/stable-diffusion-webui-forge/extensions/adetailer
+      target: /models/ckpt
       volume:
-        subpath: extensions/adetailer
+        subpath: stable_diffusion/models/ckpt
       read_only: true
     - type: volume
       source: sd-data
-      target: /opt/stable-diffusion-webui-forge/models/Lora
+      target: /models/lora
       volume:
         subpath: stable_diffusion/models/lora
-    - type: volume
-      source: sd-data
-      target: /opt/stable-diffusion-webui-forge/models/text_encoder
-      volume:
-        subpath: stable_diffusion/models/text_encoder
-    - type: volume
-      source: sd-data
-      target: /opt/stable-diffusion-webui-forge/models/VAE/flux
-      volume:
-        subpath: stable_diffusion/models/flux_vae
-    environment:
-      # --api-server-stop enables /sdapi/v1/server-restart, which gpu-yield uses to
-      # free Forge's ~10G of offloaded checkpoints before a ComfyUI video job
-      # (/sdapi/v1/unload-checkpoint does not release RAM in Forge).
-      FORGE_ARGS: --api --listen --xformers --always-offload-from-vram --api-server-stop
-      # The ai-dock image bundles a remote-access kit for rented cloud GPUs: an
-      # auth proxy, portal, Jupyter, Syncthing, sshd and public trycloudflare.com
-      # tunnels (on by default). Only Forge is used here; the gateway talks to it
-      # directly on :17860. Same list ai-dock's own SERVERLESS mode disables.
-      # storagemonitor (symlinks checkpoints from /opt/storage) and logtail
-      # (container logs -> Loki) stay on.
-      SUPERVISOR_NO_AUTOSTART: caddy,cloudflared,jupyter,quicktunnel,serviceportal,sshd,syncthing
+      read_only: true
+    - forge-neo-data:/data
     deploy:
       resources:
         limits:
@@ -226,13 +210,8 @@ services:
             device_ids: ['0']
             capabilities:
             - gpu
+    # gpu-yield frees Forge's RAM with /sdapi/v1/server-kill; this brings it back.
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "curl -sf http://localhost:17860/sdapi/v1/options > /dev/null"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 120s
   open-webui:
     image: ghcr.io/open-webui/open-webui:latest
     entrypoint: ["/bin/bash", "-c", "/patches/owui-patch.sh && exec bash start.sh"]
@@ -465,6 +444,7 @@ services:
 
 volumes:
   comfyui-data:
+  forge-neo-data:
   ollama-data:
     external: true
     name: open-claw_ollama-data
