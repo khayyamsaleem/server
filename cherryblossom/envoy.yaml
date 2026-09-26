@@ -106,6 +106,18 @@ static_resources:
                     socket_address:
                       address: ollama-3090
                       port_value: 11434
+    - name: gpu_yield
+      connect_timeout: 2s
+      type: STRICT_DNS
+      load_assignment:
+        cluster_name: gpu_yield
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: gpu-yield
+                      port_value: 11500
     - name: forge
       connect_timeout: 5s
       type: STRICT_DNS
