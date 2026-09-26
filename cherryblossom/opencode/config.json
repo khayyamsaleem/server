@@ -1,20 +1,20 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "model": "local/qwen3.6-tuned:24k",
+  "model": "local/qwen3.8-tuned:64k",
   "autoshare": false,
   "snapshot": true,
   "agent": {
     "explore": {
-      "model": "local/qwen3.6-tuned:24k"
+      "model": "local/qwen3.8-tuned:64k"
     },
     "general": {
-      "model": "local/qwen3.6-tuned:24k"
+      "model": "local/qwen3.8-tuned:64k"
     },
     "title": {
-      "model": "local/qwen3.6-tuned:24k"
+      "model": "local/qwen3.8-tuned:64k"
     },
     "summary": {
-      "model": "local/qwen3.6-tuned:24k"
+      "model": "local/qwen3.8-tuned:64k"
     }
   },
   "mcp": {
@@ -34,44 +34,19 @@
       "api": "http://ollama-gateway:11434/v1",
       "apiKey": "local",
       "models": {
-        "qwen3.6-tuned:24k": {
-          "name": "Qwen3.6 27B Dense 24K (3090)",
-          "contextLength": 24576,
-          "attachment": true
-        },
-        "qwen3.6-tuned:16k": {
-          "name": "Qwen3.6 27B Dense 16K (3090)",
-          "contextLength": 16384,
-          "attachment": true
-        },
-        "devstral-small-2:24b": {
-          "name": "Devstral Small 2 24B (3090)",
-          "contextLength": 32768,
-          "attachment": false
-        },
-        "qwen3-coder-tuned:65k": {
-          "name": "Qwen3 Coder 30B MoE 65K (3090)",
+        "qwen3.8-tuned:64k": {
+          "name": "Qwen3.8 27B Dense MTP 64K (3090)",
           "contextLength": 65536,
-          "attachment": false
+          "attachment": true
         },
-        "qwen3-coder-tuned:32k": {
-          "name": "Qwen3 Coder 30B MoE 32K (3090)",
-          "contextLength": 32768,
-          "attachment": false
+        "qwen3.8-tuned:100k": {
+          "name": "Qwen3.8 27B Dense MTP 100K (3090)",
+          "contextLength": 102400,
+          "attachment": true
         },
-        "qwen3-coder:30b-a3b-q4_K_M": {
-          "name": "Qwen3 Coder 30B MoE (3090)",
-          "contextLength": 32768,
-          "attachment": false
-        },
-        "igorls/gemma-4-E4B-it-heretic-GGUF:latest": {
-          "name": "Gemma 4 E4B IT (1080ti)",
-          "contextLength": 32768,
-          "attachment": false
-        },
-        "qwen2.5-coder:7b-instruct-q4_K_M": {
-          "name": "Qwen 2.5 Coder 7B (1080ti)",
-          "contextLength": 32768,
+        "gpt-oss:20b": {
+          "name": "GPT-OSS 20B MoE (3090)",
+          "contextLength": 131072,
           "attachment": false
         }
       }
