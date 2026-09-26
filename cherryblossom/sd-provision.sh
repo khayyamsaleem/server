@@ -5,17 +5,6 @@ set -euo pipefail
 
 STORAGE=/data
 
-# --- LoRA ---
-LORA_DIR="$STORAGE/stable_diffusion/models/lora"
-mkdir -p "$LORA_DIR"
-if [ ! -f "$LORA_DIR/flux-uncensored-v2.safetensors" ]; then
-    printf "[init] Downloading flux-uncensored-v2 LoRA...\n"
-    wget -q -O "$LORA_DIR/flux-uncensored-v2.safetensors" \
-        "https://civitai.com/api/download/models/630948?type=Model&format=SafeTensor"
-else
-    printf "[init] flux-uncensored-v2 LoRA: present\n"
-fi
-
 # --- Checkpoints ---
 CKPT_DIR="$STORAGE/stable_diffusion/models/ckpt"
 mkdir -p "$CKPT_DIR"
