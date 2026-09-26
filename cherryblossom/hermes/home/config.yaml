@@ -1,87 +1,67 @@
-# Hermes hard-requires >=64k context. A model below that raises ValueError on
-# every turn and silently kills the cron jobs -- nothing else surfaces the error.
-# Keep the primary and every cron job in cron/jobs.json on a >=64k model.
-#
-# Primary is GLM-5.2 via DigitalOcean serverless: 131k ctx, ties Kimi K3 on
-# bounded agentic work (Terminal-Bench 81.0 vs 80.9) at ~1/6 the output cost and
-# ~3x the speed. Local fallback is qwen3-coder-tuned:65k -- the only local model
-# that clears 64k, since a dense 27B cannot hold that much KV cache in 24GB.
 model:
   provider: custom:digitalocean
-  model: glm-5.2
+  model: glm-5.3
 custom_providers:
-- name: fireworks
-  base_url: https://api.fireworks.ai/inference/v1
-  api_key: ${FIREWORKS_API_KEY}
-  models:
-    accounts/fireworks/models/kimi-k2p6:
-      context_length: 131072
-      max_output_tokens: 32768
-    accounts/fireworks/models/kimi-k2p5:
-      context_length: 131072
-      max_output_tokens: 32768
-    accounts/fireworks/models/deepseek-v4-pro:
-      context_length: 131072
-      max_output_tokens: 32768
-    accounts/fireworks/models/gpt-oss-120b:
-      context_length: 131072
-      max_output_tokens: 65536
-- name: digitalocean
-  base_url: https://inference.do-ai.run/v1
-  api_key: ${DIGITALOCEAN_ACCESS_TOKEN}
-  models:
-    kimi-k3:
-      context_length: 1048576
-      max_output_tokens: 65536
-    deepseek-v4-pro:
-      context_length: 1048576
-      max_output_tokens: 65536
-    glm-5.2:
-      context_length: 131072
-      max_output_tokens: 65536
-    openai-gpt-oss-120b:
-      context_length: 131072
-      max_output_tokens: 65536
-    openai-gpt-oss-20b:
-      context_length: 131072
-      max_output_tokens: 32768
-- name: ollama-local
-  base_url: http://ollama-gateway:11434/v1
-  api_key: ollama-local
-  models:
-    qwen3.6-tuned:24k:
-      context_length: 24576
-    qwen3.6-tuned:16k:
-      context_length: 16384
-    laguna-xs.2:q4_K_M:
-      context_length: 65536
-    devstral-small-2:24b:
-      context_length: 65536
-    qwen3-coder-tuned:65k:
-      context_length: 65536
-    qwen3-coder-tuned:32k:
-      context_length: 32768
-    qwen3-coder:30b-a3b-q4_K_M:
-      context_length: 65536
-    igorls/gemma-4-E4B-it-heretic-GGUF:latest:
-      context_length: 65536
-    gemma4:26b:
-      context_length: 65536
+  - name: fireworks
+    base_url: https://api.fireworks.ai/inference/v1
+    api_key: ${FIREWORKS_API_KEY}
+    models:
+      accounts/fireworks/models/kimi-k2p6:
+        context_length: 131072
+        max_output_tokens: 32768
+      accounts/fireworks/models/kimi-k2p5:
+        context_length: 131072
+        max_output_tokens: 32768
+      accounts/fireworks/models/deepseek-v4-pro:
+        context_length: 131072
+        max_output_tokens: 32768
+      accounts/fireworks/models/gpt-oss-120b:
+        context_length: 131072
+        max_output_tokens: 65536
+  - name: digitalocean
+    base_url: https://inference.do-ai.run/v1
+    api_key: ${DIGITALOCEAN_ACCESS_TOKEN}
+    models:
+      kimi-k3:
+        context_length: 1048576
+        max_output_tokens: 65536
+      deepseek-v4-pro:
+        context_length: 1048576
+        max_output_tokens: 65536
+      glm-5.2:
+        context_length: 131072
+        max_output_tokens: 65536
+      openai-gpt-oss-120b:
+        context_length: 131072
+        max_output_tokens: 65536
+      openai-gpt-oss-20b:
+        context_length: 131072
+        max_output_tokens: 32768
+  - name: ollama-local
+    base_url: http://ollama-gateway:11434/v1
+    api_key: ollama-local
+    models:
+      qwen3.8-tuned:64k:
+        context_length: 65536
+      qwen3.8-tuned:100k:
+        context_length: 102400
+      gpt-oss:20b:
+        context_length: 131072
 agent:
   max_turns: 90
   tool_use_enforcement: auto
   context_files:
-  - /workspace/USER.md
-  - /workspace/MEMORY.md
-  - /workspace/skills/INDEX.md
-  - /workspace/skills/infra/check-gpu.md
-  - /workspace/skills/infra/host-inspect.md
-  - /workspace/skills/infra/switch-model.md
-  - /workspace/skills/running/log-run.md
-  - /workspace/skills/github/create-pr.md
-  - /workspace/skills/github/sync-repo.md
-  - /workspace/skills/discord/morning-brief-format.md
-  - /workspace/skills/google/gog.md
+    - /workspace/USER.md
+    - /workspace/MEMORY.md
+    - /workspace/skills/INDEX.md
+    - /workspace/skills/infra/check-gpu.md
+    - /workspace/skills/infra/host-inspect.md
+    - /workspace/skills/infra/switch-model.md
+    - /workspace/skills/running/log-run.md
+    - /workspace/skills/github/create-pr.md
+    - /workspace/skills/github/sync-repo.md
+    - /workspace/skills/discord/morning-brief-format.md
+    - /workspace/skills/google/gog.md
 terminal:
   backend: local
   cwd: /workspace
@@ -100,7 +80,7 @@ context:
 auxiliary:
   vision:
     provider: custom
-    model: qwen3.6-tuned:24k
+    model: qwen3.8-tuned:64k
   web_extract:
     provider: custom:digitalocean
     model: openai-gpt-oss-20b
@@ -125,9 +105,12 @@ cron:
   wrap_response: false
   script_timeout_seconds: 300
 display:
-  tool_progress: off
+  tool_progress: false
   streaming: false
   show_reasoning: false
 providers:
   custom:
     timeout: 600
+onboarding:
+  seen:
+    busy_input_prompt: true
