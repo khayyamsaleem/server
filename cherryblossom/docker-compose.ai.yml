@@ -203,9 +203,13 @@ services:
       # free Forge's ~10G of offloaded checkpoints before a ComfyUI video job
       # (/sdapi/v1/unload-checkpoint does not release RAM in Forge).
       FORGE_ARGS: --api --listen --xformers --always-offload-from-vram --api-server-stop
-      # ai-dock defaults to public trycloudflare.com tunnels for every service
-      # (Forge, Jupyter, Syncthing, portal). Nothing here uses them.
-      CF_QUICK_TUNNELS: 'false'
+      # The ai-dock image bundles a remote-access kit for rented cloud GPUs: an
+      # auth proxy, portal, Jupyter, Syncthing, sshd and public trycloudflare.com
+      # tunnels (on by default). Only Forge is used here; the gateway talks to it
+      # directly on :17860. Same list ai-dock's own SERVERLESS mode disables.
+      # storagemonitor (symlinks checkpoints from /opt/storage) and logtail
+      # (container logs -> Loki) stay on.
+      SUPERVISOR_NO_AUTOSTART: caddy,cloudflared,jupyter,quicktunnel,serviceportal,sshd,syncthing
     deploy:
       resources:
         limits:
