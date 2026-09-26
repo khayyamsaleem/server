@@ -141,6 +141,9 @@ services:
       SEARXNG_BASE_URL: http://searxng:8080/
       SEARXNG_SECRET: ${SEARXNG_SECRET:-}
     restart: unless-stopped
+    labels:
+      # Engine scrapers break as sites change; stale images silently return junk.
+      com.centurylinklabs.watchtower.enable: 'true'
     healthcheck:
       test: ["CMD-SHELL", "wget -qO /dev/null http://localhost:8080/"]
       interval: 30s
