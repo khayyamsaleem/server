@@ -48,6 +48,9 @@ async def _templated_image_form(user, prompt, chat_id):  $MARKER2
     try:
         if not await Config.get('image_generation.prompt.enable'):
             return form
+        # Import locally: upstream reshuffles module-level imports between
+        # releases (0.11.4 dropped the module-level json import from builtin.py).
+        import json
         import os
         import aiohttp
         from open_webui.utils.task import image_prompt_generation_template

@@ -1,4 +1,17 @@
-use_default_settings: true
+# Keep SearXNG's default engine definitions but only these engines (listing an
+# engine under `engines:` merges settings, it does not enable it; there is no
+# `enabled_engines` option). Brave gives the best results from this IP. Google,
+# DuckDuckGo and Startpage often CAPTCHA/silently block it but spread the load
+# when they work; SearXNG suspends a blocked engine automatically. Bing is left
+# out: its scraper returns unrelated front pages (checked 2026.9.25).
+use_default_settings:
+  engines:
+    keep_only:
+      - google
+      - duckduckgo
+      - brave
+      - startpage
+      - wikipedia
 
 server:
   limiter: false
@@ -22,16 +35,6 @@ engines:
   - name: wikipedia
     engine: wikipedia
     shortcut: wp
-  - name: bing
-    engine: bing
-    shortcut: bi
-
-enabled_engines:
-  - google
-  - duckduckgo
-  - brave
-  - wikipedia
-  - bing
 
 outgoing:
   request_timeout: 5.0
