@@ -1,10 +1,9 @@
--- Forge proxy filter: dynamically inject ADetailer for SDXL/Pony models.
+-- Forge proxy filter: dynamically inject ADetailer for SDXL-family models.
 -- Checkpoints not listed in ADETAILER_MODELS get it stripped (it NaNs on Flux-type models).
 -- Also yields the GPU from Ollama around generations via gpu-yield.
 
 -- Models that support ADetailer (SDXL-based inpainting)
 local ADETAILER_MODELS = {
-  ["ponyDiffusionV6XL"] = true,
   ["cyberrealisticPony_v18"] = true,
   ["sd_xl_base_1.0"] = true,
 }
@@ -16,7 +15,6 @@ local ADETAILER_CONFIG = [[,"alwayson_scripts":{"ADetailer":{"args":[{"ad_model"
 -- 25 steps removed censor-sticker artifacts (3/6 -> 0/6). Clip skip is not set:
 -- Forge ignores it for SDXL-based checkpoints (outputs were byte-identical).
 local SAMPLER_OVERRIDES = {
-  ["ponyDiffusionV6XL"] = { cfg_scale = "5", steps = "30" },
   ["cyberrealisticPony_v18"] = { cfg_scale = "5", steps = "30" },
 }
 
