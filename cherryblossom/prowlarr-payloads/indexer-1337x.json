@@ -295,6 +295,7 @@
     {
       "order": 1,
       "name": "baseUrl",
+      "value": "https://x1337x.ws/",
       "label": "Base Url",
       "helpText": "Select which base url Prowlarr will use for requests to the site",
       "type": "select",
