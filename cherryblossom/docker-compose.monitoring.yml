@@ -29,6 +29,13 @@ services:
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
+    # Full image/compose labels on every series pushed /metrics past 28MB,
+    # over VictoriaMetrics' 16MB maxScrapeSize, so the scrape was dropped.
+    # Keep only the labels dashboards query.
+    command:
+    - --docker_only=true
+    - --store_container_labels=false
+    - --whitelisted_container_labels=com.docker.compose.project,com.docker.compose.service,com.docker.compose.project.working_dir,com.centurylinklabs.watchtower.enable
     privileged: true
     volumes:
     - /:/rootfs:ro
