@@ -17,7 +17,6 @@ services:
     ports:
     - 80:80
     - 443:443
-    - 10022:10022
     restart: unless-stopped
     labels:
       com.centurylinklabs.watchtower.enable: 'true'
