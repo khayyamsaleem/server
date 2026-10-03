@@ -88,7 +88,9 @@ pipeline {
                                     cd ${CHERRYBLOSSOM_DEPLOY_DIR}/cherryblossom &&
                                     if docker compose up -d --dry-run 2>&1 | grep -q "gluetun.*Recreate"; then
                                         echo "Gluetun will be recreated — removing containers sharing its namespace..."
-                                        docker rm -f transmission cherryblossom-prowlarr-1 cherryblossom-flaresolverr-1 2>/dev/null || true
+                                        # Every service with network_mode: container:gluetun must be listed here;
+                                        # compose will not recreate one left pinned to the old gluetun netns.
+                                        docker rm -f transmission cherryblossom-prowlarr-1 cherryblossom-flaresolverr-1 shelfmark 2>/dev/null || true
                                     fi &&
                                     docker compose up -d --remove-orphans
                                 '
