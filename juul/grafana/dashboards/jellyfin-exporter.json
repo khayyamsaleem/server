@@ -1,47 +1,78 @@
 {
-  "__elements": {},
-  "annotations": {
-    "list": [
-      {
-        "builtIn": 1,
-        "datasource": {
-          "type": "grafana",
-          "uid": "-- Grafana --"
-        },
-        "enable": true,
-        "hide": true,
-        "iconColor": "rgba(0, 211, 255, 1)",
-        "name": "Annotations & Alerts",
-        "type": "dashboard"
-      }
-    ]
-  },
+  "uid": "D5GQA944k",
+  "title": "Jellyfin",
+  "tags": [
+    "jellyfin",
+    "media"
+  ],
+  "timezone": "browser",
   "editable": true,
-  "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
-  "id": null,
-  "links": [],
-  "liveNow": true,
+  "refresh": "30s",
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "schemaVersion": 41,
+  "templating": {
+    "list": []
+  },
+  "annotations": {
+    "list": []
+  },
+  "links": [
+    {
+      "title": "Jellyfin",
+      "type": "link",
+      "url": "https://jf.k5m.sh",
+      "targetBlank": true,
+      "icon": "external link"
+    }
+  ],
   "panels": [
     {
+      "id": 1,
+      "type": "stat",
+      "title": "Server",
       "datasource": {
         "type": "prometheus"
       },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 3,
+        "h": 4
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "expr": "jellyfin_up{job=\"jellyfin\"}",
+          "refId": "A",
+          "editorMode": "code",
+          "instant": true,
+          "range": false
+        }
+      ],
       "fieldConfig": {
         "defaults": {
+          "unit": "none",
           "mappings": [
             {
+              "type": "value",
               "options": {
                 "0": {
-                  "index": 1,
-                  "text": "DOWN"
+                  "text": "DOWN",
+                  "color": "red",
+                  "index": 0
                 },
                 "1": {
-                  "index": 0,
-                  "text": "UP"
+                  "text": "UP",
+                  "color": "green",
+                  "index": 1
                 }
-              },
-              "type": "value"
+              }
             }
           ],
           "thresholds": {
@@ -49,7 +80,7 @@
             "steps": [
               {
                 "color": "red",
-                "value": 0
+                "value": null
               },
               {
                 "color": "green",
@@ -57,92 +88,74 @@
               }
             ]
           },
-          "unit": "short"
+          "color": {
+            "mode": "thresholds"
+          }
         },
         "overrides": []
       },
-      "gridPos": {
-        "h": 5,
-        "w": 4,
-        "x": 0,
-        "y": 0
-      },
-      "id": 12,
       "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
         "colorMode": "background",
         "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
         "textMode": "value",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.1.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus"
-          },
-          "editorMode": "code",
-          "expr": "jellyfin_up{instance=~\"$instance\"}",
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "transparent": true,
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "prometheus"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "fixed"
-          },
-          "displayName": "Movies",
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 5,
-        "x": 4,
-        "y": 0
-      },
-      "id": 13,
-      "options": {
-        "colorMode": "none",
-        "graphMode": "none",
         "justifyMode": "center",
         "orientation": "auto",
-        "percentChangeColorMode": "standard",
+        "wideLayout": true
+      }
+    },
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "Version",
+      "datasource": {
+        "type": "prometheus"
+      },
+      "gridPos": {
+        "x": 3,
+        "y": 0,
+        "w": 3,
+        "h": 4
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "expr": "jellyfin_system_info{job=\"jellyfin\"}",
+          "refId": "A",
+          "editorMode": "code",
+          "legendFormat": "{{version}}",
+          "instant": true,
+          "range": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          },
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -150,67 +163,63 @@
           "fields": "",
           "values": false
         },
-        "showPercentChange": false,
-        "textMode": "value",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.1.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus"
-          },
-          "editorMode": "code",
-          "expr": "jellyfin_media_count{type=\"Movie\", instance=~\"$instance\"}",
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Movies",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "prometheus"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "fixed"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 5,
-        "x": 9,
-        "y": 0
-      },
-      "id": 14,
-      "options": {
-        "colorMode": "none",
+        "colorMode": "value",
         "graphMode": "none",
+        "textMode": "name",
         "justifyMode": "center",
         "orientation": "auto",
-        "percentChangeColorMode": "standard",
+        "wideLayout": true
+      }
+    },
+    {
+      "id": 3,
+      "type": "stat",
+      "title": "Streams",
+      "datasource": {
+        "type": "prometheus"
+      },
+      "gridPos": {
+        "x": 6,
+        "y": 0,
+        "w": 3,
+        "h": 4
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "expr": "count(jellyfin_now_playing_state{job=\"jellyfin\"}) or vector(0)",
+          "refId": "A",
+          "editorMode": "code",
+          "instant": true,
+          "range": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          },
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -218,759 +227,895 @@
           "fields": "",
           "values": false
         },
-        "showPercentChange": false,
-        "textMode": "value",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.1.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus"
-          },
-          "editorMode": "code",
-          "expr": "jellyfin_media_count{type=\"BoxSet\", instance=~\"$instance\"}",
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Collections",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "prometheus"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "fixed"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 5,
-        "x": 14,
-        "y": 0
-      },
-      "id": 15,
-      "options": {
-        "colorMode": "none",
+        "colorMode": "value",
         "graphMode": "none",
+        "textMode": "value",
         "justifyMode": "center",
         "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "value",
         "wideLayout": true
-      },
-      "pluginVersion": "12.1.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus"
-          },
-          "editorMode": "code",
-          "expr": "jellyfin_media_count{type=\"Series\", instance=~\"$instance\"}",
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "TV Shows",
-      "type": "stat"
+      }
     },
     {
-      "datasource": {
-        "type": "prometheus"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "fixed"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 5,
-        "x": 19,
-        "y": 0
-      },
-      "id": 16,
-      "options": {
-        "colorMode": "none",
-        "graphMode": "none",
-        "justifyMode": "center",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "value",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.1.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus"
-          },
-          "editorMode": "code",
-          "expr": "jellyfin_media_count{type=\"Episode\", instance=~\"$instance\"}",
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "TV Show Episodes",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "prometheus"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisPlacement": "auto",
-            "fillOpacity": 70,
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineWidth": 0,
-            "spanNulls": false
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 24,
-        "x": 0,
-        "y": 5
-      },
       "id": 4,
-      "options": {
-        "alignValue": "left",
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
-        },
-        "mergeValues": true,
-        "rowHeight": 0.9,
-        "showValue": "auto",
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "none"
-        }
+      "type": "stat",
+      "title": "Transcoding",
+      "datasource": {
+        "type": "prometheus"
       },
-      "pluginVersion": "12.1.0",
+      "gridPos": {
+        "x": 9,
+        "y": 0,
+        "w": 3,
+        "h": 4
+      },
       "targets": [
         {
           "datasource": {
             "type": "prometheus"
           },
+          "expr": "count(jellyfin_now_playing_state{job=\"jellyfin\", method=\"transcode\"}) or vector(0)",
+          "refId": "A",
           "editorMode": "code",
-          "expr": "sum by (user_device, item_index_clean, type) (\n  label_replace(\n    label_join(\n      label_join(\n        label_join(\n          jellyfin_now_playing_state{instance=~\"$instance\"},\n          \"item_index\",\n          \" \",\n          \"series_season\",\n          \"series_episode\"\n        ),\n        \"full_name\",\n        \" - \",\n        \"series_title\",\n        \"item_index\",\n        \"title\"\n      ),\n      \"user_device\",\n      \" - \",\n      \"username\",\n      \"device\"\n    ),\n    \"item_index_clean\",\n    \"$1\",\n    \"full_name\",\n    \"^[- ]*(.*?)[- ]*$\"\n  )\n)\n",
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A"
+          "instant": true,
+          "range": false
         }
       ],
-      "title": "Now Playing - Movies",
-      "transformations": [
-        {
-          "id": "seriesToRows",
-          "options": {}
-        },
-        {
-          "id": "extractFields",
-          "options": {
-            "keepTime": false,
-            "replace": false,
-            "source": "Metric"
-          }
-        },
-        {
-          "id": "filterByValue",
-          "options": {
-            "filters": [
-              {
-                "config": {
-                  "id": "isNotNull",
-                  "options": {}
-                },
-                "fieldName": "user_device"
-              }
-            ],
-            "match": "any",
-            "type": "include"
-          }
-        },
-        {
-          "id": "calculateField",
-          "options": {
-            "alias": "Item",
-            "mode": "reduceRow",
-            "reduce": {
-              "include": [
-                "item_index_clean"
-              ],
-              "reducer": "lastNotNull"
-            }
-          }
-        },
-        {
-          "id": "calculateField",
-          "options": {
-            "alias": "Name",
-            "mode": "reduceRow",
-            "reduce": {
-              "include": [
-                "user_device"
-              ],
-              "reducer": "lastNotNull"
-            }
-          }
-        },
-        {
-          "id": "filterByValue",
-          "options": {
-            "filters": [
-              {
-                "config": {
-                  "id": "equal",
-                  "options": {
-                    "value": "Movie"
-                  }
-                },
-                "fieldName": "type"
-              }
-            ],
-            "match": "any",
-            "type": "include"
-          }
-        },
-        {
-          "id": "partitionByValues",
-          "options": {
-            "fields": [
-              "Name"
-            ],
-            "keepFields": true
-          }
-        },
-        {
-          "id": "filterFieldsByName",
-          "options": {
-            "include": {
-              "pattern": "item_index_clean|Time (.*)"
-            }
-          }
-        },
-        {
-          "id": "renameByRegex",
-          "options": {
-            "regex": "item_index_clean (.*)",
-            "renamePattern": "$1"
-          }
-        }
-      ],
-      "type": "state-timeline"
-    },
-    {
-      "datasource": {
-        "type": "prometheus"
-      },
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisPlacement": "auto",
-            "fillOpacity": 70,
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineWidth": 0,
-            "spanNulls": false
-          },
+          "unit": "none",
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": 0
+                "color": "text",
+                "value": null
               },
               {
-                "color": "red",
-                "value": 80
+                "color": "orange",
+                "value": 1
               }
             ]
+          },
+          "color": {
+            "mode": "thresholds"
           }
         },
         "overrides": []
       },
-      "gridPos": {
-        "h": 9,
-        "w": 24,
-        "x": 0,
-        "y": 14
-      },
-      "id": 21,
       "options": {
-        "alignValue": "left",
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
         },
-        "mergeValues": true,
-        "rowHeight": 0.9,
-        "showValue": "auto",
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "none"
-        }
+        "colorMode": "value",
+        "graphMode": "none",
+        "textMode": "value",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "wideLayout": true
       },
-      "pluginVersion": "12.1.0",
+      "description": "Sessions Jellyfin is transcoding (NVENC). Direct play/stream costs no GPU."
+    },
+    {
+      "id": 5,
+      "type": "stat",
+      "title": "Active clients",
+      "datasource": {
+        "type": "prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 0,
+        "w": 3,
+        "h": 4
+      },
       "targets": [
         {
           "datasource": {
             "type": "prometheus"
           },
+          "expr": "count(jellyfin_user_active{job=\"jellyfin\"}) or vector(0)",
+          "refId": "A",
           "editorMode": "code",
-          "expr": "sum by (user_device, item_index_clean, type) (\n  label_replace(\n    label_join(\n      label_join(\n        label_join(\n          jellyfin_now_playing_state{instance=~\"$instance\"},\n          \"item_index\",\n          \" \",\n          \"series_season\",\n          \"series_episode\"\n        ),\n        \"full_name\",\n        \" - \",\n        \"series_title\",\n        \"item_index\",\n        \"title\"\n      ),\n      \"user_device\",\n      \" - \",\n      \"username\",\n      \"device\"\n    ),\n    \"item_index_clean\",\n    \"$1\",\n    \"full_name\",\n    \"^[- ]*(.*?)[- ]*$\"\n  )\n)\n",
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A"
+          "instant": true,
+          "range": false
         }
       ],
-      "title": "Now Playing - TV Shows",
-      "transformations": [
-        {
-          "id": "seriesToRows",
-          "options": {}
-        },
-        {
-          "id": "extractFields",
-          "options": {
-            "keepTime": false,
-            "replace": false,
-            "source": "Metric"
-          }
-        },
-        {
-          "id": "filterByValue",
-          "options": {
-            "filters": [
-              {
-                "config": {
-                  "id": "isNotNull",
-                  "options": {}
-                },
-                "fieldName": "user_device"
-              }
-            ],
-            "match": "any",
-            "type": "include"
-          }
-        },
-        {
-          "id": "calculateField",
-          "options": {
-            "alias": "Item",
-            "mode": "reduceRow",
-            "reduce": {
-              "include": [
-                "item_index_clean"
-              ],
-              "reducer": "lastNotNull"
-            }
-          }
-        },
-        {
-          "id": "calculateField",
-          "options": {
-            "alias": "Name",
-            "mode": "reduceRow",
-            "reduce": {
-              "include": [
-                "user_device"
-              ],
-              "reducer": "lastNotNull"
-            }
-          }
-        },
-        {
-          "id": "filterByValue",
-          "options": {
-            "filters": [
-              {
-                "config": {
-                  "id": "equal",
-                  "options": {
-                    "value": "Episode"
-                  }
-                },
-                "fieldName": "type"
-              }
-            ],
-            "match": "any",
-            "type": "include"
-          }
-        },
-        {
-          "id": "partitionByValues",
-          "options": {
-            "fields": [
-              "Name"
-            ],
-            "keepFields": true
-          }
-        },
-        {
-          "id": "filterFieldsByName",
-          "options": {
-            "include": {
-              "pattern": "item_index_clean|Time (.*)"
-            }
-          }
-        },
-        {
-          "id": "renameByRegex",
-          "options": {
-            "regex": "item_index_clean (.*)",
-            "renamePattern": "$1"
-          }
-        }
-      ],
-      "type": "state-timeline"
-    },
-    {
-      "datasource": {
-        "type": "prometheus"
-      },
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisPlacement": "auto",
-            "fillOpacity": 70,
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineWidth": 0,
-            "spanNulls": false
-          },
+          "unit": "none",
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
+                "color": "text",
+                "value": null
               }
             ]
+          },
+          "color": {
+            "mode": "thresholds"
           }
         },
         "overrides": []
       },
-      "gridPos": {
-        "h": 9,
-        "w": 24,
-        "x": 0,
-        "y": 23
-      },
-      "id": 22,
       "options": {
-        "alignValue": "left",
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
         },
-        "mergeValues": true,
-        "rowHeight": 0.9,
-        "showValue": "auto",
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "none"
-        }
+        "colorMode": "value",
+        "graphMode": "none",
+        "textMode": "value",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "wideLayout": true
       },
-      "pluginVersion": "12.1.0",
+      "description": "Sessions active in the last 60s, playing or not."
+    },
+    {
+      "id": 6,
+      "type": "stat",
+      "title": "Movies",
+      "datasource": {
+        "type": "prometheus"
+      },
+      "gridPos": {
+        "x": 15,
+        "y": 0,
+        "w": 3,
+        "h": 4
+      },
       "targets": [
         {
           "datasource": {
             "type": "prometheus"
           },
+          "expr": "jellyfin_media_count{job=\"jellyfin\", type=\"Movie\"}",
+          "refId": "A",
           "editorMode": "code",
-          "expr": "sum by (user_device, item_index_clean, type) (\n  label_replace(\n    label_join(\n      label_join(\n        label_join(\n          jellyfin_now_playing_state{instance=~\"$instance\"},\n          \"item_index\",\n          \" \",\n          \"series_season\",\n          \"series_episode\"\n        ),\n        \"full_name\",\n        \" - \",\n        \"series_title\",\n        \"item_index\",\n        \"title\"\n      ),\n      \"user_device\",\n      \" - \",\n      \"username\",\n      \"device\"\n    ),\n    \"item_index_clean\",\n    \"$1\",\n    \"full_name\",\n    \"^[- ]*(.*?)[- ]*$\"\n  )\n)\n",
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A"
+          "instant": true,
+          "range": false
         }
       ],
-      "title": "Now Playing - Live TV",
-      "transformations": [
-        {
-          "id": "seriesToRows",
-          "options": {}
-        },
-        {
-          "id": "extractFields",
-          "options": {
-            "keepTime": false,
-            "replace": false,
-            "source": "Metric"
-          }
-        },
-        {
-          "id": "filterByValue",
-          "options": {
-            "filters": [
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
               {
-                "config": {
-                  "id": "isNotNull",
-                  "options": {}
-                },
-                "fieldName": "user_device"
+                "color": "text",
+                "value": null
               }
-            ],
-            "match": "any",
-            "type": "include"
+            ]
+          },
+          "color": {
+            "mode": "thresholds"
           }
         },
-        {
-          "id": "calculateField",
-          "options": {
-            "alias": "Item",
-            "mode": "reduceRow",
-            "reduce": {
-              "include": [
-                "item_index_clean"
-              ],
-              "reducer": "lastNotNull"
-            }
-          }
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
         },
-        {
-          "id": "calculateField",
-          "options": {
-            "alias": "Name",
-            "mode": "reduceRow",
-            "reduce": {
-              "include": [
-                "user_device"
-              ],
-              "reducer": "lastNotNull"
-            }
-          }
-        },
-        {
-          "id": "filterByValue",
-          "options": {
-            "filters": [
-              {
-                "config": {
-                  "id": "equal",
-                  "options": {
-                    "value": "TvChannel"
-                  }
-                },
-                "fieldName": "type"
-              }
-            ],
-            "match": "any",
-            "type": "include"
-          }
-        },
-        {
-          "id": "partitionByValues",
-          "options": {
-            "fields": [
-              "Name"
-            ],
-            "keepFields": true
-          }
-        },
-        {
-          "id": "filterFieldsByName",
-          "options": {
-            "include": {
-              "pattern": "item_index_clean|Time (.*)"
-            }
-          }
-        },
-        {
-          "id": "renameByRegex",
-          "options": {
-            "regex": "item_index_clean (.*)",
-            "renamePattern": "$1"
-          }
-        }
-      ],
-      "type": "state-timeline"
+        "colorMode": "value",
+        "graphMode": "none",
+        "textMode": "value",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "wideLayout": true
+      }
     },
     {
+      "id": 7,
+      "type": "stat",
+      "title": "Series",
       "datasource": {
         "type": "prometheus"
       },
+      "gridPos": {
+        "x": 18,
+        "y": 0,
+        "w": 3,
+        "h": 4
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "expr": "jellyfin_media_count{job=\"jellyfin\", type=\"Series\"}",
+          "refId": "A",
+          "editorMode": "code",
+          "instant": true,
+          "range": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          },
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "textMode": "value",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "wideLayout": true
+      }
+    },
+    {
+      "id": 8,
+      "type": "stat",
+      "title": "Episodes",
+      "datasource": {
+        "type": "prometheus"
+      },
+      "gridPos": {
+        "x": 21,
+        "y": 0,
+        "w": 3,
+        "h": 4
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "expr": "jellyfin_media_count{job=\"jellyfin\", type=\"Episode\"}",
+          "refId": "A",
+          "editorMode": "code",
+          "instant": true,
+          "range": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          },
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "textMode": "value",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "wideLayout": true
+      }
+    },
+    {
+      "id": 9,
+      "type": "row",
+      "title": "Now playing",
+      "collapsed": false,
+      "gridPos": {
+        "x": 0,
+        "y": 4,
+        "w": 24,
+        "h": 1
+      },
+      "panels": []
+    },
+    {
+      "id": 10,
+      "type": "table",
+      "title": "Now playing",
+      "datasource": {
+        "type": "prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 5,
+        "w": 24,
+        "h": 7
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "expr": "max by (username, device, method, type, series_title, series_season, series_episode, title) (jellyfin_now_playing_state{job=\"jellyfin\"})",
+          "refId": "A",
+          "editorMode": "code",
+          "instant": true,
+          "range": false,
+          "format": "table"
+        },
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "expr": "max by (username, device, method, type, series_title, series_season, series_episode, title) (jellyfin_now_playing_progress{job=\"jellyfin\"})",
+          "refId": "B",
+          "editorMode": "code",
+          "instant": true,
+          "range": false,
+          "format": "table"
+        },
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "expr": "max by (username, device, method, type, series_title, series_season, series_episode, title) (jellyfin_now_playing_remaining{job=\"jellyfin\"})",
+          "refId": "C",
+          "editorMode": "code",
+          "instant": true,
+          "range": false,
+          "format": "table"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "indexByName": {
+              "username": 0,
+              "device": 1,
+              "series_title": 2,
+              "series_season": 3,
+              "series_episode": 4,
+              "title": 5,
+              "type": 6,
+              "method": 7,
+              "Value #A": 8,
+              "Value #B": 9,
+              "Value #C": 10
+            },
+            "renameByName": {
+              "username": "User",
+              "device": "Device",
+              "series_title": "Series",
+              "series_season": "Season",
+              "series_episode": "Ep",
+              "title": "Title",
+              "type": "Type",
+              "method": "Method",
+              "Value #A": "State",
+              "Value #B": "Progress",
+              "Value #C": "Remaining"
+            }
+          }
+        }
+      ],
       "fieldConfig": {
         "defaults": {
           "custom": {
             "align": "auto",
             "cellOptions": {
               "type": "auto"
+            }
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "State"
             },
-            "inspect": false
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
+            "properties": [
               {
-                "color": "green",
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "Paused",
+                        "color": "yellow",
+                        "index": 0
+                      },
+                      "1": {
+                        "text": "Playing",
+                        "color": "green",
+                        "index": 1
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              },
+              {
+                "id": "custom.width",
+                "value": 90
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Method"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "transcode": {
+                        "text": "Transcode",
+                        "color": "orange",
+                        "index": 0
+                      },
+                      "directplay": {
+                        "text": "Direct play",
+                        "color": "green",
+                        "index": 1
+                      },
+                      "directstream": {
+                        "text": "Direct stream",
+                        "color": "blue",
+                        "index": 2
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              },
+              {
+                "id": "custom.width",
+                "value": 120
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Progress"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percent"
+              },
+              {
+                "id": "min",
                 "value": 0
               },
               {
-                "color": "red",
+                "id": "max",
+                "value": 100
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "blue"
+                }
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "gauge",
+                  "mode": "basic",
+                  "valueDisplayMode": "text"
+                }
+              },
+              {
+                "id": "custom.width",
+                "value": 200
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Remaining"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "dtdurations"
+              },
+              {
+                "id": "custom.width",
+                "value": 130
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "Season|Ep|Type"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
                 "value": 80
               }
             ]
           }
-        },
-        "overrides": []
+        ]
       },
-      "gridPos": {
-        "h": 10,
-        "w": 12,
-        "x": 0,
-        "y": 32
-      },
-      "id": 2,
       "options": {
+        "showHeader": true,
         "cellHeight": "sm",
         "footer": {
-          "countRows": false,
-          "enablePagination": true,
-          "fields": "",
-          "reducer": [
-            "sum"
-          ],
           "show": false
         },
-        "showHeader": true,
-        "sortBy": []
+        "sortBy": [
+          {
+            "displayName": "User",
+            "desc": false
+          }
+        ]
+      }
+    },
+    {
+      "id": 11,
+      "type": "state-timeline",
+      "title": "Playback history",
+      "datasource": {
+        "type": "prometheus"
       },
-      "pluginVersion": "12.1.0",
+      "description": "One row per user/device/item. Green = playing, yellow = paused.",
+      "gridPos": {
+        "x": 0,
+        "y": 12,
+        "w": 24,
+        "h": 9
+      },
       "targets": [
         {
           "datasource": {
             "type": "prometheus"
           },
+          "expr": "max by (username, device, series_title, series_season, series_episode, title) (jellyfin_now_playing_state{job=\"jellyfin\"})",
+          "refId": "A",
           "editorMode": "code",
-          "exemplar": false,
-          "expr": "sum(jellyfin_user_active{instance=~\"$instance\"}) by (username, client, device, version)",
-          "format": "table",
-          "instant": true,
-          "legendFormat": "__auto",
-          "range": false,
-          "refId": "A"
+          "legendFormat": "{{username}} \u00b7 {{device}} \u2014 {{series_title}} {{series_season}}{{series_episode}} {{title}}",
+          "range": true
         }
       ],
-      "title": "Clients",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "fillOpacity": 80,
+            "lineWidth": 0
+          },
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "yellow",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          },
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "Paused",
+                  "color": "yellow",
+                  "index": 0
+                },
+                "1": {
+                  "text": "Playing",
+                  "color": "green",
+                  "index": 1
+                }
+              }
+            }
+          ]
+        },
+        "overrides": []
+      },
+      "options": {
+        "mergeValues": true,
+        "showValue": "never",
+        "alignValue": "left",
+        "rowHeight": 0.8,
+        "legend": {
+          "showLegend": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      }
+    },
+    {
+      "id": 12,
+      "type": "timeseries",
+      "title": "Concurrent streams by method",
+      "datasource": {
+        "type": "prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 21,
+        "w": 12,
+        "h": 7
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "expr": "count by (method) (jellyfin_now_playing_state{job=\"jellyfin\"})",
+          "refId": "A",
+          "editorMode": "code",
+          "legendFormat": "{{method}}",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 1,
+            "fillOpacity": 15,
+            "gradientMode": "none",
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "mode": "normal",
+              "group": "A"
+            },
+            "axisSoftMin": 0
+          },
+          "color": {
+            "mode": "palette-classic"
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "transcode"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "orange"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "directplay"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "green"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "directstream"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "blue"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
+      "id": 13,
+      "type": "timeseries",
+      "title": "GPU encoder / decoder",
+      "datasource": {
+        "type": "prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 21,
+        "w": 12,
+        "h": 7
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "expr": "max(DCGM_FI_DEV_ENC_UTIL{host=\"cherryblossom\"})",
+          "refId": "A",
+          "editorMode": "code",
+          "legendFormat": "NVENC",
+          "range": true
+        },
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "expr": "max(DCGM_FI_DEV_DEC_UTIL{host=\"cherryblossom\"})",
+          "refId": "B",
+          "editorMode": "code",
+          "legendFormat": "NVDEC",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 1,
+            "fillOpacity": 15,
+            "gradientMode": "none",
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisSoftMin": 0
+          },
+          "color": {
+            "mode": "palette-classic"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
+      "id": 14,
+      "type": "row",
+      "title": "Users & clients",
+      "collapsed": false,
+      "gridPos": {
+        "x": 0,
+        "y": 28,
+        "w": 24,
+        "h": 1
+      },
+      "panels": []
+    },
+    {
+      "id": 15,
+      "type": "table",
+      "title": "Active clients",
+      "datasource": {
+        "type": "prometheus"
+      },
+      "description": "Sessions active within the last 60s.",
+      "gridPos": {
+        "x": 0,
+        "y": 29,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "expr": "max by (username, client, client_version, device) (jellyfin_user_active{job=\"jellyfin\"})",
+          "refId": "A",
+          "editorMode": "code",
+          "instant": true,
+          "range": false,
+          "format": "table"
+        }
+      ],
       "transformations": [
         {
           "id": "organize",
@@ -979,550 +1124,606 @@
               "Time": true,
               "Value": true
             },
-            "includeByName": {},
             "indexByName": {
-              "Time": 0,
-              "Value": 5,
+              "username": 0,
+              "device": 1,
               "client": 2,
-              "device": 4,
-              "username": 1,
-              "version": 3
+              "client_version": 3
             },
             "renameByName": {
-              "client": "Client",
+              "username": "User",
               "device": "Device",
-              "username": "Username",
-              "version": "Version"
+              "client": "Client",
+              "client_version": "Version"
             }
           }
         }
       ],
-      "type": "table"
-    },
-    {
-      "datasource": {
-        "type": "prometheus"
-      },
       "fieldConfig": {
         "defaults": {
           "custom": {
-            "align": "left",
-            "cellOptions": {
-              "type": "auto"
-            },
-            "filterable": false,
-            "inspect": false
+            "align": "auto"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false
+        },
+        "sortBy": [
+          {
+            "displayName": "User",
+            "desc": false
+          }
+        ]
+      }
+    },
+    {
+      "id": 16,
+      "type": "table",
+      "title": "Users",
+      "datasource": {
+        "type": "prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 29,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus"
           },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
+          "expr": "max by (username, admin) (label_value(jellyfin_user_account{job=\"jellyfin\"}, \"last_access\")) * 1000",
+          "refId": "A",
+          "editorMode": "code",
+          "instant": true,
+          "range": false,
+          "format": "table"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "indexByName": {
+              "username": 0,
+              "admin": 1,
+              "Value": 2
+            },
+            "renameByName": {
+              "username": "User",
+              "admin": "Admin",
+              "Value": "Last active"
+            }
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto"
           }
         },
         "overrides": [
           {
             "matcher": {
               "id": "byName",
-              "options": "Total Plays"
+              "options": "Last active"
             },
             "properties": [
               {
+                "id": "unit",
+                "value": "dateTimeFromNow"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Admin"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "",
+                        "index": 0
+                      },
+                      "1": {
+                        "text": "admin",
+                        "index": 1
+                      }
+                    }
+                  }
+                ]
+              },
+              {
                 "id": "custom.width",
-                "value": 150
+                "value": 80
               }
             ]
           }
         ]
       },
-      "gridPos": {
-        "h": 10,
-        "w": 12,
-        "x": 12,
-        "y": 32
-      },
-      "id": 17,
       "options": {
+        "showHeader": true,
         "cellHeight": "sm",
         "footer": {
-          "countRows": false,
-          "enablePagination": true,
-          "fields": "",
-          "reducer": [
-            "sum"
-          ],
           "show": false
         },
-        "showHeader": true,
         "sortBy": [
           {
-            "desc": false,
-            "displayName": "Username"
+            "displayName": "Last active",
+            "desc": true
           }
         ]
+      }
+    },
+    {
+      "id": 17,
+      "type": "row",
+      "title": "Library",
+      "collapsed": false,
+      "gridPos": {
+        "x": 0,
+        "y": 37,
+        "w": 24,
+        "h": 1
       },
-      "pluginVersion": "12.1.0",
+      "panels": []
+    },
+    {
+      "id": 18,
+      "type": "bargauge",
+      "title": "Library items",
+      "datasource": {
+        "type": "prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 38,
+        "w": 24,
+        "h": 6
+      },
       "targets": [
         {
           "datasource": {
             "type": "prometheus"
           },
+          "expr": "jellyfin_media_count{job=\"jellyfin\"} > 0",
+          "refId": "A",
           "editorMode": "code",
-          "exemplar": false,
-          "expr": "jellyfin_activity_count{instance=~\"$instance\"}",
-          "format": "table",
+          "legendFormat": "{{type}}",
           "instant": true,
-          "legendFormat": "__auto",
-          "range": false,
-          "refId": "A"
+          "range": false
         }
       ],
-      "title": "User Activity",
-      "transformations": [
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Time": true,
-              "__name__": true,
-              "instance": true,
-              "job": true,
-              "total_time": false,
-              "user_id": true
-            },
-            "includeByName": {},
-            "indexByName": {
-              "Time": 0,
-              "Value": 5,
-              "__name__": 1,
-              "instance": 2,
-              "job": 3,
-              "last_seen": 6,
-              "total_play_time": 7,
-              "total_time": 8,
-              "username": 4
-            },
-            "renameByName": {
-              "Value": "Total Plays",
-              "last_seen": "Last Seen",
-              "total_play_time": "Total Time",
-              "total_time": "Total Time",
-              "username": "Username"
-            }
-          }
-        }
-      ],
-      "type": "table"
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 42
-      },
-      "id": 6,
-      "panels": [],
-      "title": "System Charts",
-      "type": "row"
-    },
-    {
-      "title": "Container Disk I/O",
-      "type": "timeseries",
-      "id": 5,
-      "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 0,
-        "y": 43
-      },
-      "datasource": {
-        "type": "prometheus"
-      },
       "fieldConfig": {
         "defaults": {
-          "unit": "Bps",
-          "custom": {
-            "fillOpacity": 10
-          }
-        },
-        "overrides": []
-      },
-      "options": {
-        "tooltip": {
-          "mode": "multi"
-        }
-      },
-      "targets": [
-        {
-          "expr": "rate(container_fs_reads_bytes_total{name=\"jellyfin\"}[$interval])",
-          "legendFormat": "Reads",
-          "datasource": {
-            "type": "prometheus"
-          }
-        },
-        {
-          "expr": "rate(container_fs_writes_bytes_total{name=\"jellyfin\"}[$interval])",
-          "legendFormat": "Writes",
-          "datasource": {
-            "type": "prometheus"
-          }
-        }
-      ]
-    },
-    {
-      "title": "Container Memory",
-      "type": "timeseries",
-      "id": 7,
-      "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 8,
-        "y": 43
-      },
-      "datasource": {
-        "type": "prometheus"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "unit": "bytes",
-          "custom": {
-            "fillOpacity": 10,
-            "stacking": {
-              "mode": "normal"
-            }
-          }
-        },
-        "overrides": []
-      },
-      "options": {
-        "tooltip": {
-          "mode": "multi"
-        }
-      },
-      "targets": [
-        {
-          "expr": "container_memory_rss{name=\"jellyfin\"}",
-          "legendFormat": "RSS",
-          "datasource": {
-            "type": "prometheus"
-          }
-        },
-        {
-          "expr": "container_memory_cache{name=\"jellyfin\"}",
-          "legendFormat": "Cache",
-          "datasource": {
-            "type": "prometheus"
-          }
-        },
-        {
-          "expr": "container_memory_swap{name=\"jellyfin\"}",
-          "legendFormat": "Swap",
-          "datasource": {
-            "type": "prometheus"
-          }
-        },
-        {
-          "expr": "container_memory_working_set_bytes{name=\"jellyfin\"}",
-          "legendFormat": "Working Set",
-          "datasource": {
-            "type": "prometheus"
-          }
-        }
-      ]
-    },
-    {
-      "title": "Container CPU Usage",
-      "type": "timeseries",
-      "id": 8,
-      "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 16,
-        "y": 43
-      },
-      "datasource": {
-        "type": "prometheus"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "unit": "percentunit",
-          "custom": {
-            "fillOpacity": 10
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "purple"
           },
           "min": 0
         },
         "overrides": []
       },
       "options": {
-        "tooltip": {
-          "mode": "multi"
+        "orientation": "vertical",
+        "displayMode": "basic",
+        "valueMode": "text",
+        "showUnfilled": true,
+        "namePlacement": "auto",
+        "sizing": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
         }
-      },
-      "targets": [
-        {
-          "expr": "rate(container_cpu_usage_seconds_total{name=\"jellyfin\"}[$interval])",
-          "legendFormat": "Total CPU",
-          "datasource": {
-            "type": "prometheus"
-          }
-        },
-        {
-          "expr": "rate(container_cpu_system_seconds_total{name=\"jellyfin\"}[$interval])",
-          "legendFormat": "System",
-          "datasource": {
-            "type": "prometheus"
-          }
-        },
-        {
-          "expr": "rate(container_cpu_user_seconds_total{name=\"jellyfin\"}[$interval])",
-          "legendFormat": "User",
-          "datasource": {
-            "type": "prometheus"
-          }
-        }
-      ]
+      }
     },
     {
-      "title": "Container Disk Latency",
-      "type": "timeseries",
-      "id": 9,
+      "id": 19,
+      "type": "row",
+      "title": "Container (cherryblossom)",
+      "collapsed": false,
       "gridPos": {
-        "h": 7,
-        "w": 8,
         "x": 0,
-        "y": 50
+        "y": 44,
+        "w": 24,
+        "h": 1
       },
+      "panels": []
+    },
+    {
+      "id": 20,
+      "type": "timeseries",
+      "title": "CPU",
       "datasource": {
         "type": "prometheus"
       },
+      "gridPos": {
+        "x": 0,
+        "y": 45,
+        "w": 8,
+        "h": 7
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "expr": "rate(container_cpu_usage_seconds_total{host=\"cherryblossom\", name=\"jellyfin\"}[$__rate_interval])",
+          "refId": "A",
+          "editorMode": "code",
+          "legendFormat": "cores",
+          "range": true
+        }
+      ],
       "fieldConfig": {
         "defaults": {
-          "unit": "s",
+          "unit": "short",
           "custom": {
-            "fillOpacity": 10
+            "drawStyle": "line",
+            "lineWidth": 1,
+            "fillOpacity": 15,
+            "gradientMode": "none",
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisSoftMin": 0
+          },
+          "color": {
+            "mode": "palette-classic"
           }
         },
         "overrides": []
       },
       "options": {
-        "tooltip": {
-          "mode": "multi"
-        }
-      },
-      "targets": [
-        {
-          "expr": "rate(container_fs_read_seconds_total{name=\"jellyfin\"}[$interval]) / clamp_min(rate(container_fs_reads_total{name=\"jellyfin\"}[$interval]), 1)",
-          "legendFormat": "Read Latency",
-          "datasource": {
-            "type": "prometheus"
-          }
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
         },
-        {
-          "expr": "rate(container_fs_write_seconds_total{name=\"jellyfin\"}[$interval]) / clamp_min(rate(container_fs_writes_total{name=\"jellyfin\"}[$interval]), 1)",
-          "legendFormat": "Write Latency",
-          "datasource": {
-            "type": "prometheus"
-          }
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
         }
-      ]
+      }
     },
     {
-      "title": "Container Network Traffic",
+      "id": 21,
       "type": "timeseries",
-      "id": 10,
+      "title": "Memory",
+      "datasource": {
+        "type": "prometheus"
+      },
       "gridPos": {
-        "h": 7,
-        "w": 8,
         "x": 8,
-        "y": 50
-      },
-      "datasource": {
-        "type": "prometheus"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "unit": "Bps",
-          "custom": {
-            "fillOpacity": 10
-          }
-        },
-        "overrides": []
-      },
-      "options": {
-        "tooltip": {
-          "mode": "multi"
-        }
+        "y": 45,
+        "w": 8,
+        "h": 7
       },
       "targets": [
         {
-          "expr": "rate(container_network_receive_bytes_total{name=\"jellyfin\"}[$interval])",
-          "legendFormat": "Inbound",
           "datasource": {
             "type": "prometheus"
-          }
+          },
+          "expr": "container_memory_working_set_bytes{host=\"cherryblossom\", name=\"jellyfin\"}",
+          "refId": "A",
+          "editorMode": "code",
+          "legendFormat": "working set",
+          "range": true
         },
         {
-          "expr": "rate(container_network_transmit_bytes_total{name=\"jellyfin\"}[$interval])",
-          "legendFormat": "Outbound",
           "datasource": {
             "type": "prometheus"
-          }
+          },
+          "expr": "container_memory_rss{host=\"cherryblossom\", name=\"jellyfin\"}",
+          "refId": "B",
+          "editorMode": "code",
+          "legendFormat": "rss",
+          "range": true
+        },
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "expr": "container_spec_memory_limit_bytes{host=\"cherryblossom\", name=\"jellyfin\"} > 0",
+          "refId": "C",
+          "editorMode": "code",
+          "legendFormat": "limit",
+          "range": true
         }
-      ]
-    },
-    {
-      "title": "Container Filesystem Usage",
-      "type": "timeseries",
-      "id": 11,
-      "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 16,
-        "y": 50
-      },
-      "datasource": {
-        "type": "prometheus"
-      },
+      ],
       "fieldConfig": {
         "defaults": {
           "unit": "bytes",
           "custom": {
-            "fillOpacity": 10
+            "drawStyle": "line",
+            "lineWidth": 1,
+            "fillOpacity": 15,
+            "gradientMode": "none",
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisSoftMin": 0
+          },
+          "color": {
+            "mode": "palette-classic"
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "limit"
+            },
+            "properties": [
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    10
+                  ]
+                }
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "red"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
+      "id": 22,
+      "type": "timeseries",
+      "title": "Network",
+      "datasource": {
+        "type": "prometheus"
+      },
+      "gridPos": {
+        "x": 16,
+        "y": 45,
+        "w": 8,
+        "h": 7
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "expr": "rate(container_network_receive_bytes_total{host=\"cherryblossom\", name=\"jellyfin\"}[$__rate_interval])",
+          "refId": "A",
+          "editorMode": "code",
+          "legendFormat": "rx",
+          "range": true
+        },
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "expr": "-rate(container_network_transmit_bytes_total{host=\"cherryblossom\", name=\"jellyfin\"}[$__rate_interval])",
+          "refId": "B",
+          "editorMode": "code",
+          "legendFormat": "tx",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "Bps",
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 1,
+            "fillOpacity": 15,
+            "gradientMode": "none",
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisSoftMin": null
+          },
+          "color": {
+            "mode": "palette-classic"
           }
         },
         "overrides": []
       },
       "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
         "tooltip": {
-          "mode": "multi"
+          "mode": "multi",
+          "sort": "desc"
         }
+      }
+    },
+    {
+      "id": 23,
+      "type": "timeseries",
+      "title": "Disk I/O",
+      "datasource": {
+        "type": "prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 52,
+        "w": 12,
+        "h": 7
       },
       "targets": [
         {
-          "expr": "container_fs_usage_bytes{name=\"jellyfin\"}",
-          "legendFormat": "Used",
           "datasource": {
             "type": "prometheus"
-          }
+          },
+          "expr": "sum(rate(container_fs_reads_bytes_total{host=\"cherryblossom\", name=\"jellyfin\"}[$__rate_interval]))",
+          "refId": "A",
+          "editorMode": "code",
+          "legendFormat": "read",
+          "range": true
         },
         {
-          "expr": "container_fs_limit_bytes{name=\"jellyfin\"}",
-          "legendFormat": "Limit",
           "datasource": {
             "type": "prometheus"
-          }
+          },
+          "expr": "-sum(rate(container_fs_writes_bytes_total{host=\"cherryblossom\", name=\"jellyfin\"}[$__rate_interval]))",
+          "refId": "B",
+          "editorMode": "code",
+          "legendFormat": "write",
+          "range": true
         }
-      ]
-    }
-  ],
-  "refresh": "5s",
-  "schemaVersion": 41,
-  "tags": [
-    "Jellyfin"
-  ],
-  "templating": {
-    "list": [
-      {
-        "auto": true,
-        "auto_count": 30,
-        "auto_min": "10s",
-        "current": {
-          "text": "1m",
-          "value": "1m"
-        },
-        "description": "5s,30s,1m,5m,10m,30m,1h,6h,1d",
-        "label": "Interval",
-        "name": "interval",
-        "options": [
-          {
-            "selected": false,
-            "text": "5s",
-            "value": "5s"
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "Bps",
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 1,
+            "fillOpacity": 15,
+            "gradientMode": "none",
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisSoftMin": null
           },
-          {
-            "selected": false,
-            "text": "30s",
-            "value": "30s"
-          },
-          {
-            "selected": true,
-            "text": "1m",
-            "value": "1m"
-          },
-          {
-            "selected": false,
-            "text": "5m",
-            "value": "5m"
-          },
-          {
-            "selected": false,
-            "text": "10m",
-            "value": "10m"
-          },
-          {
-            "selected": false,
-            "text": "30m",
-            "value": "30m"
-          },
-          {
-            "selected": false,
-            "text": "1h",
-            "value": "1h"
-          },
-          {
-            "selected": false,
-            "text": "6h",
-            "value": "6h"
-          },
-          {
-            "selected": false,
-            "text": "1d",
-            "value": "1d"
+          "color": {
+            "mode": "palette-classic"
           }
-        ],
-        "query": "5s,30s,1m,5m,10m,30m,1h,6h,1d",
-        "refresh": 2,
-        "type": "interval"
+        },
+        "overrides": []
       },
-      {
-        "current": {},
-        "datasource": {
-          "type": "prometheus"
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
         },
-        "definition": "label_values(jellyfin_up,instance)",
-        "includeAll": false,
-        "label": "Instance",
-        "name": "instance",
-        "options": [],
-        "query": {
-          "qryType": 1,
-          "query": "label_values(jellyfin_up,instance)",
-          "refId": "PrometheusVariableQueryEditor-VariableQuery"
-        },
-        "refresh": 1,
-        "regex": "",
-        "type": "query"
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
       }
-    ]
-  },
-  "time": {
-    "from": "now/d",
-    "to": "now"
-  },
-  "timepicker": {},
-  "timezone": "",
-  "title": "Jellyfin",
-  "uid": "D5GQA944k",
-  "version": "1.1.0",
-  "weekStart": ""
+    },
+    {
+      "id": 24,
+      "type": "timeseries",
+      "title": "Scrape health",
+      "datasource": {
+        "type": "prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 52,
+        "w": 12,
+        "h": 7
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "expr": "min by (collector) (jellyfin_scrape_collector_success{job=\"jellyfin\"})",
+          "refId": "A",
+          "editorMode": "code",
+          "legendFormat": "{{collector}}",
+          "range": true
+        },
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "expr": "up{job=\"jellyfin\"}",
+          "refId": "B",
+          "editorMode": "code",
+          "legendFormat": "exporter up",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bool",
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 1,
+            "fillOpacity": 15,
+            "gradientMode": "none",
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisSoftMin": 0
+          },
+          "color": {
+            "mode": "palette-classic"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    }
+  ]
 }
