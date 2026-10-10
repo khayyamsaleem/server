@@ -46,7 +46,9 @@ services:
       resources:
         limits:
           cpus: '4.00'
-          memory: 2G
+          # tmpfs /cache (4G) is charged to this cgroup, so the limit must
+          # cover cache + the server's own ~2G, else the OOM killer fires.
+          memory: 6G
         reservations:
           cpus: '0.10'
           memory: 256M
