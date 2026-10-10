@@ -31,3 +31,6 @@ Session.vim
 tags
 [._]*.un~
 cherryblossom/hermes/home/.git-credentials
+
+# Jellyfin config/DB/metadata (on NVMe, runtime state)
+cherryblossom/jellyfin-config/
