@@ -8,6 +8,6 @@
 #   plain prompt on any error.
 # Pinned: bumping the tag re-applies the patch, and the build fails loudly if
 # upstream moved the code instead of silently shipping unpatched.
-FROM ghcr.io/open-webui/open-webui:v0.11.4
+FROM ghcr.io/open-webui/open-webui:v0.12.5
 COPY image-prompt-template.patch /tmp/
 RUN patch -p1 --forward < /tmp/image-prompt-template.patch && rm /tmp/image-prompt-template.patch
