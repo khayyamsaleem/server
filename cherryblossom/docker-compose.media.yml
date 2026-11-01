@@ -88,12 +88,9 @@ services:
     - PUID=1000
     - PGID=1000
     - TZ=America/New_York
-    - RADARR_API_KEY=${RADARR_API_KEY}
     volumes:
     - radarr-config:/config
     - /mnt/jellydrive-01/jellyfin_media:/media
-    - ./arr-configure.sh:/configure/arr-configure.sh:ro
-    - ./radarr-init.sh:/custom-cont-init.d/01-configure.sh:ro
     restart: unless-stopped
     labels:
       com.centurylinklabs.watchtower.enable: 'true'
@@ -118,12 +115,9 @@ services:
     - PUID=1000
     - PGID=1000
     - TZ=America/New_York
-    - SONARR_API_KEY=${SONARR_API_KEY}
     volumes:
     - sonarr-config:/config
     - /mnt/jellydrive-01/jellyfin_media:/media
-    - ./arr-configure.sh:/configure/arr-configure.sh:ro
-    - ./sonarr-init.sh:/custom-cont-init.d/01-configure.sh:ro
     restart: unless-stopped
     labels:
       com.centurylinklabs.watchtower.enable: 'true'
@@ -227,14 +221,8 @@ services:
     - PUID=1000
     - PGID=1000
     - TZ=America/New_York
-    - PROWLARR_API_KEY=${PROWLARR_API_KEY}
-    - RADARR_API_KEY=${RADARR_API_KEY}
-    - SONARR_API_KEY=${SONARR_API_KEY}
     volumes:
     - prowlarr-config:/config
-    - ./prowlarr-configure.sh:/configure/prowlarr-configure.sh:ro
-    - ./prowlarr-payloads:/configure/prowlarr-payloads:ro
-    - ./prowlarr-init.sh:/custom-cont-init.d/01-configure.sh:ro
     restart: unless-stopped
     labels:
       com.centurylinklabs.watchtower.enable: 'true'
@@ -286,6 +274,30 @@ services:
           cpus: '0.02'
           memory: 64M
 
+  # Declarative Radarr/Sonarr/Prowlarr setup (configarr/config.yml): download
+  # client, root folders, remote path mapping, renaming, FlareSolverr proxy,
+  # app links and indexers. One-shot, add/update only; re-runs on compose up.
+  configarr:
+    image: ghcr.io/raydak-labs/configarr:1.38.0
+    environment:
+    - TZ=America/New_York
+    - RADARR_API_KEY=${RADARR_API_KEY}
+    - SONARR_API_KEY=${SONARR_API_KEY}
+    - PROWLARR_API_KEY=${PROWLARR_API_KEY}
+    - TRANSMISSION_USER=${TRANSMISSION_USER}
+    - TRANSMISSION_PASS=${TRANSMISSION_PASS}
+    volumes:
+    - ./configarr/config.yml:/app/config/config.yml:ro
+    - configarr-repos:/app/repos
+    depends_on:
+      radarr:
+        condition: service_healthy
+      sonarr:
+        condition: service_healthy
+      prowlarr:
+        condition: service_healthy
+    restart: "no"
+
   cleanuparr-init:
     image: alpine:latest
     command: /configure/cleanuparr-configure.sh
@@ -306,6 +318,7 @@ services:
     restart: "no"
 
 volumes:
+  configarr-repos:
   radarr-config:
   sonarr-config:
   jellyseerr-config:
