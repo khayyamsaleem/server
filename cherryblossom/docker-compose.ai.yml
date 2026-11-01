@@ -400,7 +400,13 @@ services:
       context: ./hermes
       dockerfile: Dockerfile
     image: hermes-agent:local
-    command: ["hermes-init"]
+    command: ["gateway", "run"]
+    configs:
+      # gh reads this; git gets credentials through gh (GIT_CONFIG_* below).
+      # Hermes strips GH_TOKEN from every child process by policy, so the
+      # token reaches gh/git as a file instead of an env var.
+      - source: hermes-gh-hosts
+        target: /workspace/.config/gh/hosts.yml
     volumes:
       - ./hermes/home:/opt/data
       - ./hermes/workspace:/workspace
@@ -419,6 +425,12 @@ services:
       GOG_KEYRING_BACKEND: file
       GOG_KEYRING_PASSWORD: openclaw
       XDG_CONFIG_HOME: /workspace/.config
+      # credential.helper: reset inherited helpers (empty value), then use gh.
+      GIT_CONFIG_COUNT: "2"
+      GIT_CONFIG_KEY_0: credential.helper
+      GIT_CONFIG_VALUE_0: ""
+      GIT_CONFIG_KEY_1: credential.helper
+      GIT_CONFIG_VALUE_1: "!gh auth git-credential"
       # s6-supervised dashboard/serve backend on :9119 for the mobile app.
       # Non-loopback bind requires an auth provider: basic auth from .env.
       HERMES_DASHBOARD: "1"
@@ -434,7 +446,9 @@ services:
       ollama-gateway:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "/opt/hermes/.venv/bin/hermes status || exit 1"]
+      # Run as hermes, not root: `hermes status` takes leases in /opt/data/installs,
+      # and root-owned leases lock the real (uid 1000) process out → crash loop.
+      test: ["CMD-SHELL", "HOME=/opt/data /command/s6-setuidgid hermes /opt/hermes/.venv/bin/hermes status || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -447,6 +461,14 @@ services:
         reservations:
           cpus: '0.05'
           memory: 64M
+
+configs:
+  hermes-gh-hosts:
+    content: |
+      github.com:
+          oauth_token: ${GH_TOKEN}
+          git_protocol: https
+          user: khayyamsaleem
 
 volumes:
   comfyui-data:
