@@ -19,8 +19,7 @@ RUN curl -sL "https://github.com/digitalocean/doctl/releases/download/v${DOCTL_V
 # Static binaries copied from picoclaw (pre-extracted to build context)
 COPY gog /usr/local/bin/gog
 COPY goplaces /usr/local/bin/goplaces
-COPY hermes-init.sh /usr/local/bin/hermes-init
 # Proxies `nvidia-smi` into the GPU container. No driver is visible in here, but
 # the agent types the bare command regardless — make it work instead of fail.
 COPY nvidia-smi-shim.sh /usr/local/bin/nvidia-smi
-RUN chmod +x /usr/local/bin/gog /usr/local/bin/goplaces /usr/local/bin/hermes-init /usr/local/bin/nvidia-smi
+RUN chmod +x /usr/local/bin/gog /usr/local/bin/goplaces /usr/local/bin/nvidia-smi
