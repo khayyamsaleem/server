@@ -7,7 +7,6 @@ services:
     container_name: jellyfin
     hostname: juul
     user: 1000:1000
-    entrypoint: /branding/jellyfin-branding.sh
     volumes:
     - ${JELLYFIN_CONFIG_DIR}:/config
     # Transcode cache in RAM, not on the media HDD -- a bind there made the
@@ -24,9 +23,9 @@ services:
     # with the server, so the same library CWA manages can be a Jellyfin
     # library. Read-only -- CWA owns writes.
     - /mnt/jellydrive-01/books/library:/books:ro
-    - ./jellyfin-branding.sh:/branding/jellyfin-branding.sh:ro
-    - ./juul-logo.svg:/branding/juul-logo.svg:ro
-    - ./juul-favicon.svg:/branding/juul-favicon.svg:ro
+    # ElegantFin theme + JUUL login disclaimer/logo. Read-only: edit here, not in the UI.
+    # Bump ?v= in the CSS when juul-logo.svg changes (browser cache).
+    - ./jellyfin-branding.xml:/config/config/branding.xml:ro
     - ./juul-logo.svg:/jellyfin/jellyfin-web/juul-logo.svg:ro
     - ./juul-favicon.svg:/jellyfin/jellyfin-web/juul-favicon.svg:ro
     environment:
