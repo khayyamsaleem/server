@@ -1,7 +1,7 @@
 http:
   routers:
     open-webui:
-      rule: "Host(`gpu.khayyam.me`) || Host(`gpu.k5m.sh`)"
+      rule: "Host(`gpu.k5m.sh`)"
       entryPoints:
         - https
       service: open-webui

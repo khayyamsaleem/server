@@ -33,13 +33,6 @@ scrape_configs:
   static_configs:
   - targets:
     - cherryblossom-docker:9594
-- job_name: ollama-gateway
-  metrics_path: /stats/prometheus
-  static_configs:
-  - targets:
-    - cherryblossom-docker:9901
-    labels:
-      host: cherryblossom
 - job_name: transmission
   static_configs:
   - targets:
