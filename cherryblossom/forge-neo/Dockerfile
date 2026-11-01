@@ -46,8 +46,21 @@ RUN uv venv venv --python 3.13 --seed \
 # Neo's requirements plus each extension's installer; no GPU at build time.
 RUN python launch.py --exit --skip-torch-cuda-test --uv
 
-COPY --chown=forge:forge entrypoint.sh /home/forge/entrypoint.sh
+# TCMalloc reduces memory fragmentation under large model workloads.
+ENV LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libtcmalloc_minimal.so.4
 EXPOSE 17860
 HEALTHCHECK --interval=30s --timeout=10s --start-period=180s --retries=5 \
     CMD curl -sf http://localhost:17860/sdapi/v1/sd-models > /dev/null || exit 1
-ENTRYPOINT ["/home/forge/entrypoint.sh"]
+# Dependencies are installed at build time; skip the startup environment checks.
+# --disable-smart-memory offloads models to RAM after each job so Ollama can
+# reclaim the VRAM (gpu-yield reloads it right after the image returns).
+# --api-server-stop enables /sdapi/v1/server-kill, which gpu-yield uses to free
+# RAM before a ComfyUI video job; restart: unless-stopped brings Neo back.
+ENTRYPOINT ["python", "/home/forge/sd-webui/launch.py"]
+CMD ["--listen", "--port", "17860", "--api", "--api-server-stop", \
+     "--skip-prepare-environment", "--skip-version-check", \
+     "--disable-smart-memory", \
+     "--ckpt-dirs", "/models/ckpt", \
+     "--lora-dirs", "/models/lora", \
+     "--ui-settings-file", "/data/config.json", \
+     "--ui-config-file", "/data/ui-config.json"]
