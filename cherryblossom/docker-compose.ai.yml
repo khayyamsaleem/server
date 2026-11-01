@@ -409,6 +409,9 @@ services:
         target: /workspace/.config/gh/hosts.yml
     volumes:
       - ./hermes/home:/opt/data
+      # Managed scope: repo-owned base config overlaid (and locked) on the live
+      # /opt/data/config.yaml. See hermes/managed/config.yaml.
+      - ./hermes/managed:/etc/hermes:ro
       - ./hermes/workspace:/workspace
       - /var/run/docker.sock:/var/run/docker.sock:rw
     environment:
