@@ -49,14 +49,9 @@ services:
     - ./traefik.yml:/etc/traefik/traefik.yml
     - ${DATA_DIR}/acme:/etc/traefik/acme
     - ./dynamic:/etc/traefik/dynamic
+    # Dashboard is tailnet-only: https://traefik.<tailnet>.ts.net/dashboard/ via
+    # svc:traefik, which proxies the api.insecure listener on :8080.
     labels:
-      traefik.enable: 'true'
-      traefik.http.routers.traefik.rule: Host(`p.k5m.sh`)
-      traefik.http.routers.traefik.service: api@internal
-      traefik.http.routers.traefik.middlewares: auth
-      traefik.http.routers.traefik.entrypoints: https
-      traefik.http.services.traefik.loadbalancer.server.port: '8080'
-      traefik.http.middlewares.auth.basicauth.users: $HTTP_AUTH
       com.centurylinklabs.watchtower.enable: 'true'
     restart: unless-stopped
     healthcheck:

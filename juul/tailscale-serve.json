@@ -1,6 +1,44 @@
 {
   "TCP": {
-    "3100": { "TCPForward": "loki:3100" },
-    "8428": { "TCPForward": "victoriametrics:8428" }
+    "3100": {
+      "TCPForward": "loki:3100"
+    },
+    "8428": {
+      "TCPForward": "victoriametrics:8428"
+    }
+  },
+  "Services": {
+    "svc:grafana": {
+      "TCP": {
+        "443": {
+          "HTTPS": true
+        }
+      },
+      "Web": {
+        "grafana.mango-hawksbill.ts.net:443": {
+          "Handlers": {
+            "/": {
+              "Proxy": "http://grafana:3000"
+            }
+          }
+        }
+      }
+    },
+    "svc:traefik": {
+      "TCP": {
+        "443": {
+          "HTTPS": true
+        }
+      },
+      "Web": {
+        "traefik.mango-hawksbill.ts.net:443": {
+          "Handlers": {
+            "/": {
+              "Proxy": "http://localhost:8080"
+            }
+          }
+        }
+      }
+    }
   }
 }

@@ -47,16 +47,12 @@ services:
     environment:
     - GF_SECURITY_ADMIN_USER=admin
     - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
-    - GF_SERVER_ROOT_URL=https://g.k5m.sh
+    - GF_SERVER_ROOT_URL=https://grafana.mango-hawksbill.ts.net
     - GF_LOG_CONSOLE_FORMAT=json
     - GF_UNIFIED_ALERTING_ENABLED=false
     - GOMEMLIMIT=200MiB
+    # Tailnet-only: https://grafana.<tailnet>.ts.net via svc:grafana (tailscale-serve.json).
     labels:
-      traefik.enable: 'true'
-      traefik.http.routers.grafana.rule: Host(`g.k5m.sh`)
-      traefik.http.routers.grafana.entrypoints: https
-      traefik.http.services.grafana.loadbalancer.server.port: '3000'
-      traefik.docker.network: juul_webgateway
       com.centurylinklabs.watchtower.enable: 'true'
     restart: unless-stopped
     healthcheck:
