@@ -47,23 +47,6 @@ services:
           cpus: '0.02'
           memory: 64M
 
-  flood-ui:
-    image: alpine:latest
-    command: >
-      sh -c "if [ ! -f /ui/.version ] || [ \"$$(cat /ui/.version)\" != 'v1.0.1' ]; then
-        apk add --no-cache curl unzip &&
-        curl -L -o /tmp/flood.zip https://github.com/johman10/flood-for-transmission/releases/download/v1.0.1/flood-for-transmission.zip &&
-        rm -rf /ui/* &&
-        unzip /tmp/flood.zip -d /ui &&
-        echo 'v1.0.1' > /ui/.version &&
-        echo 'Flood UI downloaded';
-      else
-        echo 'Flood UI already up to date';
-      fi"
-    volumes:
-    - flood-ui:/ui
-    restart: "no"
-
   transmission:
     image: lscr.io/linuxserver/transmission:latest
     container_name: transmission
@@ -71,19 +54,17 @@ services:
     depends_on:
       gluetun:
         condition: service_healthy
-      flood-ui:
-        condition: service_completed_successfully
     environment:
     - PUID=1000
     - PGID=1000
     - TZ=America/New_York
     - PEERPORT=${VPN_FORWARDED_PORT}
-    - TRANSMISSION_WEB_HOME=/flood-ui/flood-for-transmission
+    # Flood UI via linuxserver docker mod (sets TRANSMISSION_WEB_HOME itself).
+    - DOCKER_MODS=linuxserver/mods:transmission-floodui
     volumes:
     - transmission-config:/config
     - /mnt/jellydrive-01/jellyfin_media:/downloads
     - /home/khayyam/Downloads:/watch
-    - flood-ui:/flood-ui:ro
     restart: unless-stopped
     labels:
       com.centurylinklabs.watchtower.enable: 'true'
@@ -126,4 +107,3 @@ services:
 volumes:
   gluetun-data:
   transmission-config:
-  flood-ui:
