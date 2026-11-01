@@ -213,8 +213,9 @@ services:
     # gpu-yield frees Forge's RAM with /sdapi/v1/server-kill; this brings it back.
     restart: unless-stopped
   open-webui:
-    image: ghcr.io/open-webui/open-webui:latest
-    entrypoint: ["/bin/bash", "-c", "/patches/owui-patch.sh && exec bash start.sh"]
+    image: open-webui:local
+    build:
+      context: ./open-webui
     environment:
       # --- Core ---
       RESET_CONFIG_ON_START: 'true'
@@ -259,7 +260,6 @@ services:
       CODE_INTERPRETER_JUPYTER_TIMEOUT: '120'
     volumes:
     - open-webui-data:/app/backend/data
-    - ./owui-patch.sh:/patches/owui-patch.sh:ro
     ports:
     - 127.0.0.1:3100:8080
     restart: unless-stopped
