@@ -1,6 +1,6 @@
 model:
-  provider: custom:digitalocean
-  model: glm-5.3
+  provider: custom:ollama-local
+  model: qwen3.8-tuned:100k
 custom_providers:
   - name: fireworks
     base_url: https://api.fireworks.ai/inference/v1
