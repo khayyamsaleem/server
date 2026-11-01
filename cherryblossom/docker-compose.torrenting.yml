@@ -61,9 +61,6 @@ services:
     - PEERPORT=${VPN_FORWARDED_PORT}
     # Flood UI via linuxserver docker mod (sets TRANSMISSION_WEB_HOME itself).
     - DOCKER_MODS=linuxserver/mods:transmission-floodui
-    # RPC/web auth (linuxserver sets rpc-authentication-required + credentials).
-    - USER=${TRANSMISSION_USER}
-    - PASS=${TRANSMISSION_PASS}
     volumes:
     - transmission-config:/config
     - /mnt/jellydrive-01/jellyfin_media:/downloads
