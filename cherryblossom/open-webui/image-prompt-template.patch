@@ -1,16 +1,16 @@
-diff -ru a/open_webui/tools/builtin.py b/open_webui/tools/builtin.py
+diff --color -ru a/open_webui/tools/builtin.py b/open_webui/tools/builtin.py
 --- a/open_webui/tools/builtin.py
 +++ b/open_webui/tools/builtin.py
-@@ -389,7 +389,7 @@
+@@ -395,7 +395,7 @@
  
          images = await image_generations(
              request=__request__,
--            form_data=CreateImageForm(prompt=prompt),
-+            form_data=CreateImageForm(**(await _templated_image_form(user, prompt, __chat_id__))),
+-            form_data=CreateImageForm(prompt=prompt, size=size),
++            form_data=CreateImageForm(**(await _templated_image_form(user, prompt, __chat_id__)), size=size),
              metadata=(
                  {'channel_id': __chat_id__.removeprefix('channel:'), 'message_id': __message_id__}
                  if isinstance(__chat_id__, str) and __chat_id__.startswith('channel:')
-@@ -4543,3 +4543,55 @@
+@@ -5029,3 +5029,55 @@
      except Exception as e:
          log.exception(f'delete_calendar_event error: {e}')
          return JSONCodec.dumps({'error': str(e)})
@@ -66,17 +66,17 @@ diff -ru a/open_webui/tools/builtin.py b/open_webui/tools/builtin.py
 +    except Exception as e:
 +        log.warning(f'generate_image: prompt template failed, using tool prompt: {e}')
 +    return form
-diff -ru a/open_webui/utils/middleware.py b/open_webui/utils/middleware.py
+diff --color -ru a/open_webui/utils/middleware.py b/open_webui/utils/middleware.py
 --- a/open_webui/utils/middleware.py
 +++ b/open_webui/utils/middleware.py
-@@ -1990,7 +1990,10 @@
+@@ -1656,7 +1656,10 @@
          try:
              images = await image_generations(
                  request=request,
 -                form_data=CreateImageForm(**{'prompt': prompt}),
 +                form_data=CreateImageForm(  # PATCHED: forward model+negative_prompt from task model
-+                        **({k: v for k, v in response.items() if k in ('prompt', 'model', 'negative_prompt', 'size', 'steps')}
-+                           if isinstance(response, dict) else {'prompt': prompt})
++                        **({k: v for k, v in locals()['response'].items() if k in ('prompt', 'model', 'negative_prompt', 'size', 'steps')}
++                           if isinstance(locals().get('response'), dict) else {'prompt': prompt})
 +                    ),
                  metadata=image_metadata,
                  user=user,
