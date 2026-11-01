@@ -1,52 +1,6 @@
 model:
   provider: custom:ollama-local
-  model: qwen3.8-tuned:100k
-custom_providers:
-  - name: fireworks
-    base_url: https://api.fireworks.ai/inference/v1
-    api_key: ${FIREWORKS_API_KEY}
-    models:
-      accounts/fireworks/models/kimi-k2p6:
-        context_length: 131072
-        max_output_tokens: 32768
-      accounts/fireworks/models/kimi-k2p5:
-        context_length: 131072
-        max_output_tokens: 32768
-      accounts/fireworks/models/deepseek-v4-pro:
-        context_length: 131072
-        max_output_tokens: 32768
-      accounts/fireworks/models/gpt-oss-120b:
-        context_length: 131072
-        max_output_tokens: 65536
-  - name: digitalocean
-    base_url: https://inference.do-ai.run/v1
-    api_key: ${DIGITALOCEAN_ACCESS_TOKEN}
-    models:
-      kimi-k3:
-        context_length: 1048576
-        max_output_tokens: 65536
-      deepseek-v4-pro:
-        context_length: 1048576
-        max_output_tokens: 65536
-      glm-5.2:
-        context_length: 131072
-        max_output_tokens: 65536
-      openai-gpt-oss-120b:
-        context_length: 131072
-        max_output_tokens: 65536
-      openai-gpt-oss-20b:
-        context_length: 131072
-        max_output_tokens: 32768
-  - name: ollama-local
-    base_url: http://ollama-gateway:11434/v1
-    api_key: ollama-local
-    models:
-      qwen3.8-tuned:64k:
-        context_length: 65536
-      qwen3.8-tuned:100k:
-        context_length: 102400
-      gpt-oss:20b:
-        context_length: 131072
+  default: qwen3.8-tuned:100k
 agent:
   max_turns: 90
   tool_use_enforcement: auto
@@ -95,7 +49,6 @@ approvals:
   mode: false
 security:
   redact_secrets: true
-  tirith_enabled: false
 discord:
   require_mention: false
   reactions: true
@@ -111,6 +64,58 @@ display:
 providers:
   custom:
     timeout: 600
+  fireworks:
+    api: https://api.fireworks.ai/inference/v1
+    name: fireworks
+    api_key: ${FIREWORKS_API_KEY}
+    models:
+      accounts/fireworks/models/kimi-k2p6:
+        context_length: 131072
+        max_output_tokens: 32768
+      accounts/fireworks/models/kimi-k2p5:
+        context_length: 131072
+        max_output_tokens: 32768
+      accounts/fireworks/models/deepseek-v4-pro:
+        context_length: 131072
+        max_output_tokens: 32768
+      accounts/fireworks/models/gpt-oss-120b:
+        context_length: 131072
+        max_output_tokens: 65536
+  digitalocean:
+    api: https://inference.do-ai.run/v1
+    name: digitalocean
+    api_key: ${DIGITALOCEAN_ACCESS_TOKEN}
+    models:
+      kimi-k3:
+        context_length: 1048576
+        max_output_tokens: 65536
+      deepseek-v4-pro:
+        context_length: 1048576
+        max_output_tokens: 65536
+      glm-5.2:
+        context_length: 131072
+        max_output_tokens: 65536
+      openai-gpt-oss-120b:
+        context_length: 131072
+        max_output_tokens: 65536
+      openai-gpt-oss-20b:
+        context_length: 131072
+        max_output_tokens: 32768
+  ollama-local:
+    api: http://ollama-gateway:11434/v1
+    name: ollama-local
+    api_key: ollama-local
+    models:
+      qwen3.8-tuned:64k:
+        context_length: 65536
+      qwen3.8-tuned:100k:
+        context_length: 102400
+      gpt-oss:20b:
+        context_length: 131072
 onboarding:
   seen:
     busy_input_prompt: true
+_config_version: 51
+vault:
+  bitwarden:
+    binary_path: /opt/data/.local/node/bin/bw
