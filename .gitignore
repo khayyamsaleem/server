@@ -13,9 +13,8 @@ cherryblossom/hermes/workspace/memory/
 cherryblossom/hermes/workspace/sessions/
 # hermes/home: exclude all runtime state, track only config, persona, and cron jobs
 cherryblossom/hermes/home/*
-# config.yaml is Hermes-owned runtime state (dashboard/app edits, MCP servers);
-# config.example.yaml is the documented baseline to copy from on a fresh host.
-!cherryblossom/hermes/home/config.example.yaml
+# config.yaml is Hermes-owned live state; the repo-owned base config is
+# cherryblossom/hermes/managed/config.yaml (Hermes managed scope).
 !cherryblossom/hermes/home/SOUL.md
 !cherryblossom/hermes/home/cron/
 cherryblossom/hermes/home/cron/*

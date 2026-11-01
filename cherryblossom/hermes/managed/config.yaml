@@ -1,21 +1,25 @@
-model:
-  provider: custom:ollama-local
-  default: qwen3.8-tuned:100k
+# Hermes managed scope: repo-owned base config, mounted read-only at
+# /etc/hermes/config.yaml. Hermes deep-merges it ON TOP of the live
+# /opt/data/config.yaml: every leaf set here wins and is locked in the
+# dashboard/app/CLI ("managed by your administrator"). Lists are replaced
+# wholesale. Anything NOT set here (model, display, mcp_servers, moa, ...)
+# lives in the Hermes-owned live config and survives deploys.
+# ${VAR} refs expand against the container env (compose environment:).
 agent:
   max_turns: 90
   tool_use_enforcement: auto
   context_files:
-    - /workspace/USER.md
-    - /workspace/MEMORY.md
-    - /workspace/skills/INDEX.md
-    - /workspace/skills/infra/check-gpu.md
-    - /workspace/skills/infra/host-inspect.md
-    - /workspace/skills/infra/switch-model.md
-    - /workspace/skills/running/log-run.md
-    - /workspace/skills/github/create-pr.md
-    - /workspace/skills/github/sync-repo.md
-    - /workspace/skills/discord/morning-brief-format.md
-    - /workspace/skills/google/gog.md
+  - /workspace/USER.md
+  - /workspace/MEMORY.md
+  - /workspace/skills/INDEX.md
+  - /workspace/skills/infra/check-gpu.md
+  - /workspace/skills/infra/host-inspect.md
+  - /workspace/skills/infra/switch-model.md
+  - /workspace/skills/running/log-run.md
+  - /workspace/skills/github/create-pr.md
+  - /workspace/skills/github/sync-repo.md
+  - /workspace/skills/discord/morning-brief-format.md
+  - /workspace/skills/google/gog.md
 terminal:
   backend: local
   cwd: /workspace
@@ -57,10 +61,6 @@ discord:
 cron:
   wrap_response: false
   script_timeout_seconds: 300
-display:
-  tool_progress: false
-  streaming: false
-  show_reasoning: false
 providers:
   custom:
     timeout: 600
@@ -112,10 +112,6 @@ providers:
         context_length: 102400
       gpt-oss:20b:
         context_length: 131072
-onboarding:
-  seen:
-    busy_input_prompt: true
-_config_version: 51
 vault:
   bitwarden:
     binary_path: /opt/data/.local/node/bin/bw
