@@ -16,5 +16,15 @@
     "4096": { "TCPForward": "opencode:4096" },
     "8083": { "TCPForward": "calibre-web-automated:8083" },
     "8084": { "TCPForward": "gluetun:8084" }
+  },
+  "Services": {
+    "svc:hermes": {
+      "TCP": { "443": { "HTTPS": true } },
+      "Web": {
+        "hermes.mango-hawksbill.ts.net:443": {
+          "Handlers": { "/": { "Proxy": "http://hermes-agent:9119" } }
+        }
+      }
+    }
   }
 }

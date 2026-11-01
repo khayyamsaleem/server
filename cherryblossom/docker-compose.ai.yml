@@ -419,6 +419,12 @@ services:
       GOG_KEYRING_BACKEND: file
       GOG_KEYRING_PASSWORD: openclaw
       XDG_CONFIG_HOME: /workspace/.config
+      # s6-supervised dashboard/serve backend on :9119 for the mobile app.
+      # Non-loopback bind requires an auth provider: basic auth from .env.
+      HERMES_DASHBOARD: "1"
+      HERMES_DASHBOARD_BASIC_AUTH_USERNAME: ${HERMES_DASHBOARD_BASIC_AUTH_USERNAME:-}
+      HERMES_DASHBOARD_BASIC_AUTH_PASSWORD_HASH: ${HERMES_DASHBOARD_BASIC_AUTH_PASSWORD_HASH:-}
+      HERMES_DASHBOARD_BASIC_AUTH_SECRET: ${HERMES_DASHBOARD_BASIC_AUTH_SECRET:-}
     group_add:
       - "965"
     extra_hosts:
@@ -437,7 +443,7 @@ services:
       resources:
         limits:
           cpus: '1.00'
-          memory: 512M
+          memory: 1G
         reservations:
           cpus: '0.05'
           memory: 64M
