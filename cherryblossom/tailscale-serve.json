@@ -1,28 +1,107 @@
 {
   "TCP": {
-    "8096": { "TCPForward": "jellyfin:8096" },
-    "9091": { "TCPForward": "gluetun:9091" },
-    "9100": { "TCPForward": "node-exporter:9100" },
-    "9101": { "TCPForward": "cadvisor:8080" },
-    "9594": { "TCPForward": "jellyfin-exporter:9594" },
-    "19091": { "TCPForward": "transmission-exporter:19091" },
-    "3100": { "TCPForward": "open-webui:8080" },
-    "17860": { "TCPForward": "forge:17860" },
-    "9400": { "TCPForward": "dcgm-exporter:9400" },
-    "7878": { "TCPForward": "radarr:7878" },
-    "8989": { "TCPForward": "sonarr:8989" },
-    "5055": { "TCPForward": "jellyseerr:5055" },
-    "9696": { "TCPForward": "gluetun:9696" },
-    "4096": { "TCPForward": "opencode:4096" },
-    "8083": { "TCPForward": "calibre-web-automated:8083" },
-    "8084": { "TCPForward": "gluetun:8084" }
+    "8096": {
+      "TCPForward": "jellyfin:8096"
+    },
+    "9100": {
+      "TCPForward": "node-exporter:9100"
+    },
+    "9101": {
+      "TCPForward": "cadvisor:8080"
+    },
+    "9594": {
+      "TCPForward": "jellyfin-exporter:9594"
+    },
+    "19091": {
+      "TCPForward": "transmission-exporter:19091"
+    },
+    "3100": {
+      "TCPForward": "open-webui:8080"
+    },
+    "9400": {
+      "TCPForward": "dcgm-exporter:9400"
+    },
+    "7878": {
+      "TCPForward": "radarr:7878"
+    },
+    "8989": {
+      "TCPForward": "sonarr:8989"
+    },
+    "5055": {
+      "TCPForward": "jellyseerr:5055"
+    },
+    "9696": {
+      "TCPForward": "gluetun:9696"
+    },
+    "8083": {
+      "TCPForward": "calibre-web-automated:8083"
+    },
+    "8084": {
+      "TCPForward": "gluetun:8084"
+    }
   },
   "Services": {
     "svc:hermes": {
-      "TCP": { "443": { "HTTPS": true } },
+      "TCP": {
+        "443": {
+          "HTTPS": true
+        }
+      },
       "Web": {
         "hermes.mango-hawksbill.ts.net:443": {
-          "Handlers": { "/": { "Proxy": "http://hermes-agent:9119" } }
+          "Handlers": {
+            "/": {
+              "Proxy": "http://hermes-agent:9119"
+            }
+          }
+        }
+      }
+    },
+    "svc:code": {
+      "TCP": {
+        "443": {
+          "HTTPS": true
+        }
+      },
+      "Web": {
+        "code.mango-hawksbill.ts.net:443": {
+          "Handlers": {
+            "/": {
+              "Proxy": "http://opencode:4096"
+            }
+          }
+        }
+      }
+    },
+    "svc:forge": {
+      "TCP": {
+        "443": {
+          "HTTPS": true
+        }
+      },
+      "Web": {
+        "forge.mango-hawksbill.ts.net:443": {
+          "Handlers": {
+            "/": {
+              "Proxy": "http://forge:17860"
+            }
+          }
+        }
+      }
+    },
+    "svc:torrent": {
+      "TCP": {
+        "443": {
+          "HTTPS": true
+        }
+      },
+      "Web": {
+        "torrent.mango-hawksbill.ts.net:443": {
+          "Handlers": {
+            "/": {
+              "Proxy": "http://gluetun:9091"
+            }
+          }
         }
       }
     }
