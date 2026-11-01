@@ -43,10 +43,10 @@ api GET configuration/general | jq -c '
 log "Auth: login bypassed for 172.17.0.0/16"
 
 # --- download client -------------------------------------------------------
-# Transmission shares gluetun's netns; RPC has no auth (same as Sonarr's view).
-client=$(jq -nc --arg h "$TRANSMISSION_HOST" '{
+# Transmission shares gluetun's netns.
+client=$(jq -nc --arg h "$TRANSMISSION_HOST" --arg u "$TRANSMISSION_USER" --arg p "$TRANSMISSION_PASS" '{
   enabled:true, name:"Transmission", typeName:"Transmission", type:"Torrent",
-  host:$h, urlBase:"/transmission/", username:"", password:""}')
+  host:$h, urlBase:"/transmission/", username:$u, password:$p}')
 id=$(api GET configuration/download_client | jq -r '.clients[] | select(.name=="Transmission") | .id')
 if [ -n "$id" ]; then
   api PUT "configuration/download_client/$id" "$client" >/dev/null

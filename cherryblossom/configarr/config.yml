@@ -28,7 +28,7 @@ radarr:
             username: !env TRANSMISSION_USER
             password: !env TRANSMISSION_PASS
             movie_category: radarr
-      update_password: false
+      update_password: true
       remote_paths:
         - host: gluetun
           remote_path: /downloads/
@@ -58,7 +58,7 @@ sonarr:
             username: !env TRANSMISSION_USER
             password: !env TRANSMISSION_PASS
             tv_category: sonarr
-      update_password: false
+      update_password: true
       remote_paths:
         - host: gluetun
           remote_path: /downloads/
