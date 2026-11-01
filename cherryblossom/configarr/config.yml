@@ -1,0 +1,146 @@
+# Declarative Radarr/Sonarr/Prowlarr setup, applied by the one-shot configarr
+# service on every `compose up`. Add/update only: nothing here deletes objects
+# that were created in the UI. Secrets come from the container env (!env).
+trashGuideUrl: https://github.com/TRaSH-Guides/Guides
+recyclarrConfigUrl: https://github.com/recyclarr/config-templates
+
+radarr:
+  main:
+    base_url: http://radarr:7878
+    api_key: !env RADARR_API_KEY
+    quality_definition: {}
+    custom_formats: []
+    quality_profiles: []
+    root_folders:
+      - /media/movies
+    media_naming_api:
+      renameMovies: true
+    download_clients:
+      data:
+        - name: Transmission
+          type: transmission
+          enable: true
+          fields:
+            host: gluetun
+            port: 9091
+            use_ssl: false
+            url_base: /transmission/
+            username: !env TRANSMISSION_USER
+            password: !env TRANSMISSION_PASS
+            movie_category: radarr
+      update_password: false
+      remote_paths:
+        - host: gluetun
+          remote_path: /downloads/
+          local_path: /media/
+
+sonarr:
+  main:
+    base_url: http://sonarr:8989
+    api_key: !env SONARR_API_KEY
+    quality_definition: {}
+    custom_formats: []
+    quality_profiles: []
+    root_folders:
+      - /media/shows
+    media_naming_api:
+      renameEpisodes: true
+    download_clients:
+      data:
+        - name: Transmission
+          type: transmission
+          enable: true
+          fields:
+            host: gluetun
+            port: 9091
+            use_ssl: false
+            url_base: /transmission/
+            username: !env TRANSMISSION_USER
+            password: !env TRANSMISSION_PASS
+            tv_category: sonarr
+      update_password: false
+      remote_paths:
+        - host: gluetun
+          remote_path: /downloads/
+          local_path: /media/
+
+prowlarrEnabled: true
+prowlarr:
+  main:
+    # Prowlarr and FlareSolverr share gluetun's network namespace.
+    base_url: http://gluetun:9696
+    api_key: !env PROWLARR_API_KEY
+    tags:
+      - flaresolverr
+    indexer_proxies:
+      data:
+        - name: FlareSolverr
+          type: FlareSolverr
+          fields:
+            host: http://localhost:8191/
+            requestTimeout: 180
+          tags:
+            - flaresolverr
+    applications:
+      data:
+        - name: Radarr
+          type: Radarr
+          sync_level: fullSync
+          fields:
+            prowlarrUrl: http://gluetun:9696
+            baseUrl: http://radarr:7878
+            apiKey: !env RADARR_API_KEY
+            syncCategories: [2000, 2010, 2020, 2030, 2040, 2050, 2060, 2070, 2080, 2090]
+        - name: Sonarr
+          type: Sonarr
+          sync_level: fullSync
+          fields:
+            prowlarrUrl: http://gluetun:9696
+            baseUrl: http://sonarr:8989
+            apiKey: !env SONARR_API_KEY
+            syncCategories: [5000, 5010, 5020, 5030, 5040, 5050, 5060, 5070, 5080, 5090]
+            animeSyncCategories: [5070]
+    # Indexers tagged flaresolverr route through the proxy above. Created with
+    # whatever the site's connect test says (a flaky Cloudflare check must not
+    # block seeding).
+    indexers:
+      data:
+        - name: YTS
+          definition: yts
+          fields:
+            apiurl: movies-api.accel.li
+        - name: TorrentsCSV
+          definition: TorrentsCSV
+          fields:
+            baseUrl: https://torrents-csv.com/
+        - name: EZTV
+          definition: eztv
+          fields:
+            baseUrl: https://eztvx.to/
+          tags: [flaresolverr]
+        - name: Torrent Downloads
+          definition: torrentdownloads
+          fields:
+            baseUrl: https://www.torrentdownloads.pro/
+            primarydownloadlink: 1
+            fallbackdownloadlink: 0
+          tags: [flaresolverr]
+        - name: The Pirate Bay
+          definition: thepiratebay
+          fields:
+            apiurl: apibay.org
+            top100: 6
+          tags: [flaresolverr]
+        - name: 1337x
+          definition: 1337x
+          fields:
+            baseUrl: https://x1337x.ws/
+            primarydownloadlink: 1
+            fallbackdownloadlink: 0
+            sort: 2
+            type: 1
+          tags: [flaresolverr]
+        - name: Knaben
+          definition: Knaben
+          fields:
+            baseUrl: https://knaben.org/
