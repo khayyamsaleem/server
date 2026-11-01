@@ -65,38 +65,41 @@ docker compose up -d
 ### Architecture
 
 ```
-                     Internet
-                        |
-                        v
-              +----- juul (VPS) -----+
-              |                      |
-              |  Traefik <-- TLS     |
-              |    |                 |
-              |    +-- Jenkins       |
-              |    +-- Grafana       |
-              |    +-- jelly --------+-------+
-              |    +-- transmission -+-------+
-              |                      |       |
-              |  VictoriaMetrics     |       | Tailscale
-              |    ^  ^              |       |
-              |    |  +- OTel        |       |
-              |    |    Collector    |       |
-              |  Loki                |       |
-              |    ^                 |       |
-              +----+-----------------+       |
-                   |                         |
-              +----+--- cherryblossom ---+---+
-              |    |                     |   |
-              |  Promtail    Jellyfin <--+   |
-              |                              |
-              |  Gluetun (NordVPN)           |
-              |    +-- Transmission          |
-              |                              |
-              |  Ollama (GPU)                |
-              |    +-- Envoy proxy           |
-              |    +-- PicoClaw              |
-              |    +-- Open WebUI            |
-              |                              |
-              |  node-exporter, cAdvisor     |
-              +------------------------------+
+                                 Internet
+                                    |
+                        Cloudflare (proxied DNS)
+                                    |
+                                    v
++--------------------------- juul (DigitalOcean VPS) ---------------------------+
+|                                                                               |
+|  Traefik (TLS: Let's Encrypt via Cloudflare DNS challenge)                    |
+|    +-- p.k5m.sh    Traefik dashboard                                          |
+|    +-- ci.k5m.sh   Jenkins --> OTel Collector --+                             |
+|    +-- g.k5m.sh    Grafana                      |                             |
+|    +-- jf  t  gpu  code  forge                  v                             |
+|        seerr  books  shelf  .k5m.sh      VictoriaMetrics        Loki          |
+|                |                           |        ^            ^            |
+|  Tailscale sidecar (juul-docker): Traefik egress; serves :8428 VM, :3100 Loki |
++----------------|---------------------------|--------|------------|------------+
+                 | proxy                     | scrape | OTLP       | push
+                 |                           |        |            |
+                 |   Tailscale (tailnet: mango-hawksbill.ts.net)   |
+                 |                           |        |            |
++----------------|---------------------------|--------|------------|------------+
+|                v                           v        |            |            |
+|  Tailscale sidecar (cherryblossom-docker) exporters  OTel Coll.  Promtail     |
+|    TCP forward per service + svc:hermes -> https://hermes.<tailnet>.ts.net    |
+|                                                                               |
+|  media       Jellyfin (NVENC), Jellyseerr, Radarr, Sonarr, Cleanuparr         |
+|  torrenting  Gluetun (AirVPN WireGuard)                                       |
+|                +-- Transmission (Flood UI), Prowlarr, FlareSolverr, Shelfmark |
+|  books       Calibre-Web Automated                                            |
+|  ai          Envoy gateway --> Ollama (RTX 3090), Forge, ComfyUI              |
+|                +-- Open WebUI, Hermes agent, OpenCode, Jupyter, SearXNG       |
+|              gpu-yield                                                        |
+|  monitoring  node-exporter, cAdvisor, DCGM, Jellyfin/Transmission/network     |
+|              exporters, OTel Collector, Promtail                              |
+|  infra       Watchtower                                                       |
+|                                                                               |
++----------------------- cherryblossom (on-prem, RTX 3090) ---------------------+
 ```
