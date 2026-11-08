@@ -239,8 +239,8 @@ services:
       WEBUI_SESSION_COOKIE_SAME_SITE: none
       ENABLE_SIGNUP: 'false'
       ENABLE_API_KEYS: 'true'
-      TASK_MODEL: qwen3.8-tuned:64k
-      DEFAULT_MODELS: qwen3.8-tuned:64k
+      TASK_MODEL: gpt-oss:20b
+      DEFAULT_MODELS: gpt-oss:20b
       # --- Image generation (Forge on 3090; model routing via the template in .env) ---
       ENABLE_IMAGE_GENERATION: 'true'
       ENABLE_IMAGE_PROMPT_GENERATION: 'true'
