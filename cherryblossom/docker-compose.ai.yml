@@ -429,11 +429,15 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1.00'
-          memory: 1G
+          # Raised from 1.00 CPU / 1G. At 1G the container hit its ceiling and
+          # Docker recorded OOMKilled=true; at 1.00 CPU `hermes status` took
+          # 3.5 min under host load, stalling the event loop long enough for the
+          # Discord gateway websocket to fall 57s behind and fatally drop.
+          cpus: '4.00'
+          memory: 3G
         reservations:
-          cpus: '0.05'
-          memory: 64M
+          cpus: '0.50'
+          memory: 256M
 
 configs:
   hermes-gh-hosts:
