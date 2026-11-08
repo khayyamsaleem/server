@@ -17,6 +17,10 @@ ComfyUI video (called by envoy comfy_filter on every prompt submission):
                  so a job never starts where it could cause a host-wide OOM.
                  A watcher reloads Ollama once ComfyUI's queue has drained.
 
+Idle Forge: a background reaper restarts Forge after FORGE_IDLE_SECS
+  (default 900s) without a Forge request, so an unused Forge stops holding
+  its checkpoints in system RAM. Re-armed by the next /evict or /restore.
+
   GET  /health
 
 The KV cache is not preserved: llama-server slot save/restore does not
@@ -36,10 +40,21 @@ MIN_FREE_MIB = int(os.environ.get("MIN_FREE_MIB", "14500"))
 # Peak ComfyUI RSS measured for one LTX-2.3 job (12.2-15.4G across i2v/t2v/LoRA runs).
 COMFY_PEAK_MIB = int(os.environ.get("COMFY_PEAK_MIB", "15872"))
 LEASE_IDLE_SECS = int(os.environ.get("LEASE_IDLE_SECS", "15"))
+# How long Forge may sit idle before gpu-yield restarts it to release the
+# checkpoints it holds in system RAM (--disable-smart-memory keeps weights out
+# of VRAM so Ollama can use the card, at the cost of ~9-12G resident).
+FORGE_IDLE_SECS = int(os.environ.get("FORGE_IDLE_SECS", "900"))
 
 lock = threading.Lock()
 state = {}  # model + ctx of the last eviction awaiting restore
 lease = {"active": False, "last": 0.0}
+# Forge usage tracking: last_use is bumped by the Forge path (/evict, /restore);
+# ram_freed is set once the reaper or a lease has reset Forge and cleared as
+# soon as Forge is used again, so an already-empty Forge is not restarted
+# repeatedly. last_use starts at "now" so a gpu-yield restart grants a full
+# FORGE_IDLE_SECS grace period before the reaper's first kill — otherwise a
+# restart mid-generation would kill Forge out from under an in-flight image.
+forge = {"last_use": time.time(), "ram_freed": False}
 
 
 def log(msg, **kw):
@@ -102,6 +117,8 @@ def _restore():
 
 def evict():
     with lock:
+        forge["last_use"] = time.time()
+        forge["ram_freed"] = False
         if lease["active"]:
             return 423, {"error": "GPU busy: video generation in progress"}
         out = _evict()
@@ -112,6 +129,8 @@ def evict():
 
 def restore():
     with lock:
+        forge["last_use"] = time.time()
+        forge["ram_freed"] = False
         if lease["active"]:
             return 200, {"restored": None, "deferred": "video lease active"}
         out = _restore()
@@ -148,6 +167,7 @@ def take_lease():
         t = time.time()
         evicted = _evict()
         _free_forge_ram()
+        forge["ram_freed"] = True
         need = required_free_mib()
         avail = mem_available_mib()
         deadline = time.time() + 30
@@ -188,6 +208,28 @@ def watch_comfy():
             return
 
 
+def forge_reaper():
+    """Restart Forge once it has been idle long enough to be holding RAM.
+
+    Forge keeps its checkpoints in system RAM by design, so an idle Forge sits
+    on ~9-12G indefinitely. /sdapi/v1/server-kill exits the process and
+    `restart: unless-stopped` brings it back empty in ~20s (checkpoints load
+    lazily), so the next image just pays a cold start. Skipped while a ComfyUI
+    lease holds the GPU, and re-armed by the next /evict or /restore.
+    """
+    while True:
+        time.sleep(60)
+        idle_for = time.time() - forge["last_use"]
+        if forge["ram_freed"] or idle_for < FORGE_IDLE_SECS:
+            continue
+        with lock:
+            if lease["active"] or forge["ram_freed"]:
+                continue
+            forge["ram_freed"] = True
+        _free_forge_ram()
+        log("forge ram freed (idle)", idle_secs=round(idle_for))
+
+
 class Handler(BaseHTTPRequestHandler):
     def _send(self, code, obj):
         body = json.dumps(obj).encode()
@@ -217,5 +259,6 @@ class Handler(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-    log("gpu-yield listening", port=PORT)
+    log("gpu-yield listening", port=PORT, forge_idle_secs=FORGE_IDLE_SECS)
+    threading.Thread(target=forge_reaper, daemon=True).start()
     ThreadingHTTPServer(("0.0.0.0", PORT), Handler).serve_forever()
