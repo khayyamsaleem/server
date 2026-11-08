@@ -1,6 +1,12 @@
 services:
+  # Ollama version policy: ollama-mgmt and ollama-3090 SHARE the ollama-data
+  # model store, so they must run the SAME version. Both are pinned to an
+  # explicit tag. With the shared :latest tag, watchtower (enabled on
+  # ollama-mgmt only) moved the tag under the running 3090, which then jumped
+  # 0.34.4 -> 0.40.15 on its next restart and crash-looped on the models mount.
+  # Bump both tags together, deliberately.
   ollama-mgmt:
-    image: ollama/ollama:latest
+    image: ollama/ollama:0.40.15
     volumes:
     - ollama-data:/root/.ollama
     deploy:
@@ -24,10 +30,12 @@ services:
     - 127.0.0.1:11434:11434
 
   ollama-3090:
-    image: ollama/ollama:latest
+    image: ollama/ollama:0.40.15   # keep in lockstep with ollama-mgmt
     profiles: ["gpu-3090"]
     volumes:
-    - ollama-data:/ollama-models:ro
+    # rw (not :ro): Ollama >= 0.40 writes/cleans `manifests-v2` in the models
+    # dir on startup and exits 1 on a read-only mount (0.34.4 tolerated :ro).
+    - ollama-data:/ollama-models
     deploy:
       resources:
         limits:
@@ -49,6 +57,11 @@ services:
       OLLAMA_KV_CACHE_TYPE: q8_0
       OLLAMA_KEEP_ALIVE: 5m
       OLLAMA_NUM_PARALLEL: 1
+      # Match the context_length Hermes/Open WebUI declare for gpt-oss:20b
+      # (131072). Without this Ollama's VRAM-based default caps it at 32k and
+      # silently truncates longer conversations. Models that pin num_ctx in
+      # their Modelfile (qwen3.8-tuned:*) keep their own value.
+      OLLAMA_CONTEXT_LENGTH: 131072
       # llama-server --fit keeps this much VRAM free (MiB). Ollama's default
       # margin (~1.9 GiB) spills 4 layers of qwen3.8 at 100k ctx to the CPU.
       LLAMA_ARG_FIT_TARGET: 512
