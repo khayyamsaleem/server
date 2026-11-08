@@ -57,22 +57,6 @@
         }
       }
     },
-    "svc:code": {
-      "TCP": {
-        "443": {
-          "HTTPS": true
-        }
-      },
-      "Web": {
-        "code.mango-hawksbill.ts.net:443": {
-          "Handlers": {
-            "/": {
-              "Proxy": "http://opencode:4096"
-            }
-          }
-        }
-      }
-    },
     "svc:forge": {
       "TCP": {
         "443": {
