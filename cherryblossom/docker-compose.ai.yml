@@ -1,6 +1,12 @@
 services:
+  # Ollama version policy: ollama-mgmt and ollama-3090 SHARE the ollama-data
+  # model store, so they must run the SAME version. Both are pinned to an
+  # explicit tag. With the shared :latest tag, watchtower (enabled on
+  # ollama-mgmt only) moved the tag under the running 3090, which then jumped
+  # 0.34.4 -> 0.40.15 on its next restart and crash-looped on the models mount.
+  # Bump both tags together, deliberately.
   ollama-mgmt:
-    image: ollama/ollama:latest
+    image: ollama/ollama:0.40.15
     volumes:
     - ollama-data:/root/.ollama
     deploy:
@@ -24,10 +30,12 @@ services:
     - 127.0.0.1:11434:11434
 
   ollama-3090:
-    image: ollama/ollama:latest
+    image: ollama/ollama:0.40.15   # keep in lockstep with ollama-mgmt
     profiles: ["gpu-3090"]
     volumes:
-    - ollama-data:/ollama-models:ro
+    # rw (not :ro): Ollama >= 0.40 writes/cleans `manifests-v2` in the models
+    # dir on startup and exits 1 on a read-only mount (0.34.4 tolerated :ro).
+    - ollama-data:/ollama-models
     deploy:
       resources:
         limits:
@@ -49,6 +57,11 @@ services:
       OLLAMA_KV_CACHE_TYPE: q8_0
       OLLAMA_KEEP_ALIVE: 5m
       OLLAMA_NUM_PARALLEL: 1
+      # Match the context_length Hermes/Open WebUI declare for gpt-oss:20b
+      # (131072). Without this Ollama's VRAM-based default caps it at 32k and
+      # silently truncates longer conversations. Models that pin num_ctx in
+      # their Modelfile (qwen3.8-tuned:*) keep their own value.
+      OLLAMA_CONTEXT_LENGTH: 131072
       # llama-server --fit keeps this much VRAM free (MiB). Ollama's default
       # margin (~1.9 GiB) spills 4 layers of qwen3.8 at 100k ctx to the CPU.
       LLAMA_ARG_FIT_TARGET: 512
@@ -226,8 +239,8 @@ services:
       WEBUI_SESSION_COOKIE_SAME_SITE: none
       ENABLE_SIGNUP: 'false'
       ENABLE_API_KEYS: 'true'
-      TASK_MODEL: qwen3.8-tuned:64k
-      DEFAULT_MODELS: qwen3.8-tuned:64k
+      TASK_MODEL: gpt-oss:20b
+      DEFAULT_MODELS: gpt-oss:20b
       # --- Image generation (Forge on 3090; model routing via the template in .env) ---
       ENABLE_IMAGE_GENERATION: 'true'
       ENABLE_IMAGE_PROMPT_GENERATION: 'true'
@@ -352,49 +365,6 @@ services:
           cpus: '0.02'
           memory: 32M
 
-  opencode:
-    build:
-      context: ./opencode
-      dockerfile: Dockerfile
-    image: opencode:local
-    volumes:
-    - ./opencode/config.json:/root/.config/opencode/config.json:ro
-    - ./opencode/skills:/root/.config/opencode/skills:ro
-    - /home/khayyam/dev/opencode-workspace:/workspace
-    - /var/run/docker.sock:/var/run/docker.sock:ro
-    - opencode-data:/root/.local/share/opencode
-    environment:
-      OPENCODE_SERVER_PASSWORD: ${OPENCODE_PASSWORD:-}
-      OLLAMA_BASE_URL: http://ollama-gateway:11434
-      GH_TOKEN: ${GH_TOKEN:-}
-      GITHUB_TOKEN: ${GH_TOKEN:-}
-      GIT_AUTHOR_NAME: ${GIT_AUTHOR_NAME:-Khayyam Saleem}
-      GIT_AUTHOR_EMAIL: ${GIT_AUTHOR_EMAIL:-khayyam.saleem@gmail.com}
-      GIT_COMMITTER_NAME: ${GIT_AUTHOR_NAME:-Khayyam Saleem}
-      GIT_COMMITTER_EMAIL: ${GIT_AUTHOR_EMAIL:-khayyam.saleem@gmail.com}
-    ports:
-    - 127.0.0.1:4096:4096
-    restart: unless-stopped
-    depends_on:
-      ollama-gateway:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD-SHELL", "curl -sf http://127.0.0.1:4096/ > /dev/null"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 30s
-    deploy:
-      resources:
-        limits:
-          cpus: '2.00'
-          memory: 8G
-        reservations:
-          cpus: '0.05'
-          memory: 256M
-    labels:
-      com.centurylinklabs.watchtower.enable: 'false'
-
   hermes-agent:
     build:
       context: ./hermes
@@ -459,11 +429,15 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1.00'
-          memory: 1G
+          # Raised from 1.00 CPU / 1G. At 1G the container hit its ceiling and
+          # Docker recorded OOMKilled=true; at 1.00 CPU `hermes status` took
+          # 3.5 min under host load, stalling the event loop long enough for the
+          # Discord gateway websocket to fall 57s behind and fatally drop.
+          cpus: '4.00'
+          memory: 3G
         reservations:
-          cpus: '0.05'
-          memory: 64M
+          cpus: '0.50'
+          memory: 256M
 
 configs:
   hermes-gh-hosts:
@@ -481,4 +455,3 @@ volumes:
     name: open-claw_ollama-data
   open-webui-data:
   sd-data:
-  opencode-data:
